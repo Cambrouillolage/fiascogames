@@ -588,7 +588,7 @@ footer{
         </div>
 
         <div class="navRight">
-          <a class="navMail" href="mailto:contact@cambrouillolage.fr">contact@cambrouillolage.fr</a>
+          
 
           <a class="navIcon" href="TON_URL_INSTAGRAM" target="_blank" rel="noreferrer" aria-label="Instagram">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
@@ -882,6 +882,34 @@ footer{
       recalcStops();
       setActiveByIndex(currentIndex);
     });
+
+    // Wheel / touch support: allow vertical scroll or swipe to change timeline index
+    let lastWheelTime = 0;
+    function onWheel(e){
+      const now = Date.now();
+      if (now - lastWheelTime < 300) return; // debounce
+      const delta = e.deltaY || e.wheelDelta;
+      if (!delta) return;
+      if (Math.abs(delta) < 8) return;
+      if (delta > 0) setActiveByIndex(currentIndex + 1);
+      else setActiveByIndex(currentIndex - 1);
+      lastWheelTime = now;
+    }
+    window.addEventListener('wheel', onWheel, {passive:true});
+
+    // touch swipe (vertical) for mobile
+    let touchStartY = null;
+    window.addEventListener('touchstart', (e)=>{ touchStartY = (e.touches && e.touches[0]) ? e.touches[0].clientY : null; }, {passive:true});
+    window.addEventListener('touchend', (e)=>{
+      if (touchStartY === null) return;
+      const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : null;
+      if (endY === null) return;
+      const dy = touchStartY - endY;
+      if (Math.abs(dy) < 30) return;
+      if (dy > 0) setActiveByIndex(currentIndex + 1);
+      else setActiveByIndex(currentIndex - 1);
+      touchStartY = null;
+    }, {passive:true});
   </script>
 
 </body>
