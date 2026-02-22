@@ -252,7 +252,14 @@
         linear-gradient(180deg,#060707,#040505);
     }
 
-    .tlScrollArea{ height: 240vh; position:relative; }
+    .tlScrollArea{ height: 100vh; position:relative; }
+    .tlControls{ position:absolute; inset:auto 12px 12px auto; z-index:40; display:flex; gap:8px; }
+    .tlNavBtn{
+      width:44px; height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04); color:var(--text); font-weight:900; font-size:20px;
+      display:grid; place-items:center; cursor:pointer;
+    }
+    .tlNavBtn:hover{ transform:translateY(-2px); background:rgba(255,255,255,.07); }
     .tlSticky{
       position:sticky;
       top:var(--navH);
@@ -598,7 +605,7 @@ footer{
             </svg>
           </a>
 
-          <a class="btn btnPrimary" href="./cambrouillolage.html">Voir Cambrouillolage →</a>
+          <a class="btn btnPrimary" href="./cambrouillolage_fixed.html">Voir Cambrouillolage →</a>
         </div>
       </div>
     </div>
@@ -656,7 +663,11 @@ footer{
             <h2>On avance dans le temps.</h2>
             <p class="lead">Scroll = progression par chapitres. Chaque stop se met en valeur, puis se débloque.</p>
           </div>
-          <div class="tlHint"><span class="tlHintDot"></span> Scrolle pour avancer</div>
+          <div class="tlHint"><span class="tlHintDot"></span> Utilisez ‹ › pour avancer</div>
+          <div class="tlControls" aria-hidden="true">
+            <button class="tlNavBtn prev" aria-label="Précédent">‹</button>
+            <button class="tlNavBtn next" aria-label="Suivant">›</button>
+          </div>
         </div>
 
         <div class="tlStage">
@@ -671,7 +682,7 @@ footer{
             </div>
 
             <!-- STOP 1 : Cambrouillolage -->
-            <article class="tlStop isAvailable" data-stop="1" data-href="./cambrouillolage.html" style="--x:720px;">
+            <article class="tlStop isAvailable" data-stop="1" data-href="./cambrouillolage_fixed.html" style="--x:720px;">
               <div class="tlLabel">H+1 • La fuite</div>
               <div class="tlDot"></div>
               <div class="tlStem"></div>
@@ -692,7 +703,7 @@ footer{
                 <p class="tlDesc">Coopère. Trahis. Pars seul avec le butin.</p>
 
                 <div class="tlCtas">
-                  <a class="btn btnPrimary" href="./cambrouillolage.html">Voir le jeu →</a>
+                  <a class="btn btnPrimary" href="./cambrouillolage_fixed.html">Voir le jeu →</a>
                 </div>
               </div>
             </article>
@@ -765,7 +776,7 @@ footer{
           </div>
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btnPrimary" href="./cambrouillolage.html">Découvrir Cambrouillolage →</a>
+            <a class="btn btnPrimary" href="./cambrouillolage_fixed.html">Découvrir Cambrouillolage →</a>
             <a class="btn" href="mailto:contact@cambrouillolage.fr?subject=Fiasco%20Games%20—%20Contact">Me contacter</a>
           </div>
         </div>
@@ -783,8 +794,8 @@ footer{
 
       <div class="footerCol">
         <div class="footerTitle">Pages</div>
-        <a class="footerLink" href="./index_fiasco.html">Fiasco Games (Accueil)</a>
-        <a class="footerLink" href="./cambrouillolage.html">Cambrouillolage</a>
+        <a class="footerLink" href="./index.html">Fiasco Games (Accueil)</a>
+        <a class="footerLink" href="./cambrouillolage_fixed.html">Cambrouillolage</a>
       </div>
 
       <div class="footerCol">
@@ -814,111 +825,63 @@ footer{
     const activeLineEl = document.getElementById('tlLineActive');
     const lineEl = document.querySelector('.tlLine');
 
-    const stops = Array.from(document.querySelectorAll('.tlStop'))
+    let stops = Array.from(document.querySelectorAll('.tlStop'))
       .sort((a,b)=> (parseInt(a.dataset.stop,10) - parseInt(b.dataset.stop,10)));
 
-    const stopXs = stops.map(el => {
-      const x = parseFloat(getComputedStyle(el).getPropertyValue('--x')) || 0;
-      return x;
-    });
-
+    let stopXs = [];
     const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
 
-    function viewportTargetOffset(){
-      // où on “vise” le stop dans le viewport (un peu à gauche pour laisser la carte respirer)
-      return window.innerWidth * 0.35;
+    function recalcStops(){
+      stops = Array.from(document.querySelectorAll('.tlStop'))
+        .sort((a,b)=> (parseInt(a.dataset.stop,10) - parseInt(b.dataset.stop,10)));
+      stopXs = stops.map(el => parseFloat(getComputedStyle(el).getPropertyValue('--x')) || 0);
     }
 
-    function maxShift(){
-      const lastX = Math.max(...stopXs);
-      return Math.max(0, lastX - viewportTargetOffset());
+    function viewportTargetOffset(){ return window.innerWidth * 0.35; }
+    function maxShift(){ const lastX = Math.max(...stopXs); return Math.max(0, lastX - viewportTargetOffset()); }
+
+    // active index navigation (no vertical scroll needed)
+    let currentIndex = 0;
+    function setActiveByIndex(idx){
+      idx = clamp(idx, 0, stops.length - 1);
+      currentIndex = idx;
+      stops.forEach((s,i)=> s.classList.toggle('isActive', i === idx));
+
+      const desiredShift = clamp(stopXs[idx], 0, maxShift());
+      track.style.transform = `translate3d(${-desiredShift}px,0,0)`;
+      if (lineEl) lineEl.style.setProperty('--tickShift', `${desiredShift * 1.2}px`);
+      if (activeLineEl) activeLineEl.style.width = `${Math.max(0, stopXs[idx] - desiredShift)}px`;
     }
 
-    function computeProgress(){
-      const r = scrollArea.getBoundingClientRect();
-      const areaTop = window.scrollY + r.top;
-      const areaH = scrollArea.offsetHeight;
-      const span = Math.max(1, areaH - window.innerHeight);
-      return clamp((window.scrollY - areaTop) / span, 0, 1);
-    }
+    // buttons
+    const btnPrev = document.querySelector('.tlNavBtn.prev');
+    const btnNext = document.querySelector('.tlNavBtn.next');
+    if (btnPrev) btnPrev.addEventListener('click', ()=> setActiveByIndex(currentIndex - 1));
+    if (btnNext) btnNext.addEventListener('click', ()=> setActiveByIndex(currentIndex + 1));
 
-    function setActiveByShift(shiftX){
-      // stop “le plus proche” de la zone cible
-      const target = shiftX + viewportTargetOffset();
-      let best = 0;
-      let bestD = Infinity;
-      for (let i=0;i<stopXs.length;i++){
-        const d = Math.abs(stopXs[i] - target);
-        if (d < bestD){ bestD = d; best = i; }
-      }
-      stops.forEach((s,idx)=> s.classList.toggle('isActive', idx === best));
-
-      // Ligne active = jusqu’au stop actif
-      const visibleX = stopXs[best] - shiftX;
-      if (activeLineEl) activeLineEl.style.width = `${Math.max(0, visibleX)}px`;
-    }
-
-    let raf = 0;
-    function update(){
-      raf = 0;
-      if (prefersReduced) return;
-
-      // Ajuste automatiquement la hauteur de scroll en fonction du nombre de stops
-      // (évite les “sauts” mobile)
-      const desiredVh = (stops.length * 80) + 80; // ex: 3 stops => 320vh
-      scrollArea.style.height = `${desiredVh}vh`;
-
-      const p = computeProgress();
-      const shift = maxShift() * p;
-
-      track.style.transform = `translate3d(${-shift}px,0,0)`;
-
-      if (lineEl) lineEl.style.setProperty('--tickShift', `${shift * 1.2}px`);
-
-      setActiveByShift(shift);
-    }
-
-    function onScroll(){
-      if (raf) return;
-      raf = requestAnimationFrame(update);
-    }
-
-    function onResize(){
-      // recalc + keep visual correct
-      update();
-    }
-
-    // Click stop: scroll vers la bonne position + navigation si stop cliquable
-    stops.forEach((s, idx)=>{
-      const href = s.getAttribute('data-href');
-      s.addEventListener('click', (e)=>{
-        // si on clique un lien dans la carte, on laisse faire
-        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-        if (tag === 'a' || tag === 'button') return;
-
-        // si le stop est cliquable (href), on navigue
-        if (href){
-          window.location.href = href;
-          return;
-        }
-
-        // sinon, scroll vers ce stop
-        const r = scrollArea.getBoundingClientRect();
-        const areaTop = window.scrollY + r.top;
-        const span = Math.max(1, scrollArea.offsetHeight - window.innerHeight);
-
-        const desiredShift = clamp(stopXs[idx], 0, maxShift());
-        const desiredP = (maxShift() === 0) ? 0 : desiredShift / maxShift();
-        const y = areaTop + desiredP * span;
-
-        window.scrollTo({ top: y, behavior: 'smooth' });
+    // Click stop: navigate or move to index (no page scroll)
+    function bindStopClicks(){
+      stops.forEach((s, idx)=>{
+        const href = s.getAttribute('data-href');
+        s.addEventListener('click', (e)=>{
+          const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+          if (tag === 'a' || tag === 'button') return;
+          if (href){ window.location.href = href; return; }
+          setActiveByIndex(idx);
+        });
       });
-    });
+    }
 
     // init
-    update();
-    window.addEventListener('scroll', onScroll, { passive:true });
-    window.addEventListener('resize', onResize);
+    recalcStops();
+    bindStopClicks();
+    setActiveByIndex(0);
+
+    // handle resize (recalc positions)
+    window.addEventListener('resize', ()=>{
+      recalcStops();
+      setActiveByIndex(currentIndex);
+    });
   </script>
 
 </body>
