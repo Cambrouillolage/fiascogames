@@ -67,17 +67,6 @@
       border:1px solid rgba(255,255,255,.10);
     }
     .navRight{display:flex; align-items:center; gap:10px; margin-left:auto;}
-    .navMail{
-      color:rgba(255,255,255,.72);
-      font-weight:850;
-      text-decoration:none;
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid transparent;
-      transition:.2s ease;
-      white-space:nowrap;
-    }
-    .navMail:hover{color:rgba(255,255,255,.92); background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.10);}
     .navIcon{
       width:38px; height:38px; border-radius:12px;
       display:grid; place-items:center;
@@ -114,8 +103,7 @@
     }
     .btnPrimary:hover{transform:translateY(-2px)}
     .btn:focus-visible,
-    .navIcon:focus-visible,
-    .navMail:focus-visible{
+    .navIcon:focus-visible{
       outline: 3px solid rgba(255,152,29,.35);
       outline-offset: 3px;
     }
@@ -139,8 +127,8 @@
       font-weight:850;
     }
     .headline{
-      font-size:clamp(40px,4.8vw,68px);
-      line-height:.95;
+      font-size:clamp(34px,6vw,68px);
+      line-height:.98;
       letter-spacing:-1.2px;
       margin:16px 0 14px;
       font-weight:950;
@@ -158,7 +146,7 @@
       max-width:64ch;
     }
     .heroCtas{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
-    .metaRow{display:flex; gap:12px; flex-wrap:wrap; margin-top:14px}
+    .metaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
     .chip{
       display:inline-flex; align-items:center; gap:8px;
       padding:10px 12px;
@@ -228,7 +216,7 @@
     }
     h2{
       margin:8px 0 0;
-      font-size:clamp(28px,3.2vw,44px);
+      font-size:clamp(26px,5vw,44px);
       line-height:1.05;
       letter-spacing:-.8px;
       font-weight:950;
@@ -253,13 +241,6 @@
     }
 
     .tlScrollArea{ height: 100vh; position:relative; }
-    .tlControls{ position:absolute; inset:auto 12px 12px auto; z-index:40; display:flex; gap:8px; }
-    .tlNavBtn{
-      width:44px; height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04); color:var(--text); font-weight:900; font-size:20px;
-      display:grid; place-items:center; cursor:pointer;
-    }
-    .tlNavBtn:hover{ transform:translateY(-2px); background:rgba(255,255,255,.07); }
     .tlSticky{
       position:sticky;
       top:var(--navH);
@@ -268,7 +249,6 @@
       display:flex;
       flex-direction:column;
     }
-
     .tlHead{
       display:flex;
       justify-content:space-between;
@@ -276,7 +256,6 @@
       gap:18px;
       padding: 18px 0 14px;
     }
-
     .tlHint{
       display:flex; align-items:center; gap:10px;
       padding:10px 12px;
@@ -314,7 +293,6 @@
       background: rgba(255,255,255,.10);
       overflow: visible;
     }
-
     .tlLine::before{
       content:"";
       position:absolute;
@@ -340,6 +318,7 @@
       background: linear-gradient(90deg, rgba(255,152,29,.95), rgba(255,255,255,.18));
       box-shadow: 0 0 0 6px rgba(255,152,29,.08);
       pointer-events:none;
+      will-change: width;
     }
 
     .tlStop{
@@ -348,7 +327,6 @@
       top: var(--axisY);
       translate: var(--x, 0px) 0;
     }
-
     .tlStop .tlLabel{
       position:absolute;
       left: 0;
@@ -361,7 +339,6 @@
       color: rgba(255,255,255,.65);
       white-space:nowrap;
     }
-
     .tlStop .tlDot{
       position:absolute;
       left: 0;
@@ -373,7 +350,6 @@
       background: rgba(255,255,255,.35);
       box-shadow: 0 0 0 8px rgba(255,255,255,.06);
     }
-
     .tlStop .tlStem{
       position:absolute;
       left: 0;
@@ -385,7 +361,6 @@
       background: rgba(255,255,255,.18);
       border-radius:999px;
     }
-
     .tlCard{
       position:absolute;
       left: 0;
@@ -401,7 +376,6 @@
       filter: saturate(.9);
       transition: .28s ease;
     }
-
     .tlStop.isStart .tlCard,
     .tlStop.isStart .tlStem{ display:none; }
 
@@ -435,8 +409,6 @@
       box-shadow: 0 24px 70px rgba(0,0,0,.65);
     }
 
-    .tlStop[data-href]{ cursor:pointer; }
-
     .tlTop{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
     .tlTime{color: rgba(255,255,255,.62); font-weight: 950; font-size: 12px; letter-spacing:.14em; text-transform:uppercase;}
     .tlTitle{margin: 8px 0 0; font-weight: 950; font-size: 20px; letter-spacing: -.3px;}
@@ -445,7 +417,7 @@
     .tlDesc{margin: 12px 0 0; color: rgba(255,255,255,.75); line-height:1.5;}
     .tlCtas{margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap;}
 
-    /* ABOUT (manquait chez toi -> cassait) */
+    /* ABOUT */
     .aboutGrid{
       margin-top:22px;
       display:grid;
@@ -471,15 +443,9 @@
       color:rgba(255,255,255,.78);
       line-height:1.55;
     }
-    .bullets{
-      margin-top:14px;
-      display:grid;
-      gap:10px;
-    }
+    .bullets{ margin-top:14px; display:grid; gap:10px; }
     .bullet{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
+      display:flex; gap:10px; align-items:flex-start;
       padding:10px 12px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
@@ -495,74 +461,66 @@
       flex:0 0 auto;
     }
 
-   
-.footerRight{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
+    /* FOOTER */
+    .footerRight{ display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+    .footerGrid{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .footerCol{ display:flex; flex-direction:column; gap:10px; }
+    .footerTitle{ font-weight:950; letter-spacing:.08em; text-transform:uppercase; font-size:12px; opacity:.7; }
+    .footerBrand{ display:flex; flex-direction:column; gap:8px; }
+    .footerSmall{ color: rgba(255,255,255,.62); font-weight:850; }
+    .footerLink{
+      text-decoration:none;
+      color: rgba(255,255,255,.72);
+      font-weight:850;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid transparent;
+      transition:.2s ease;
+    }
+    .footerLink:hover{
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.10);
+    }
+    footer{
+      padding: 28px 0 42px;
+      color: rgba(255,255,255,.55);
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin-top: 30px;
+    }
 
-.footerGrid{
-  display:grid;
-  grid-template-columns: 1.2fr 1fr 1fr 1fr;
-  gap:18px;
-  align-items:start;
-}
-.footerCol{ display:flex; flex-direction:column; gap:10px; }
-.footerTitle{ font-weight:950; letter-spacing:.08em; text-transform:uppercase; font-size:12px; opacity:.7; }
-.footerBrand{ display:flex; flex-direction:column; gap:8px; }
-.footerSmall{ color: rgba(255,255,255,.62); font-weight:850; }
-
-@media (max-width: 900px){
-  .footerGrid{ grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 520px){
-  .footerGrid{ grid-template-columns: 1fr; }
-  .footerRight{ justify-content:flex-start; }
-}
-.footerLink{
-  text-decoration:none;
-  color: rgba(255,255,255,.72);
-  font-weight:850;
-  padding:8px 10px;
-  border-radius:12px;
-  border:1px solid transparent;
-  transition:.2s ease;
-}
-.footerLink:hover{
-  color: rgba(255,255,255,.92);
-  background: rgba(255,255,255,.05);
-  border-color: rgba(255,255,255,.10);
-}
-
-footer{
-  padding: 28px 0 42px;
-  color: rgba(255,255,255,.55);
-  border-top: 1px solid rgba(255,255,255,.08);
-  margin-top: 30px;
-}
-
+    /* MOBILE FIRST BOOST */
+    @media (max-width: 900px){
+      .heroGrid{grid-template-columns:1fr; gap:18px;}
+      .heroCard{min-height:320px;}
+      .footerGrid{grid-template-columns:1fr 1fr;}
+      .tlHint{display:none;}
+    }
     @media (max-width: 640px){
+      .container{width:min(var(--max), calc(100% - 28px));}
+      header.hero{padding:44px 0 18px;}
+      section{padding:40px 0;}
+      .sub{font-size:16px;}
+      .heroCtas .btn{width:100%;}
+      .heroCtas{gap:10px;}
+      .metaRow{gap:8px;}
+      .chip{padding:9px 10px; font-size:12px;}
+      .aboutGrid{grid-template-columns:1fr;}
       :root{
         --axisY: 22%;
         --cardOffset: 56px;
         --stem: 44px;
       }
-      .tlLine,
-      .tlLineActive{
-        left: 14px;
-        right: 14px;
-      }
-      .tlStop .tlLabel{
-        top: -34px;
-        transform: translateX(-50%);
-      }
-      .tlCard{
-        width: 92vw;
-        transform: translateX(-50%);
-        padding: 14px;
-      }
+      .tlLine, .tlLineActive{left:14px; right:14px;}
+      .tlStop .tlLabel{top:-34px; transform:translateX(-50%);}
+      .tlCard{width:92vw; transform:translateX(-50%); padding:14px;}
+      .footerGrid{grid-template-columns:1fr;}
+      .footerRight{justify-content:flex-start;}
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -572,7 +530,6 @@ footer{
 </head>
 
 <body>
-
   <!-- NAV -->
   <div class="nav">
     <div class="container">
@@ -588,8 +545,6 @@ footer{
         </div>
 
         <div class="navRight">
-          
-
           <a class="navIcon" href="TON_URL_INSTAGRAM" target="_blank" rel="noreferrer" aria-label="Instagram">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
               <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/>
@@ -661,13 +616,9 @@ footer{
           <div>
             <div class="kicker">La saga</div>
             <h2>On avance dans le temps.</h2>
-            <p class="lead">Scroll = progression par chapitres. Chaque stop se met en valeur, puis se débloque.</p>
+            
           </div>
-          <div class="tlHint"><span class="tlHintDot"></span> Utilisez ‹ › pour avancer</div>
-          <div class="tlControls" aria-hidden="true">
-            <button class="tlNavBtn prev" aria-label="Précédent">‹</button>
-            <button class="tlNavBtn next" aria-label="Suivant">›</button>
-          </div>
+         
         </div>
 
         <div class="tlStage">
@@ -675,14 +626,14 @@ footer{
             <div class="tlLine"></div>
             <div class="tlLineActive" id="tlLineActive"></div>
 
-            <!-- STOP 0 : Départ (pas de jeu) -->
-            <div class="tlStop isStart" data-stop="0" style="--x:0px;">
+            <!-- STOP 0 -->
+            <div class="tlStop isStart" data-stop="0">
               <div class="tlLabel">H-0 • Le vol</div>
               <div class="tlDot"></div>
             </div>
 
-            <!-- STOP 1 : Cambrouillolage -->
-            <article class="tlStop isAvailable" data-stop="1" data-href="./cambrouillolage_fixed.html" style="--x:720px;">
+            <!-- STOP 1 -->
+            <article class="tlStop isAvailable" data-stop="1" data-href="./cambrouillolage_fixed.html">
               <div class="tlLabel">H+1 • La fuite</div>
               <div class="tlDot"></div>
               <div class="tlStem"></div>
@@ -708,10 +659,9 @@ footer{
               </div>
             </article>
 
-            <!-- STOP 2 : GAV -->
+            <!-- STOP 2 -->
             <article class="tlStop isSoon" data-stop="2"
-              data-href="mailto:contact@cambrouillolage.fr?subject=GAV%20—%20Prévenez-moi"
-              style="--x:1440px;">
+              data-href="mailto:contact@cambrouillolage.fr?subject=GAV%20—%20Prévenez-moi">
               <div class="tlLabel">J+3 • L’arrestation</div>
               <div class="tlDot"></div>
               <div class="tlStem"></div>
@@ -739,7 +689,6 @@ footer{
 
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -784,7 +733,7 @@ footer{
     </div>
   </section>
 
-
+  <!-- FOOTER -->
   <footer>
     <div class="container footerGrid">
       <div class="footerBrand">
@@ -813,104 +762,136 @@ footer{
     </div>
   </footer>
 
-
   <script>
-    // year
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const scrollArea = document.getElementById('tlScrollArea');
     const track = document.getElementById('tlTrack');
-    const activeLineEl = document.getElementById('tlLineActive');
+    const activeLine = document.getElementById('tlLineActive');
     const lineEl = document.querySelector('.tlLine');
 
-    let stops = Array.from(document.querySelectorAll('.tlStop'))
-      .sort((a,b)=> (parseInt(a.dataset.stop,10) - parseInt(b.dataset.stop,10)));
+    const stops = [...document.querySelectorAll('.tlStop')]
+      .sort((a,b)=> +a.dataset.stop - +b.dataset.stop);
 
-    let stopXs = [];
     const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
 
-    function recalcStops(){
-      stops = Array.from(document.querySelectorAll('.tlStop'))
-        .sort((a,b)=> (parseInt(a.dataset.stop,10) - parseInt(b.dataset.stop,10)));
-      stopXs = stops.map(el => parseFloat(getComputedStyle(el).getPropertyValue('--x')) || 0);
+    let stopXs = [];
+    let startY = 0;
+    let endY = 1;
+    let span = 1;
+
+    let targetShift = 0;
+    let currentShift = 0;
+    let raf = null;
+
+    
+
+    function recalcStopXs(){
+      const gap = window.innerWidth <= 640 ? 380 : 720;
+      stopXs = stops.map((_,i)=> i * gap);
+      stops.forEach((s,i)=> s.style.setProperty('--x', stopXs[i] + 'px'));
     }
 
-    function viewportTargetOffset(){ return window.innerWidth * 0.35; }
-    function maxShift(){ const lastX = Math.max(...stopXs); return Math.max(0, lastX - viewportTargetOffset()); }
+    function setScrollHeight(){
+      const base = window.innerWidth <= 640 ? 120 : 95;
+      const vh = (stops.length * base) + base;
+      scrollArea.style.height = vh + 'vh';
+    }
 
-    // active index navigation (no vertical scroll needed)
-    let currentIndex = 0;
-    function setActiveByIndex(idx){
-      idx = clamp(idx, 0, stops.length - 1);
-      currentIndex = idx;
+    function recalcGeometry(){
+      const r = scrollArea.getBoundingClientRect();
+      startY = window.scrollY + r.top;
+      endY = startY + scrollArea.offsetHeight - window.innerHeight;
+      span = Math.max(1, endY - startY);
+    }
+
+    function maxShift(){ return stopXs[stopXs.length - 1] || 0; }
+    function progressFromScroll(){ return clamp((window.scrollY - startY) / span, 0, 1); }
+    function shiftFromProgress(p){ return p * maxShift(); }
+
+    function closestStopIndex(shift){
+      let best = 0, bestD = Infinity;
+      for(let i=0;i<stopXs.length;i++){
+        const d = Math.abs(stopXs[i] - shift);
+        if(d < bestD){ bestD = d; best = i; }
+      }
+      return best;
+    }
+
+    function animate(){
+      currentShift += (targetShift - currentShift) * 0.12;
+
+      if(Math.abs(targetShift - currentShift) < 0.3){
+        currentShift = targetShift;
+        raf = null;
+      } else {
+        raf = requestAnimationFrame(animate);
+      }
+
+      track.style.transform = `translate3d(${-currentShift}px,0,0)`;
+
+      if(lineEl){
+        lineEl.style.setProperty('--tickShift', `${currentShift * 1.2}px`);
+      }
+
+      const idx = closestStopIndex(currentShift);
       stops.forEach((s,i)=> s.classList.toggle('isActive', i === idx));
 
-      const desiredShift = clamp(stopXs[idx], 0, maxShift());
-      track.style.transform = `translate3d(${-desiredShift}px,0,0)`;
-      if (lineEl) lineEl.style.setProperty('--tickShift', `${desiredShift * 1.2}px`);
-      if (activeLineEl) activeLineEl.style.width = `${Math.max(0, stopXs[idx] - desiredShift)}px`;
+      if(activeLine){
+        activeLine.style.width = stopXs[idx] + 'px';
+      }
     }
 
-    // buttons
-    const btnPrev = document.querySelector('.tlNavBtn.prev');
-    const btnNext = document.querySelector('.tlNavBtn.next');
-    if (btnPrev) btnPrev.addEventListener('click', ()=> setActiveByIndex(currentIndex - 1));
-    if (btnNext) btnNext.addEventListener('click', ()=> setActiveByIndex(currentIndex + 1));
-
-    // Click stop: navigate or move to index (no page scroll)
-    function bindStopClicks(){
-      stops.forEach((s, idx)=>{
-        const href = s.getAttribute('data-href');
-        s.addEventListener('click', (e)=>{
-          const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-          if (tag === 'a' || tag === 'button') return;
-          if (href){ window.location.href = href; return; }
-          setActiveByIndex(idx);
-        });
-      });
+    function updateFromScroll(){
+      targetShift = shiftFromProgress(progressFromScroll());
+      if(!raf) raf = requestAnimationFrame(animate);
     }
 
-    // init
-    recalcStops();
-    bindStopClicks();
-    setActiveByIndex(0);
+    
 
-    // handle resize (recalc positions)
+  
+
+   window.addEventListener('scroll', ()=>{
+  const rect = scrollArea.getBoundingClientRect();
+
+  const visible =
+    rect.top < window.innerHeight &&
+    rect.bottom > 0;
+
+  if(!visible) return;
+
+  updateFromScroll();
+
+}, {passive:true});
+
     window.addEventListener('resize', ()=>{
-      recalcStops();
-      setActiveByIndex(currentIndex);
+      setScrollHeight();
+      recalcStopXs();
+      recalcGeometry();
+      updateFromScroll();
     });
 
-    // Wheel / touch support: allow vertical scroll or swipe to change timeline index
-    let lastWheelTime = 0;
-    function onWheel(e){
-      const now = Date.now();
-      if (now - lastWheelTime < 300) return; // debounce
-      const delta = e.deltaY || e.wheelDelta;
-      if (!delta) return;
-      if (Math.abs(delta) < 8) return;
-      if (delta > 0) setActiveByIndex(currentIndex + 1);
-      else setActiveByIndex(currentIndex - 1);
-      lastWheelTime = now;
+    // Click on a stop => navigate if data-href
+    stops.forEach((s)=>{
+      const href = s.getAttribute('data-href');
+      if(!href) return;
+      s.style.cursor = 'pointer';
+      s.addEventListener('click', (e)=>{
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+        if(tag === 'a' || tag === 'button') return;
+        window.location.href = href;
+      });
+    });
+
+    function init(){
+      setScrollHeight();
+      recalcStopXs();
+      recalcGeometry();
+      updateFromScroll();
     }
-    window.addEventListener('wheel', onWheel, {passive:true});
-
-    // touch swipe (vertical) for mobile
-    let touchStartY = null;
-    window.addEventListener('touchstart', (e)=>{ touchStartY = (e.touches && e.touches[0]) ? e.touches[0].clientY : null; }, {passive:true});
-    window.addEventListener('touchend', (e)=>{
-      if (touchStartY === null) return;
-      const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : null;
-      if (endY === null) return;
-      const dy = touchStartY - endY;
-      if (Math.abs(dy) < 30) return;
-      if (dy > 0) setActiveByIndex(currentIndex + 1);
-      else setActiveByIndex(currentIndex - 1);
-      touchStartY = null;
-    }, {passive:true});
+    init();
   </script>
-
 </body>
 </html>
