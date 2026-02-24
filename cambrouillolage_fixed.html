@@ -292,6 +292,18 @@
       width:10px; height:10px; border-radius:999px; background: var(--orange);
       box-shadow: 0 0 0 6px rgba(255,152,29,.10);
     }
+    /* Badge "En stock" */
+    .inStockBadge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px; border-radius:999px;
+      background: rgba(56,211,113,.06);
+      border:1px solid rgba(56,211,113,.10);
+      color: var(--text);
+      font-weight:800; font-size:13px;
+      white-space:nowrap;
+    }
+    .inStockDot{ width:10px; height:10px; border-radius:999px; background:#34d399; box-shadow: 0 0 0 6px rgba(52,211,153,.10); }
+    .inStockBadge .badgeText{ display:inline-block }
 
     /* HERO right = GIF */
     .heroCard{
@@ -569,6 +581,86 @@
     .back{ transform: rotateY(180deg); }
     .cardInner.flip{ transform: rotateY(180deg); }
 
+    /* REVIEWS TICKER */
+    .reviewsSection{
+      padding: 40px 0;
+      background:
+        radial-gradient(900px 400px at 20% 30%, rgba(255,152,29,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+    }
+    .reviewsHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:18px;
+      margin-bottom: 32px;
+    }
+    .reviewsTicker{
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+      padding: 40px 0;
+      width: 100%;
+    }
+    .reviewsTrack{
+      display: flex;
+      gap: 20px;
+      animation: carouselScroll 60s linear infinite;
+      width: fit-content;
+    }
+    @keyframes carouselScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    .reviewItem{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      max-width: 400px;
+      min-width: 400px;
+      white-space: normal;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      flex-shrink: 0;
+    }
+    .reviewItem:nth-child(1) { }
+    .reviewItem:nth-child(2) { }
+    .reviewItem:nth-child(3) { }
+    .reviewItem:nth-child(4) { }
+    .reviewItem:nth-child(5) { }
+    .reviewItem:nth-child(6) { }
+    .reviewItem:nth-child(7) { }
+    .reviewItem:nth-child(8) { }
+    .reviewsTrack:hover {
+      animation-play-state: paused;
+    }
+    .reviewStars{
+      display: flex;
+      gap: 3px;
+      font-size: 18px;
+      justify-content: center;
+    }
+    .reviewAuthor{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 13px;
+    }
+    .reviewText{
+      color: rgba(255,255,255,.75);
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0;
+    }
+
     /* CTA */
     .ctaWrap{
       border-radius: var(--radius-xl);
@@ -640,10 +732,41 @@
     }
     @media (max-width: 520px){
       .ctaWrap{flex-direction:column; align-items:stretch}
+      /* Header / nav spacing improvements on small screens */
+      .navInner{padding:10px 0; gap:8px}
+      .brandLogo{width:28px; height:28px}
+      .navExtras{gap:8px}
+      .navIcon{width:34px; height:34px}
+
+      /* Simplify header on very small screens: hide extras, keep logo + acheter */
+      .navExtras{display:none}
+      .nav .btnPrimary{display:inline-flex}
+      .brand > div > div{display:none}
+
+      /* Make hero image take available width and avoid being cropped */
+      .heroCard{min-height:320px; padding:12px}
+      .heroBoxInner{width:100%; padding:6px; aspect-ratio: auto}
+      .heroGif{width: min(420px, 96%); object-fit: contain; object-position: center}
+
+      /* Slightly reduce large text spacing so header doesn't feel cramped */
+      .headline{font-size: clamp(30px, 7vw, 46px)}
+      .heroCtas{flex-direction:column}
+      .heroCtas .btn{width:100%}
     }
 
     @media (prefers-reduced-motion: reduce){
       *{animation:none !important; transition:none !important}
+    }
+    @media (max-width: 520px){
+      /* Header minimal: afficher uniquement le logo + nom/sous-titre */
+      .navExtras{display:none !important}
+      .nav .btnPrimary{display:none !important}
+      .navInner{justify-content:flex-start; gap:10px; padding:10px 0}
+      .brand{gap:10px}
+      .brandLogo{width:34px; height:34px}
+      .brand > div{display:block}
+      .brand > div > div:first-child{font-size:14px; font-weight:900; line-height:1}
+      .brand > div > div:last-child{font-size:11px; color:rgba(255,255,255,.66); letter-spacing:.08em; text-transform:none}
     }
   </style>
 </head>
@@ -674,9 +797,9 @@
             <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
           </svg>
         </a>
-        <a class="navBack" href="./index.html" aria-label="Retour à Fiasco Game">← Fiasco Game</a>
+        
 
-        <a class="navIcon" href="TON_URL_INSTAGRAM" target="_blank" rel="noreferrer" aria-label="Instagram">
+        <a class="navIcon" href="https://www.instagram.com/cambrouillolage_lejeu/" target="_blank" rel="noreferrer" aria-label="Instagram">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
             <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="2"/>
@@ -684,7 +807,7 @@
           </svg>
         </a>
 
-        <a class="navIcon" href="TON_URL_TIKTOK" target="_blank" rel="noreferrer" aria-label="TikTok">
+        <a class="navIcon" href="https://www.tiktok.com/@cambrouillolage" target="_blank" rel="noreferrer" aria-label="TikTok">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
             <path d="M14 3v10.2a3.8 3.8 0 1 1-3-3.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             <path d="M14 6c.8 1.7 2.5 3 4.5 3.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -694,7 +817,12 @@
         
       </div>
 
-      <a class="btn btnPrimary" href="#acheter">Acheter →</a>
+      <span class="inStockBadge" aria-hidden="true">
+        <span class="inStockDot" aria-hidden="true"></span>
+        <span class="badgeText">En stock - Livraison rapide chez vous</span>
+      </span>
+
+      <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter →</a>
 
     </div>
   </div>
@@ -721,7 +849,12 @@
           </p>
 
           <div class="heroCtas">
-            <a class="btn btnPrimary" href="#acheter">Acheter maintenant</a>
+            <span class="inStockBadge" aria-hidden="true" style="margin-right:6px">
+              <span class="inStockDot" aria-hidden="true"></span>
+              <span class="badgeText">En stock - Livraison rapide chez vous</span>
+            </span>
+            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter maintenant</a>
+            <a class="btn" href="https://www.amazon.fr/dp/B0DVCF9N8G" target="_blank" rel="noreferrer">Acheter sur Amazon</a>
             <a class="btn" href="#principe">Comprendre en vidéo</a>
           </div>
 
@@ -887,16 +1020,85 @@
     </div>
   </section>
 
+  <!-- AVIS -->
+  <section class="reviewsSection">
+    <div class="container">
+      <div class="reviewsHead">
+        <div>
+          <div class="kicker">Avis joueurs</div>
+          <h2>Ça braque sec sur les réseaux.</h2>
+        </div>
+      </div>
+      
+      <div class="reviewsTicker">
+        <div class="reviewsTrack">
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Sarah M.</span>
+            <p class="reviewText">"Cambrouillolage est ouf ! Les retournements en fin de partie te tuent. C'est devenu notre jeu soirée préféré."</p>
+          </div>
+          
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Thomas L.</span>
+            <p class="reviewText">"Parfait pour 6 joueurs en soirée. Les règles sont claires et les partie sont explosives. Dès le premier jeu, mes potes m'ont dit « on recommence »."</p>
+          </div>
+          
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Émilie P.</span>
+            <p class="reviewText">"Un vrai braquage émotionnel. Les trahisons, les coups bas… c'est du pur plaisir. On a acheté 3 exemplaires tellement on l'adore !"</p>
+          </div>
+          
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Marc D.</span>
+            <p class="reviewText">"Les interactions constantes font que personne ne s'ennuie. Même les spectateurs restent hypés. Franchement du génie."</p>
+          </div>
+          
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Julia K.</span>
+            <p class="reviewText">"On joue en 20 minutes mais on rejoue 5 fois d'affilée. C'est addictif, stratégique, et hilarant à parts égales."</p>
+          </div>
+
+          <!-- Duplicata pour la boucle infinie -->
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Sarah M.</span>
+            <p class="reviewText">"Cambrouillolage est ouf ! Les retournements en fin de partie te tuent. C'est devenu notre jeu soirée préféré."</p>
+          </div>
+          
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Thomas L.</span>
+            <p class="reviewText">"Parfait pour 6 joueurs en soirée. Les règles sont claires et les partie sont explosives. Dès le premier jeu, mes potes m'ont dit « on recommence »."</p>
+          </div>
+
+          <div class="reviewItem">
+            <span class="reviewStars">⭐⭐⭐⭐⭐</span>
+            <span class="reviewAuthor">Émilie P.</span>
+            <p class="reviewText">"Un vrai braquage émotionnel. Les trahisons, les coups bas… c'est du pur plaisir. On a acheté 3 exemplaires tellement on l'adore !"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ACHETER -->
   <section id="acheter">
     <div class="container">
       <div class="ctaWrap">
         <div>
           <h3>Prêt à voler… euh, à jouer ?</h3>
-          <p>Clique et choisis ton point de vente. (Tu peux remplacer par ton lien WooCommerce / Amazon / Fnac.)</p>
+        
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btnPrimary" href="https://cambrouillolage.fr/" target="_blank" rel="noreferrer">Acheter sur le site</a>
-            <a class="btn" href="#" onclick="alert('Ajoute ici ton lien Amazon'); return false;">Amazon</a>
+            <span class="inStockBadge" aria-hidden="true" style="margin-right:6px">
+              <span class="inStockDot" aria-hidden="true"></span>
+              <span class="badgeText">En stock - Livraison rapide chez vous</span>
+            </span>
+            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" target="_blank" rel="noreferrer">Acheter sur le site</a>
+            <a class="btn" href="#" onclick="alert('https://www.amazon.fr/dp/B0DVCF9N8G'); return false;">Amazon</a>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:10px; min-width: 260px;">
@@ -955,19 +1157,21 @@
         <div class="footerTitle">Pages</div>
         <a class="footerLink" href="./index.html">Fiasco Game (Accueil)</a>
         <a class="footerLink" href="./cambrouillolage_fixed.html">Cambrouillolage</a>
+        <a class="footerLink" href="./politique-confidentialite.html">Politique de confidentialité</a>
+        <a class="footerLink" href="./mentions-legales.html">Mentions légales</a>
       </div>
 
       <div class="footerCol">
         <div class="footerTitle">Sommaire</div>
         <a class="footerLink" href="#principe">Principe</a>
         <a class="footerLink" href="#cartes">Cartes</a>
-        <a class="footerLink" href="#acheter">Acheter</a>
+        <a class="footerLink" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter</a>
       </div>
 
       <div class="footerCol footerRight">
         <div class="footerTitle">Suivre</div>
-        <a class="footerLink" href="TON_URL_INSTAGRAM" target="_blank" rel="noreferrer">Instagram</a>
-        <a class="footerLink" href="TON_URL_TIKTOK" target="_blank" rel="noreferrer">TikTok</a>
+        <a class="footerLink" href="https://www.instagram.com/cambrouillolage_lejeu/" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="footerLink" href="https://www.tiktok.com/@cambrouillolage" target="_blank" rel="noreferrer">TikTok</a>
         <a class="footerLink" href="mailto:contact@cambrouillolage.fr">contact@cambrouillolage.fr</a>
       </div>
     </div>
