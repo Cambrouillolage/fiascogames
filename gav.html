@@ -726,7 +726,7 @@
         const qWrap = document.createElement("div");
         qWrap.className = "row-question";
         const taQ = document.createElement("textarea");
-        taQ.placeholder = "";
+        taQ.placeholder = "Inscris ta question";
         taQ.value = q.text;
         taQ.addEventListener("input", ()=>{
           state.questions[idx].text = taQ.value;
@@ -783,7 +783,7 @@
         const answerWrap = document.createElement("div");
         answerWrap.className = "row-answer";
         const taA = document.createElement("textarea");
-        taA.placeholder = q.text?.trim() ? q.text : "";
+        taA.placeholder = "Inscris ta réponse";
         taA.value = s.answer;
         taA.addEventListener("input", ()=>{ state.suspect[idx].answer = taA.value; });
         answerWrap.appendChild(taA);
