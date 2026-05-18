@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cambrouillolage - Vidéo et Questions Règles</title>
+  <meta name="description" content="Regardez la vidéo de Cambrouillolage puis posez vos questions sur les règles à l'IA." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://fiascogames.fr/cambrouillolage/video/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="Cambrouillolage - Vidéo et Questions Règles" />
+  <meta property="og:description" content="Regardez la vidéo puis posez vos questions sur les règles à l'IA." />
+  <meta property="og:url" content="https://fiascogames.fr/cambrouillolage/video/" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/box.png" />
+  <meta property="og:image:alt" content="Boite du jeu Cambrouillolage" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cambrouillolage - Vidéo et Questions Règles" />
+  <meta name="twitter:description" content="Regardez la vidéo puis posez vos questions sur les règles à l'IA." />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/box.png" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon.png" />
+  <link rel="apple-touch-icon" href="../../assets/favicon.png" />
+
+  <style>
+    :root{
+      --bg:#070909;
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --orange:#ff981d;
+      --green:#396155;
+      --line:rgba(255,255,255,.12);
+      --radius:22px;
+      --max:980px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 700px at 10% -10%, rgba(255,152,29,.15), transparent 58%),
+        radial-gradient(900px 650px at 90% 0%, rgba(57,97,85,.20), transparent 62%),
+        linear-gradient(180deg, #060707, #050606 40%, #040505 100%);
+      min-height:100vh;
+    }
+
+    .container{width:min(var(--max), calc(100% - 32px));margin:0 auto}
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(5,6,6,.7);
+      backdrop-filter: blur(14px);
+    }
+    .navInner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 0;
+    }
+    .navBack, .navHome{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:12px;
+      padding:8px 12px;
+      font-weight:800;
+      font-size:14px;
+    }
+    .navTitle{font-weight:900; color:var(--muted); text-align:center; flex:1}
+
+    main{padding:30px 0 42px}
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.04);
+      box-shadow:0 18px 60px rgba(0,0,0,.45);
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(26px, 4vw, 38px);
+      line-height:1.05;
+    }
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.55;
+    }
+
+    .videoFrame{
+      order:2;
+      position:relative;
+      width:100%;
+      aspect-ratio:16/9;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background:#000;
+      margin-bottom:18px;
+    }
+    .videoFrame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .ctaWrap{
+      order:1;
+      display:flex;
+      justify-content:center;
+      margin:0 0 16px;
+    }
+    .ctaBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#101010;
+      font-weight:900;
+      letter-spacing:.2px;
+      background:linear-gradient(180deg, rgba(255,152,29,.98), rgba(255,152,29,.84));
+      border:1px solid rgba(255,152,29,.35);
+      border-radius:14px;
+      padding:14px 18px;
+      min-height:50px;
+      box-shadow:0 14px 32px rgba(0,0,0,.38);
+      transition:transform .18s ease;
+    }
+    .ctaBtn:hover{transform:translateY(-2px)}
+
+    .summary{
+      order:3;
+      margin:0;
+      color:var(--text);
+      line-height:1.6;
+      padding:0;
+    }
+
+    @media (max-width:640px){
+      .container{width:min(var(--max), calc(100% - 22px));}
+      .navTitle{font-size:13px}
+      .navBack, .navHome{padding:8px 10px;font-size:13px}
+      .card{padding:14px}
+      .lead{font-size:15px}
+      .ctaBtn{width:100%}
+      .ctaWrap{order:1; margin:0 0 14px}
+      .videoFrame{order:2}
+      .summary{order:3}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container navInner">
+      <a class="navBack" href="../">Retour</a>
+      <div class="navTitle">Cambrouillolage</div>
+      <a class="navHome" href="../../">Accueil</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <section class="card">
+        <h1>Vidéo Cambrouillolage</h1>
+        <p class="lead">Regarde la vidéo officielle pour comprendre rapidement le jeu.</p>
+
+        <div class="ctaWrap">
+          <a
+            class="ctaBtn"
+            href="https://chatgpt.com/g/g-68f29e9d8f0c8191a78e909fbe1ca7dc-cambrouillolage"
+            target="_blank"
+            rel="noopener noreferrer">
+            Poser une question sur les règles
+          </a>
+        </div>
+
+        <div class="videoFrame">
+          <iframe
+            src="https://www.youtube.com/embed/drRt_Kdgc6w?start=18"
+            title="Vidéo de Cambrouillolage"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <p class="summary">
+          Tu peux poser tes questions sur les règles à l'IA : elle te répond en s'appuyant sur les règles de Cambrouillolage pour t'aider pendant la partie.
+        </p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
