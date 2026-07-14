@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Feuillets digitaux</title>
+  <link rel="icon" type="image/png" href="../../assets/GAV1.png" />
+  <style>
+    :root{
+      --ink:#111;
+      --line:rgba(0,0,0,.55);
+      --paper:#e9d3a6;
+      --red:#d11;
+      --green:#1a8f3a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background: radial-gradient(1100px 600px at 50% 0%, rgba(0,0,0,.08), transparent), #f3efe6;
+      padding:14px;
+    }
+    .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+    .topbar{display:flex;align-items:center;gap:10px}
+    .topbar .brand{flex:1;font-weight:900;opacity:.8}
+    .game-logo{
+      display:block;
+      height:auto;
+      object-fit:contain;
+    }
+    .topbar .brand .game-logo{
+      width:140px;
+      max-width:100%;
+    }
+    #home .head .game-logo{
+      width:180px;
+      max-width:100%;
+    }
+    .btn{
+      width:100%;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:900;
+      border:2px solid #111;
+      background:#111;
+      color:#fff;
+      cursor:pointer;
+    }
+    .btn.light{background:rgba(255,255,255,.55);color:#111;border-color:rgba(0,0,0,.65)}
+    .btn.danger{background:#b91c1c;border-color:#b91c1c}
+    .btn.inline{width:auto;padding:10px 12px;border-radius:12px}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .paper{
+      border-radius:18px;
+      border:2px solid rgba(0,0,0,.5);
+      background:
+        linear-gradient(0deg, rgba(255,255,255,.40), rgba(255,255,255,.40)),
+        radial-gradient(900px 400px at 40% 0%, rgba(0,0,0,.06), transparent),
+        var(--paper);
+      box-shadow: 0 14px 40px rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+    .paper .head{
+      padding:16px;
+      border-bottom:2px solid rgba(0,0,0,.65);
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .paper .head h1{margin:0;font-size:34px;letter-spacing:.2px}
+    .paper .body{padding:14px}
+
+    .grid-head, .row{
+      display:grid;
+      gap:10px;
+      align-items:center;
+      padding:10px 8px;
+    }
+    .grid-head{font-weight:900;border-bottom:2px solid rgba(0,0,0,.65)}
+    .row{border-bottom:2px solid rgba(0,0,0,.25);padding:12px 8px;font-weight:700}
+
+    textarea, input[type="text"], input[type="number"]{
+      width:100%;
+      border-radius:12px;
+      border:2px solid rgba(0,0,0,.55);
+      padding:10px;
+      background: rgba(255,255,255,.45);
+      font-weight:800;
+      outline:none;
+    }
+    textarea{resize:vertical;min-height:42px}
+    input[type="number"]{text-align:center}
+
+    .center{display:flex;justify-content:center}
+
+    .square{
+      width:34px;height:34px;border-radius:6px;
+      border:3px solid rgba(0,0,0,.85);
+      background:transparent;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+    }
+    .square input{display:none}
+    .square.on{background:rgba(0,0,0,.85);box-shadow: inset 0 0 0 3px var(--paper)}
+
+    .muted{opacity:.8;font-weight:900}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .panel{
+      padding:12px;border-radius:14px;
+      border:2px solid rgba(0,0,0,.35);
+      background: rgba(255,255,255,.35);
+    }
+    .download-card{
+      padding:12px;
+      border-radius:14px;
+      border:2px solid rgba(0,0,0,.35);
+      background: rgba(255,255,255,.35);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .download-card .title{
+      font-weight:1000;
+      font-size:14px;
+    }
+    .download-actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .download-actions .btn{
+      text-decoration:none;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    /* Barre condamnations */
+    .sentences{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:2px solid rgba(0,0,0,.35);
+      background: rgba(255,255,255,.25);
+    }
+    .sent-title{font-weight:1000;margin-bottom:10px}
+    .bar{
+      height:6px;
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
+      margin:0 8px;
+    }
+    .seg{position:absolute;top:0;bottom:0}
+    .seg.red{background:var(--red)}
+    .seg.green{background:var(--green)}
+    .scale{
+      display:grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      align-items:end;
+      gap:8px;
+      padding:6px 2px 0;
+    }
+    .tick{min-width:0;text-align:center;font-weight:1000}
+    .lbl{
+      font-size:11px;
+      font-weight:1000;
+      line-height:1.2;
+      margin-bottom:6px;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      min-height:34px;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:50%;
+      background:var(--red);
+      border:2px solid rgba(0,0,0,.35);
+      margin:8px auto 0;
+    }
+    .dot.green{background:var(--green)}
+    .pts{font-size:14px;margin-top:6px}
+
+    @media (max-width: 480px){
+      .scale{
+        gap:4px;
+      }
+      .lbl{
+        font-size:10px;
+        min-height:44px;
+      }
+      .pts{
+        font-size:12px;
+      }
+      .dot{
+        width:10px;
+        height:10px;
+      }
+      .download-actions{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* Labels uniquement mobile */
+    #inspector .field-label{display:none;}
+    #suspect .field-label{display:none;}
+
+    /* ===== ALIBI CARD — grid constant desktop ===== */
+    #suspect .head h1{
+      font-family: 'Courier New', Courier, monospace;
+      letter-spacing: 1px;
+    }
+    #suspect .grid-head{
+      grid-template-columns: 44px 1fr 80px 66px !important;
+      padding: 10px 6px 8px;
+      font-size: 12px;
+      line-height: 1.3;
+      border-bottom: 3px solid rgba(0,0,0,.75);
+      font-family: 'Courier New', Courier, monospace;
+    }
+    #suspect .row{
+      display: grid !important;
+      grid-template-columns: 44px 1fr 80px 66px;
+      align-items: stretch;
+      border-bottom: 1.5px solid rgba(120,95,55,.4);
+      min-height: 64px;
+      padding: 0 !important;
+      gap: 0;
+      font-weight: 400;
+    }
+    #suspect .row-num{
+      font-size: 24px;
+      font-weight: 400;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 10px 4px 10px 10px;
+      color: rgba(0,0,0,.8);
+      display: flex;
+      align-items: center;
+    }
+    #suspect .row-answer{
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+    }
+    #suspect .row-answer textarea{
+      border: none !important;
+      background: transparent !important;
+      resize: none;
+      min-height: 44px;
+      outline: none !important;
+      width: 100%;
+      padding: 2px 0;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    #suspect .row-super{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-right: 2.5px solid rgba(0,0,0,.7);
+    }
+    #suspect .row-pts{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+    }
+    #suspect .row-pts input[type="number"]{
+      width: 50px !important;
+      border: none !important;
+      background: transparent !important;
+      text-align: center;
+      font-weight: 800;
+      outline: none !important;
+      font-size: 16px;
+      padding: 4px 2px;
+    }
+    #suspect .row-pts select{
+      width: 58px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-weight: 800;
+      outline: none;
+      font-size: 16px;
+      padding: 4px 2px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+    .verdict-scene{
+      display:none;
+      margin:10px 0 12px;
+      padding:10px;
+      border:2px solid rgba(0,0,0,.45);
+      border-radius:12px;
+      background: rgba(255,255,255,.25);
+    }
+    .verdict-scene.show{display:block}
+    .verdict-title{
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .scene{
+      position:relative;
+      height:84px;
+      border-radius:8px;
+      overflow:hidden;
+      border:2px solid rgba(0,0,0,.55);
+      background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(0,0,0,.04));
+    }
+    .scene .thief{
+      position:absolute;
+      bottom:6px;
+      font-size:34px;
+      line-height:1;
+      user-select:none;
+    }
+    .scene.jail .bars{
+      position:absolute;
+      inset:0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0 20px,
+        rgba(0,0,0,.65) 20px 24px
+      );
+      pointer-events:none;
+      z-index:3;
+    }
+    .scene.jail .thief{
+      z-index:2;
+      animation: jailBob 1.2s ease-in-out infinite alternate;
+    }
+    .scene.jail .thief.t1{left:16%}
+    .scene.jail .thief.t2{left:42%; animation-delay:.2s}
+    .scene.jail .thief.t3{left:68%; animation-delay:.4s}
+
+    .scene.flee .thief{
+      z-index:2;
+      bottom:10px;
+    }
+    .scene.flee .thief.t1{left:-12%; animation: fleeA 2.8s linear infinite}
+    .scene.flee .thief.t2{left:-24%; animation: fleeB 3.1s linear infinite .4s}
+    .scene.flee .thief.t3{left:-36%; animation: fleeC 2.5s linear infinite .9s}
+
+    @keyframes jailBob{
+      from{transform:translateY(0)}
+      to{transform:translateY(-4px)}
+    }
+    @keyframes fleeA{
+      0%{transform:translateX(0) scaleX(-1)}
+      100%{transform:translateX(140vw) scaleX(-1)}
+    }
+    @keyframes fleeB{
+      0%{transform:translateX(0) translateY(0) scaleX(-1)}
+      100%{transform:translateX(138vw) translateY(-4px) scaleX(-1)}
+    }
+    @keyframes fleeC{
+      0%{transform:translateX(0) translateY(-2px) scaleX(-1)}
+      100%{transform:translateX(142vw) translateY(0) scaleX(-1)}
+    }
+
+    /* ===== CARNET D'ENQUÊTE CARD ===== */
+    #inspector .head{
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0;
+    }
+    #inspector .head .insp-title-row{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px 10px;
+      border-bottom: 2px solid rgba(0,0,0,.65);
+    }
+    #inspector .head .insp-title-row h1{
+      margin: 0;
+      font-size: 26px;
+      font-family: 'Courier New', Courier, monospace;
+      letter-spacing: .5px;
+    }
+    #inspector .head .insp-title-row .back-btn{ margin-left: auto; }
+    #inspector .head .insp-npreuve{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 2px solid rgba(0,0,0,.65);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    #inspector .head .insp-npreuve input{
+      flex: 1;
+      border: 1.5px solid rgba(0,0,0,.6);
+      border-radius: 4px;
+      background: rgba(255,255,255,.35);
+      padding: 4px 8px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      outline: none;
+      max-width: 160px;
+    }
+    #inspector .grid-head{
+      grid-template-columns: 44px 1fr 80px 110px !important;
+      padding: 10px 6px 8px;
+      font-size: 12px;
+      line-height: 1.3;
+      border-bottom: 3px solid rgba(0,0,0,.75);
+      font-family: 'Courier New', Courier, monospace;
+    }
+    #inspector .row{
+      display: grid !important;
+      grid-template-columns: 44px 1fr 80px 110px;
+      align-items: stretch;
+      border-bottom: 1.5px solid rgba(120,95,55,.4);
+      min-height: 64px;
+      padding: 0 !important;
+      gap: 0;
+      font-weight: 400;
+    }
+    #inspector .row-num{
+      font-size: 24px;
+      font-weight: 400;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 10px 4px 10px 10px;
+      color: rgba(0,0,0,.8);
+      display: flex;
+      align-items: center;
+    }
+    #inspector .row-question{
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+    }
+    #inspector .row-question textarea{
+      border: none !important;
+      background: transparent !important;
+      resize: none;
+      min-height: 44px;
+      outline: none !important;
+      width: 100%;
+      padding: 2px 0;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    #inspector .row-analyse{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-right: 2.5px solid rgba(0,0,0,.7);
+    }
+    #inspector .row-piece{
+      display: flex;
+      align-items: center;
+      padding: 6px 8px;
+    }
+    #inspector .row-piece input[type="text"]{
+      border: none !important;
+      background: transparent !important;
+      outline: none !important;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 2px 0;
+    }
+
+    @media (max-width: 480px){
+      .topbar .brand .game-logo{ width:120px; }
+      #home .head .game-logo{ width:150px; }
+
+      /* INSPECTEUR mobile */
+      #inspector .head .insp-title-row{
+        padding: 10px 10px 8px;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      #inspector .head .insp-title-row h1{
+        font-size: 22px;
+      }
+      #inspector .head .insp-title-row .back-btn{
+        margin-left: auto;
+        padding: 8px 10px;
+      }
+      #inspector .head .insp-npreuve{
+        padding: 8px 10px;
+        gap: 8px;
+      }
+      #inspector .head .insp-npreuve input{
+        max-width: none;
+      }
+      #inspector .body{
+        overflow-x: auto;
+      }
+      #inspector .grid-head{
+        display: grid !important;
+        grid-template-columns: 30px 1fr 58px 92px !important;
+        padding: 8px 4px 6px;
+        font-size: 11px;
+      }
+      #inspector .row{
+        grid-template-columns: 30px 1fr 58px 92px !important;
+        min-height: 56px;
+      }
+      #inspector .row-num{
+        font-size: 19px;
+        padding: 8px 4px 8px 6px;
+      }
+      #inspector .row-question{
+        padding: 6px 8px;
+      }
+      #inspector .row-question textarea{
+        min-height: 40px;
+        font-size: 14px;
+      }
+      #inspector .row-piece{
+        padding: 6px;
+      }
+      #inspector .row-piece input[type="text"]{
+        font-size: 13px;
+      }
+      #inspector .square{
+        width: 28px;
+        height: 28px;
+      }
+
+      /* SUSPECT mobile */
+      #suspect .grid-head{ padding: 8px 4px 6px; }
+      #suspect .row{
+        grid-template-columns: 36px 1fr 64px 52px !important;
+        min-height: 56px;
+      }
+      #suspect .row-num{ font-size: 20px; padding: 8px 4px 8px 6px; }
+      #suspect .row-pts select{ width: 48px; font-size: 14px; }
+      .scene{height:74px}
+      .scene .thief{font-size:28px}
+    }
+
+    @media (min-width: 540px){
+      .download-actions{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <img class="game-logo" src="../../assets/GAV1.png" alt="Logo GAV" />
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section class="paper" id="home">
+      <div class="head">
+        <div class="muted">Choisis ton rôle</div>
+      </div>
+      <div class="body" style="display:flex;flex-direction:column;gap:10px">
+        <div class="download-card">
+          <div class="title">Télécharger les feuilles</div>
+          <div class="download-actions">
+            <a class="btn" href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer">Feuille Police</a>
+            <a class="btn light" href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer">Feuille Suspect</a>
+          </div>
+        </div>
+        <button class="btn" id="goSuspect">Suspect</button>
+        <button class="btn light" id="goInspector">Inspecteur</button>
+      </div>
+    </section>
+
+    <div style="padding:12px;border-radius:12px;border:2px solid rgba(0,0,0,.25);background:rgba(255,255,255,.3);font-size:13px;line-height:1.5">
+      Tu as aimé GAV ? Découvre <strong>Cambrouillolage</strong> — la fuite des voleurs avant de se faire attraper !<br>
+      <a href="https://fiascogames.fr/cambrouillolage/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#b45309;color:#fff;font-weight:800;border-radius:10px;text-decoration:none">Découvrir →</a>
+    </div>
+
+    <!-- INSPECTEUR -->
+    <section class="paper" id="inspector" style="display:none">
+      <div class="head">
+        <div class="insp-title-row">
+          <span style="font-size:28px">👮</span>
+          <h1>Carnet d'enquête</h1>
+          <button class="btn inline light back-btn" id="backFromInspector">Accueil</button>
+        </div>
+        <div class="insp-npreuve">
+          <span>N°preuve</span>
+          <input type="text" id="npreuve" placeholder="" />
+        </div>
+      </div>
+      <div class="body" style="padding:0">
+        <div class="grid-head" style="grid-template-columns:44px 1fr 80px 110px">
+          <div></div>
+          <div style="text-align:center">Questions</div>
+          <div style="text-align:center;line-height:1.2">Analyse<br>effectuée</div>
+          <div style="text-align:center;line-height:1.2">Pièces à<br>conviction</div>
+        </div>
+        <div id="inspectorRows"></div>
+      </div>
+    </section>
+
+    <!-- SUSPECT -->
+    <section class="paper" id="suspect" style="display:none">
+      <div class="head">
+        <h1>Alibi</h1>
+        <button class="btn inline light" id="backFromSuspect">Accueil</button>
+      </div>
+      <div class="body">
+        <div class="grid-head" style="grid-template-columns:44px 1fr 80px 66px">
+          <div></div>
+          <div></div>
+          <div style="text-align:center">Super<br>Alibi</div>
+          <div style="text-align:center">Pts</div>
+        </div>
+
+        <div class="verdict-scene" id="verdictScene" aria-live="polite">
+          <div class="verdict-title" id="verdictTitle"></div>
+          <div class="scene jail" id="jailScene" style="display:none">
+            <span class="thief t1">🥷</span>
+            <span class="thief t2">🥷</span>
+            <span class="thief t3">🥷</span>
+            <div class="bars" aria-hidden="true"></div>
+          </div>
+          <div class="scene flee" id="fleeScene" style="display:none">
+            <span class="thief t1">😄🥷</span>
+            <span class="thief t2">😄🥷</span>
+            <span class="thief t3">😄🥷</span>
+          </div>
+        </div>
+
+        <div id="suspectRows"></div>
+
+        <div class="two" style="margin-top:12px">
+          <div class="panel">
+            <div class="muted">Total (somme des points)</div>
+            <div style="font-size:28px;font-weight:1000" id="suspectTotal">0</div>
+          </div>
+          <div class="panel">
+            <div class="muted">Total du binôme (option)</div>
+            <input type="number" id="partnerTotal" placeholder="Ex: 12" />
+            <div style="margin-top:8px;font-weight:1000">
+              Score final : <span id="finalTotal">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sentences">
+          <div class="sent-title">Échelle des condamnations</div>
+          <div class="bar" aria-hidden="true">
+            <div class="seg red" style="left:0%;width:78%"></div>
+            <div class="seg green" style="left:78%;width:22%"></div>
+          </div>
+
+          <div class="scale">
+            <div class="tick">
+              <div class="lbl" style="color:var(--red)">Perpétuité</div>
+              <div class="dot"></div>
+              <div class="pts">&gt;0 pts</div>
+            </div>
+            <div class="tick">
+              <div class="lbl" style="color:var(--red)">20 ans<br/>ferme</div>
+              <div class="dot"></div>
+              <div class="pts">5 pts</div>
+            </div>
+            <div class="tick">
+              <div class="lbl" style="color:var(--red)">3 ans<br/>sursis</div>
+              <div class="dot"></div>
+              <div class="pts">10 pts</div>
+            </div>
+            <div class="tick">
+              <div class="lbl" style="color:var(--red)">21 jours<br/>en prison</div>
+              <div class="dot"></div>
+              <div class="pts">14 pts</div>
+            </div>
+            <div class="tick">
+              <div class="lbl" style="color:var(--red)">Libéré(e)<br/>sous caution</div>
+              <div class="dot"></div>
+              <div class="pts">16 pts</div>
+            </div>
+            <div class="tick">
+              <div class="lbl" style="color:var(--green)">Innocent</div>
+              <div class="dot green"></div>
+              <div class="pts" style="color:var(--green)">18 pts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const LS_KEY = "fiasco_sheet_simple_v1";
+
+    const home = document.getElementById("home");
+    const inspector = document.getElementById("inspector");
+    const suspect = document.getElementById("suspect");
+
+    const inspectorRows = document.getElementById("inspectorRows");
+    const suspectRows = document.getElementById("suspectRows");
+
+    const suspectTotalEl = document.getElementById("suspectTotal");
+    const partnerTotalEl = document.getElementById("partnerTotal");
+    const finalTotalEl = document.getElementById("finalTotal");
+    const verdictSceneEl = document.getElementById("verdictScene");
+    const verdictTitleEl = document.getElementById("verdictTitle");
+    const jailSceneEl = document.getElementById("jailScene");
+    const fleeSceneEl = document.getElementById("fleeScene");
+
+    const state = {
+      role: "home",
+      questions: Array.from({length: 8}, (_,i)=>({
+        id:i+1,
+        text:"",
+        piece:"",
+        analyse:false
+      })),
+      suspect: Array.from({length:8}, (_,i)=>({
+        id:i+1,
+        answer:"",
+        super:false,
+        pts:0
+      })),
+      partnerTotal: ""
+    };
+
+    function show(which){
+      home.style.display = which==="home" ? "" : "none";
+      inspector.style.display = which==="inspector" ? "" : "none";
+      suspect.style.display = which==="suspect" ? "" : "none";
+      state.role = which;
+    }
+
+    function makeSquare(checked, onToggle){
+      const label = document.createElement("label");
+      label.className = "square" + (checked ? " on" : "");
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = checked;
+      label.appendChild(input);
+      label.addEventListener("click", (e)=>{
+        e.preventDefault();
+        onToggle(!checked);
+      });
+      return label;
+    }
+
+    function renderInspector(){
+      inspectorRows.innerHTML = "";
+      state.questions.forEach((q, idx)=>{
+        const row = document.createElement("div");
+        row.className = "row";
+
+        // Numéro
+        const numEl = document.createElement("div");
+        numEl.className = "row-num";
+        numEl.textContent = String(q.id);
+
+        // Question textarea
+        const qWrap = document.createElement("div");
+        qWrap.className = "row-question";
+        const taQ = document.createElement("textarea");
+        taQ.placeholder = "Inscris ta question";
+        taQ.value = q.text;
+        taQ.addEventListener("input", ()=>{
+          state.questions[idx].text = taQ.value;
+          syncQuestionsToSuspect();
+        });
+        qWrap.appendChild(taQ);
+
+        // Analyse checkbox
+        const analyseWrap = document.createElement("div");
+        analyseWrap.className = "row-analyse";
+        analyseWrap.appendChild(makeSquare(q.analyse, (v)=>{
+          state.questions[idx].analyse = v;
+          renderInspector();
+        }));
+
+        // Pièce à conviction
+        const pieceWrap = document.createElement("div");
+        pieceWrap.className = "row-piece";
+        const inpPiece = document.createElement("input");
+        inpPiece.type = "text";
+        inpPiece.placeholder = "";
+        inpPiece.value = q.piece;
+        inpPiece.addEventListener("input", ()=>{ state.questions[idx].piece = inpPiece.value; });
+        pieceWrap.appendChild(inpPiece);
+
+        row.appendChild(numEl);
+        row.appendChild(qWrap);
+        row.appendChild(analyseWrap);
+        row.appendChild(pieceWrap);
+
+        inspectorRows.appendChild(row);
+      });
+    }
+
+    function syncQuestionsToSuspect(){
+      renderSuspect();
+    }
+
+    function renderSuspect(){
+      suspectRows.innerHTML = "";
+
+      state.suspect.forEach((s, idx)=>{
+        const q = state.questions[idx];
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        // Numéro
+        const numEl = document.createElement("div");
+        numEl.className = "row-num";
+        numEl.textContent = String(s.id);
+
+        // Zone de réponse
+        const answerWrap = document.createElement("div");
+        answerWrap.className = "row-answer";
+        const taA = document.createElement("textarea");
+        taA.placeholder = "Inscris ta réponse";
+        taA.value = s.answer;
+        taA.addEventListener("input", ()=>{ state.suspect[idx].answer = taA.value; });
+        answerWrap.appendChild(taA);
+
+        // Super Alibi checkbox
+        const superWrap = document.createElement("div");
+        superWrap.className = "row-super";
+        const superCheck = makeSquare(s.super, (v)=>{
+          state.suspect[idx].super = v;
+          const allowed = v ? [2, -1] : [1, 0, -1];
+          if(!allowed.includes(Number(state.suspect[idx].pts))){
+            state.suspect[idx].pts = allowed[0];
+          }
+          renderSuspect();
+        });
+        superWrap.appendChild(superCheck);
+
+        // Pts
+        const ptsWrap = document.createElement("div");
+        ptsWrap.className = "row-pts";
+        const pts = document.createElement("select");
+        const scoreOptions = s.super ? [2, -1] : [1, 0, -1];
+        if(!scoreOptions.includes(Number(s.pts))){
+          state.suspect[idx].pts = scoreOptions[0];
+        }
+        scoreOptions.forEach((val)=>{
+          const opt = document.createElement("option");
+          opt.value = String(val);
+          opt.textContent = String(val);
+          pts.appendChild(opt);
+        });
+        pts.value = String(state.suspect[idx].pts);
+        pts.addEventListener("change", ()=>{
+          state.suspect[idx].pts = Number(pts.value);
+          updateTotals();
+        });
+        ptsWrap.appendChild(pts);
+
+        row.appendChild(numEl);
+        row.appendChild(answerWrap);
+        row.appendChild(superWrap);
+        row.appendChild(ptsWrap);
+
+        suspectRows.appendChild(row);
+      });
+
+      updateTotals();
+    }
+
+    function updateTotals(){
+      const sum = state.suspect.reduce((acc, s)=> acc + (Number(s.pts)||0), 0);
+      suspectTotalEl.textContent = String(sum);
+
+      const partnerVal = partnerTotalEl.value.trim();
+      if(partnerVal === ""){
+        finalTotalEl.textContent = "—";
+      } else {
+        const p = Number(partnerVal);
+        finalTotalEl.textContent = Number.isFinite(p) ? String(sum + p) : "—";
+      }
+
+      renderVerdictScene(sum, partnerVal);
+    }
+
+    function renderVerdictScene(sum, partnerVal){
+      const allAnswersFilled = state.suspect.every((s)=> s.answer.trim() !== "");
+      const partner = Number(partnerVal);
+      const partnerReady = partnerVal !== "" && Number.isFinite(partner);
+
+      if(!allAnswersFilled || !partnerReady){
+        verdictSceneEl.classList.remove("show");
+        jailSceneEl.style.display = "none";
+        fleeSceneEl.style.display = "none";
+        return;
+      }
+
+      const final = sum + partner;
+      verdictSceneEl.classList.add("show");
+      verdictTitleEl.textContent = `Score final: ${final}`;
+
+      if(final >= 18){
+        verdictTitleEl.textContent += " - Les voleurs s'enfuient, libres.";
+        jailSceneEl.style.display = "none";
+        fleeSceneEl.style.display = "block";
+      } else {
+        verdictTitleEl.textContent += " - Les voleurs restent derriere les barreaux.";
+        jailSceneEl.style.display = "block";
+        fleeSceneEl.style.display = "none";
+      }
+    }
+
+    function load(){
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return;
+      try{
+        const data = JSON.parse(raw);
+        if(data?.questions?.length===8) state.questions = data.questions;
+        if(data?.suspect?.length===8) state.suspect = data.suspect;
+        if(typeof data?.partnerTotal === "string") state.partnerTotal = data.partnerTotal;
+        if(["home","inspector","suspect"].includes(data?.role)) state.role = data.role;
+      }catch{}
+      partnerTotalEl.value = state.partnerTotal || "";
+    }
+
+    function reset(){
+      localStorage.removeItem(LS_KEY);
+      location.reload();
+    }
+
+    // Events
+    document.getElementById("goInspector").addEventListener("click", ()=>{ show("inspector"); renderInspector(); });
+    document.getElementById("goSuspect").addEventListener("click", ()=>{ show("suspect"); renderSuspect(); });
+
+    document.getElementById("backFromInspector").addEventListener("click", ()=> show("home"));
+    document.getElementById("backFromSuspect").addEventListener("click", ()=> show("home"));
+
+    partnerTotalEl.addEventListener("input", updateTotals);
+
+    // Init
+    load();
+    show(state.role || "home");
+    renderInspector();
+    renderSuspect();
+  </script>
+</body>
+</html>
