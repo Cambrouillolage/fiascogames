@@ -2,107 +2,1191 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GAV - Page en preparation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GAV - Le jeu d'ambiance simple et drôle</title>
+  <meta name="description" content="GAV: le jeu d'ambiance simple et drôle où vous devez avoir le même alibi que votre complice." />
   <link rel="icon" type="image/png" href="../assets/GAV1.png" />
   <style>
-    :root {
-      --bg: #f7f2e8;
-      --ink: #1b1b1b;
-      --paper: #fffaf1;
-      --line: #2b2b2b;
-      --accent: #bb1e10;
+    :root{
+      --bg:#f3ede1;
+      --bg-2:#f9f5ec;
+      --dark:#131313;
+      --dark-soft:#222;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+      --green:#2d9e48;
+      --max:1200px;
+      --shadow:0 14px 30px rgba(19,19,19,.16);
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
+    html,body{height:100%; overflow-x:hidden}
+    body{
+      margin:0;
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      color: var(--ink);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    .container{width:min(var(--max), calc(100% - 32px)); margin:0 auto}
+
+    .topNav{
+      position:sticky;
+      top:0;
+      z-index:90;
+      background:linear-gradient(180deg, #111, #1a1a1a);
+      border-bottom:1px solid rgba(255,255,255,.12);
+      box-shadow:0 6px 16px rgba(0,0,0,.28);
+    }
+    .topNavInner{
+      min-height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff}
+    .brand img{height:42px; width:auto}
+
+    .menuBtn{display:none; border:1px solid rgba(255,255,255,.2); background:transparent; color:#fff; border-radius:10px; padding:10px 12px; font-weight:800}
+    .navLinks{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+    .navLinks a{
+      color:#fff;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.02em;
+      opacity:.88;
+      padding:6px 0;
+      border-bottom:2px solid transparent;
+    }
+    .navLinks a:hover,
+    .navLinks a.isActive{opacity:1; border-color:var(--orange)}
+
+    .navCtas{display:flex; gap:10px; align-items:center}
+    .btn{
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:10px;
+      padding:11px 14px;
+      font-weight:800;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:transform .2s ease, filter .2s ease;
+      cursor:pointer;
+    }
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.06)}
+    .btnGhost{color:#fff; background:transparent}
+    .btnPrimary{color:#fff; background:linear-gradient(180deg, #ff8c2c, #ea6f11); border-color:#df6410}
+
+    .hero{
       background:
-        radial-gradient(900px 500px at 15% 0%, rgba(0, 0, 0, 0.08), transparent),
-        radial-gradient(900px 500px at 85% 100%, rgba(187, 30, 16, 0.12), transparent),
-        var(--bg);
+        radial-gradient(760px 400px at 18% 16%, rgba(255,168,91,.12), transparent 68%),
+        radial-gradient(620px 360px at 82% 80%, rgba(255,255,255,.07), transparent 68%),
+        linear-gradient(180deg, #181818, #101010);
+      color:#fff;
+      padding:34px 0 28px;
+      border-bottom:2px solid rgba(255,255,255,.08);
+    }
+    .heroGrid{display:grid; grid-template-columns:1.05fr 1fr; gap:22px; align-items:center}
+    .heroKicker{
+      margin:0;
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      font-size:14px;
+      font-weight:800;
+      color:var(--orange-2);
+    }
+    .heroTitle{
+      margin:0;
+      font-size:clamp(52px, 9vw, 112px);
+      line-height:.82;
+      letter-spacing:.01em;
+      color:var(--orange);
+      font-weight:900;
+      text-transform:uppercase;
+      text-shadow:0 5px 18px rgba(234,111,17,.2);
+    }
+    .heroLead{
+      margin:12px 0 0;
+      font-size:clamp(30px, 3.5vw, 44px);
+      font-weight:900;
+      line-height:.96;
+    }
+    .heroLead .accent{color:var(--orange)}
+    .heroCopy{
+      margin:14px 0 0;
+      max-width:46ch;
+      color:#ebe6dd;
+      font-size:22px;
+      line-height:1.28;
+      font-weight:600;
+    }
+    .heroCopy strong{color:var(--orange-2)}
+
+    .storeRow{margin-top:20px; display:flex; gap:9px; flex-wrap:wrap}
+    .storeBtn{
+      background:#fff;
+      color:#222;
+      border:1px solid #cec2ac;
+      border-radius:8px;
+      height:45px;
+      min-width:100px;
+      padding:0 16px;
+      font-size:27px;
+      font-weight:800;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow);
+    }
+    .storeBtn.fnac{background:#f6bf33; color:#fff}
+    .storeBtn.cultura{background:#215b9e; color:#fff}
+
+    .metaRow{margin-top:14px; display:flex; flex-wrap:wrap; gap:8px}
+    .metaChip{
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:8px;
+      padding:8px 10px;
+      color:#f7efe5;
+      font-size:12px;
+      font-weight:800;
+      background:rgba(255,255,255,.04);
     }
 
-    .card {
-      width: min(720px, 100%);
-      background: var(--paper);
-      border: 2px solid var(--line);
-      border-radius: 16px;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
-      padding: 24px;
+    .heroVisual{position:relative; min-height:420px; display:grid; place-items:center}
+    .heroBox{width:min(460px, 92%); filter:drop-shadow(0 24px 32px rgba(0,0,0,.5))}
+    .heroCard{
+      position:absolute;
+      width:170px;
+      border-radius:14px;
+      background:#fff8eb;
+      box-shadow:0 16px 26px rgba(0,0,0,.24);
+      padding:14px;
+      color:#1d1d1d;
+      font-weight:800;
+      font-size:15px;
+      line-height:1.18;
+      text-align:center;
+    }
+    .heroCard.card1{left:1%; top:26%; transform:rotate(-9deg)}
+    .heroCard.card2{right:1%; top:8%; transform:rotate(8deg)}
+    .heroCard.card3{right:4%; bottom:8%; transform:rotate(-6deg)}
+
+    .section{padding:36px 0}
+    .sectionTitle{
+      margin:0;
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+      font-size:46px;
+      line-height:.9;
+      font-weight:900;
+    }
+    .sectionTitle .accent{color:var(--orange)}
+
+    .stepsLayout{
+      margin-top:18px;
+      display:grid;
+      gap:16px;
+      width:100%;
+      max-width:100%;
+    }
+    .stepsBottom{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      min-width:0;
+      width:100%;
+      max-width:100%;
+    }
+    .stepCard{
+      border:2px solid #d7c8af;
+      border-radius:14px;
+      background:var(--bg-2);
+      padding:14px;
+      box-shadow:0 10px 20px rgba(36,22,8,.08);
+      min-width:0;
+      width:100%;
+      max-width:100%;
+    }
+    .stepCard.isPrimary{
+      padding:18px;
+      background:linear-gradient(180deg, #fbf6ec, #f6eddd);
+    }
+    .stepHead{display:flex; align-items:flex-start; gap:10px; margin-bottom:10px}
+    .stepNo{
+      width:38px; height:38px; border-radius:50%;
+      display:grid; place-items:center;
+      background:#171717; color:#fff; font-weight:900; font-size:21px;
+      flex:0 0 38px;
+    }
+    .stepTitle{margin:0; text-transform:uppercase; line-height:1; font-size:26px; font-weight:900}
+    .stepTitle .accent{color:var(--orange)}
+    .stepVisual{display:grid; grid-template-columns:140px minmax(0,1fr); gap:11px; align-items:center; min-width:0}
+    .stepVisual img{width:100%; height:auto; display:block; filter:drop-shadow(0 8px 14px rgba(0,0,0,.2))}
+    .stepVisual.onlyText{grid-template-columns:1fr}
+    .stepText{font-size:14px; color:#3f372f; line-height:1.3; font-weight:700; min-width:0; overflow-wrap:anywhere}
+    .stepCard.isPrimary .stepVisual{
+      grid-template-columns:minmax(0,170px) minmax(0,1fr);
+      gap:14px;
+    }
+    .stepCard.isPrimary .stepTitle{font-size:32px}
+    .stepCard.isPrimary .stepText{font-size:17px; line-height:1.35}
+    .stepCard.isPrimary .stepVisual.onlyText{
+      display:block;
+    }
+    .stepCard.isPrimary .stepVisual.onlyText .stepText{
+      width:100%;
+      max-width:none;
+      font-size:16px;
+      line-height:1.55;
+      margin:0;
+    }
+    .stepCard.isPrimary .stepVisual.onlyText .stepText p{
+      margin:0 0 10px;
+    }
+    .stepCard.isPrimary .stepVisual.onlyText .stepText p:last-child{
+      margin-bottom:0;
+    }
+    .stepCard.isPrimary .stepVisual.onlyText .stepText .stepLead{
+      font-size:clamp(19px, 2.1vw, 24px);
+      font-weight:900;
+      color:var(--ink);
+      margin-bottom:10px;
     }
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(1.6rem, 4vw, 2.1rem);
-      line-height: 1.15;
+    .stepsBottom .stepVisual{
+      grid-template-columns:minmax(0, 220px) minmax(0, 1fr);
+      gap:16px;
+      align-items:center;
+      background:transparent;
+      min-width:0;
+    }
+    .stepsBottom .stepVisual img{
+      width:100%;
+      max-width:210px;
+      justify-self:center;
+      filter:none;
+      background:transparent;
+      border:0;
+      box-shadow:none;
+      transition:transform .28s ease;
+      transform:translateY(var(--assetShift, 0px));
+    }
+    .stepsBottom .stepText{
+      margin:0;
+      position:relative;
+      z-index:1;
+      min-width:0;
+    }
+    .stepsBottom .stepCard{
+      background:transparent;
+      box-shadow:none;
+      border:1px solid rgba(120,85,52,.20);
+      max-width:100%;
+    }
+    .stepsBottom .stepCard:hover .stepVisual img{
+      transform:translateY(calc(var(--assetShift, 0px) - 6px)) scale(1.03);
     }
 
-    p {
-      margin: 0 0 20px;
-      font-size: 1rem;
-      opacity: 0.9;
+    .stepsRiver{
+      margin-top:20px;
+      min-height:212px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:0;
+      overflow:visible;
+      perspective:1200px;
+      --riverShift:0px;
+      --riverWobble:0px;
+      --riverFlip:0deg;
+    }
+    .stepsRiverCard{
+      width:min(180px, 22vw);
+      margin-left:-54px;
+      filter:drop-shadow(0 12px 16px rgba(0,0,0,.18));
+      transform-origin:50% 100%;
+      transition:transform .5s cubic-bezier(.22,.85,.32,1), opacity .4s ease;
+      transform-style:preserve-3d;
+      backface-visibility:hidden;
+      --card-y:0px;
+      --card-r:0deg;
+      --card-m:1;
+      --dealX:0px;
+      --hoverLift:0px;
+      --hoverFlip:0deg;
+      --dealProgress:1;
+      --takeProgress:0;
+      --motionBoost:1;
+      position:relative;
+      opacity:calc(1 - var(--takeProgress));
+      transform:
+        translateX(calc(var(--dealX) * (1 - var(--dealProgress))))
+        translateY(calc(
+          var(--card-y)
+          + ((var(--riverShift) + var(--riverWobble)) * var(--card-m))
+          + var(--hoverLift)
+          + ((1 - var(--dealProgress)) * -54px * var(--motionBoost))
+          + (var(--takeProgress) * -240px * var(--motionBoost))
+        ))
+        rotate(calc((var(--card-r) * var(--dealProgress)) + ((1 - var(--dealProgress)) * var(--card-m) * -14deg * var(--motionBoost)) + (var(--takeProgress) * var(--card-m) * 30deg * var(--motionBoost))))
+        scale(calc(0.78 + (var(--dealProgress) * 0.22) - (var(--takeProgress) * 0.34)))
+        rotateY(calc((var(--riverFlip) * var(--card-m)) + var(--hoverFlip)));
+    }
+    .stepsRiverCard:hover{
+      --hoverLift:-8px;
+      --hoverFlip:10deg;
+    }
+    .stepsRiverCard:first-child{margin-left:0; --card-y:6px; --card-r:-12deg; --card-m:1; --dealX:150px; z-index:1}
+    .stepsRiverCard:nth-child(2){--card-y:-5px; --card-r:-4deg; --card-m:-.7; --dealX:50px; z-index:2}
+    .stepsRiverCard:nth-child(3){--card-y:-9px; --card-r:6deg; --card-m:.8; --dealX:-50px; z-index:3}
+    .stepsRiverCard:nth-child(4){--card-y:4px; --card-r:13deg; --card-m:-.9; --dealX:-150px; z-index:4}
+    .stepsRiverCard img{
+      width:100%;
+      height:auto;
+      display:block;
+      background:transparent;
+      border:0;
+      box-shadow:none;
     }
 
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+    .valueBand{
+      background:linear-gradient(180deg, #191919, #121212);
+      border-top:1px solid rgba(255,255,255,.14);
+      border-bottom:1px solid rgba(255,255,255,.14);
+      padding:30px 0 34px;
+      color:#fff;
+    }
+    .valueBand .sectionTitle{color:#fff}
+    .whyGrid{
+      margin-top:20px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .whyCard{
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      padding:18px 14px;
+      text-align:center;
+    }
+    .whyIcon{
+      width:54px;
+      height:54px;
+      margin:0 auto 10px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:26px;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      color:#fff;
+      box-shadow:0 8px 14px rgba(234,111,17,.28);
+    }
+    .whyTitle{
+      margin:0;
+      font-size:25px;
+      line-height:1.05;
+      text-transform:uppercase;
+      font-weight:900;
+      color:#fff;
+    }
+    .whyText{
+      margin:10px 0 0;
+      font-size:15px;
+      line-height:1.35;
+      color:#e8dbcc;
+      font-weight:700;
     }
 
-    .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      text-decoration: none;
-      text-align: center;
-      width: 100%;
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-weight: 700;
-      color: #fff;
-      background: #202020;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    .assetRaw{
+      border:0 !important;
+      border-radius:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+      padding:0 !important;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    .scrollAsset{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1);
+      will-change:opacity, transform;
+    }
+    .jsReveal .scrollAsset{
+      opacity:0;
+      transform:translateY(24px) scale(.96);
+    }
+    .jsReveal .scrollAsset.isInView{
+      opacity:1;
+      transform:translateY(0) scale(1);
     }
 
-    .btn.police {
-      background: var(--accent);
+    .faqWrap{display:block; margin-top:18px}
+    .faqList{display:grid; gap:8px}
+    .faqItem{
+      border:2px solid #d9ccba;
+      border-radius:10px;
+      background:#fffbf2;
+      overflow:hidden;
+    }
+    .faqItem summary{
+      list-style:none;
+      cursor:pointer;
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+      color:#2a2520;
+      text-transform:uppercase;
+      font-size:15px;
+    }
+    .faqItem summary::-webkit-details-marker{display:none}
+    .faqItem summary .q{display:flex; align-items:center; gap:8px}
+    .faqItem summary .qno{font-size:13px; color:var(--orange)}
+    .faqItem p{margin:0; padding:0 14px 12px; color:#5b5248; line-height:1.35; font-weight:700; font-size:14px}
+    .chev{transition:transform .22s ease; color:var(--orange); font-size:17px}
+    .faqItem[open] .chev{transform:rotate(180deg)}
+
+    .buyBand{
+      margin-top:14px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:10px;
+      background:linear-gradient(180deg, #171717, #111);
+      color:#fff;
+      padding:18px;
+      display:grid;
+      grid-template-columns:1fr auto 1.2fr;
+      gap:16px;
+      align-items:center;
+    }
+    .buyTitle{margin:0; text-transform:uppercase; font-weight:900; font-size:57px; line-height:.9}
+    .buyTitle .accent{color:var(--orange)}
+    .buyLead{margin:8px 0 0; color:#ddd3c7; font-weight:700; line-height:1.3; font-size:17px}
+    .buyBox img{width:133px; height:auto; filter:drop-shadow(0 12px 18px rgba(0,0,0,.35))}
+    .buyRight h3{margin:0; text-transform:uppercase; font-size:39px; line-height:.95; font-weight:900}
+    .buyStores{margin-top:12px; display:flex; gap:9px; flex-wrap:wrap}
+    .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
+
+    .buyModalBackdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,12,8,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:200;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+    }
+    .buyModalBackdrop.isOpen{opacity:1; pointer-events:auto}
+    .buyModal{
+      position:relative;
+      width:min(420px, 100%);
+      background:var(--bg-2);
+      border-radius:14px;
+      padding:30px 26px 26px;
+      text-align:center;
+      box-shadow:0 24px 60px rgba(0,0,0,.4);
+      transform:translateY(10px);
+      transition:transform .2s ease;
+    }
+    .buyModalBackdrop.isOpen .buyModal{transform:translateY(0)}
+    .buyModalClose{
+      position:absolute;
+      top:10px;
+      right:10px;
+      width:32px;
+      height:32px;
+      border:none;
+      border-radius:999px;
+      background:transparent;
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+    }
+    .buyModalClose:hover{background:var(--line)}
+    .buyModalTitle{margin:0; font-size:24px; font-weight:900; text-transform:uppercase; color:var(--ink)}
+    .buyModalTitle .accent{color:var(--orange)}
+    .buyModalText{margin:12px 0 0; color:var(--muted); font-size:15px; line-height:1.4}
+    .buyModalActions{margin-top:20px}
+
+    .stickyBuyBar{
+      position:fixed;
+      left:10px;
+      right:10px;
+      bottom:10px;
+      z-index:120;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.22);
+      background:linear-gradient(180deg, #171717, #111);
+      color:#fff;
+      box-shadow:0 14px 26px rgba(0,0,0,.35);
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      transform:translateY(130%);
+      opacity:0;
+      pointer-events:none;
+      transition:transform .28s ease, opacity .28s ease;
+      display:none;
+    }
+    .stickyBuyBar.isVisible{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+    .stickyBuyText{font-size:13px; line-height:1.2; font-weight:800; color:#f5e7d7}
+    .stickyBuyBtn{
+      text-decoration:none;
+      background:linear-gradient(180deg, #ff8c2c, #ea6f11);
+      color:#fff;
+      border:1px solid #df6410;
+      border-radius:9px;
+      padding:9px 12px;
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+      text-transform:uppercase;
+      letter-spacing:.02em;
     }
 
-    .small {
-      margin-top: 16px;
-      font-size: 0.92rem;
-      opacity: 0.75;
+    .isCompactMobile .stepsLayout,
+    .isCompactMobile .stepsBottom,
+    .isCompactMobile .stepCard,
+    .isCompactMobile .stepCard.isPrimary{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+    }
+    .isCompactMobile .stepsBottom{
+      display:block;
+    }
+    .isCompactMobile .stepsBottom .stepCard{
+      margin-top:16px;
+    }
+    .isCompactMobile .stepsBottom .stepVisual{
+      display:grid;
+      grid-template-columns:minmax(92px, 120px) minmax(0, 1fr);
+      gap:12px;
+      width:100%;
+      max-width:100%;
+    }
+    .isCompactMobile .stepsBottom .stepVisual img{
+      width:100%;
+      max-width:120px;
+    }
+    .stepsRiverHint{display:none}
+    .stepsRiver:focus{outline:none}
+    .stepsRiver:focus-visible{
+      outline:none;
+      box-shadow:0 0 0 3px rgba(234,111,17,.5);
+      border-radius:16px;
+    }
+    .isCompactMobile .stepsRiver{
+      display:block;
+      position:relative;
+      width:100%;
+      max-width:240px;
+      aspect-ratio:1 / 1;
+      min-height:0;
+      margin:18px auto 12px;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+    .isCompactMobile .stepsRiverHint{
+      display:block;
+      margin:10px auto 0;
+      text-align:center;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .isCompactMobile .stepsRiverCard{
+      position:absolute;
+      left:50%;
+      top:48%;
+      width:66%;
+      max-width:none;
+      aspect-ratio:1 / 1;
+      margin:0;
+      --stackX:0px;
+      --stackY:0px;
+      --stackRot:0deg;
+      opacity:1;
+      transition:transform .45s cubic-bezier(.22,.85,.32,1), opacity .3s ease;
+      transform:translate(-50%, -50%) translate(var(--stackX), var(--stackY)) rotate(var(--stackRot));
     }
 
-    @media (min-width: 640px) {
-      .actions {
-        grid-template-columns: 1fr 1fr;
-      }
+    footer{
+      margin-top:16px;
+      background:#111;
+      color:#fff;
+      border-top:1px solid rgba(255,255,255,.13);
+      padding:24px 0 10px;
+    }
+    .footGrid{display:grid; grid-template-columns:1.1fr .7fr .7fr .7fr .9fr; gap:14px; align-items:start}
+    .footLogo img{height:38px; width:auto}
+    .footText{margin-top:8px; color:#d6c9b9; line-height:1.35; font-size:13px; font-weight:700}
+    .footCol h4{margin:0 0 8px; text-transform:uppercase; font-size:12px; letter-spacing:.09em; color:#ffb06c}
+    .footCol a{display:block; text-decoration:none; color:#fff; opacity:.86; font-size:13px; margin:5px 0; font-weight:700}
+    .footCol a:hover{opacity:1; color:#ffb06c}
+    .footBottom{
+      margin-top:14px;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.1);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      color:#cabaa7;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    @media (max-width:1080px){
+      .heroGrid{grid-template-columns:1fr}
+      .heroVisual{min-height:380px}
+      .heroCard.card1{left:6%; top:8%}
+      .heroCard.card2{right:6%; top:0}
+      .stepsBottom{grid-template-columns:1fr 1fr}
+      .stepCard.isPrimary .stepVisual{grid-template-columns:140px 1fr}
+      .stepCard.isPrimary .stepTitle{font-size:28px}
+      .stepCard.isPrimary .stepText{font-size:15px}
+      .whyGrid{grid-template-columns:1fr}
+      .buyBand{grid-template-columns:1fr}
+      .buyRight h3{text-align:left}
+      .footGrid{grid-template-columns:1fr 1fr}
+      .stepsRiverCard{width:min(160px, 30vw); margin-left:-44px}
+    }
+
+    @media (max-width:820px){
+      .menuBtn{display:none}
+      .brand{display:none}
+      .navLinks{display:none}
+      .navCtas{display:flex}
+      .navCtas .btnGhost{display:none}
+      .navCtas .btnPrimary{padding:9px 16px; font-size:12px}
+      .topNavInner{min-height:64px; justify-content:center}
+      .heroCopy{font-size:18px}
+      .heroCard{width:134px; font-size:13px; padding:10px}
+      .stepVisual{grid-template-columns:120px 1fr}
+      .stepCard.isPrimary .stepVisual{grid-template-columns:120px 1fr}
+      .stepCard.isPrimary .stepTitle{font-size:26px}
+      .stepsBottom{grid-template-columns:1fr}
+      .stepsBottom .stepVisual{grid-template-columns:minmax(100px, 132px) minmax(0, 1fr)}
+      .stepsBottom .stepVisual img{width:100%; max-width:132px}
+      .stickyBuyText{font-size:12px}
+      .stepsRiver{min-height:180px}
+      .stepsRiverCard{width:min(128px, 34vw); margin-left:-34px}
+      .stickyBuyBar{display:flex}
+    }
+
+    @media (max-width:560px){
+      .container{width:min(var(--max), calc(100% - 20px))}
+      .topNavInner{min-height:70px}
+      .hero{padding:22px 0}
+      .heroVisual{min-height:330px}
+      .heroCard.card1{left:2%; top:0}
+      .heroCard.card2{right:2%; top:2%}
+      .heroCard.card3{right:3%; bottom:4%}
+      .storeBtn{font-size:22px; min-width:84px}
+      .sectionTitle{font-size:36px}
+      .stepVisual{grid-template-columns:1fr}
+      .stepCard.isPrimary .stepVisual{grid-template-columns:1fr}
+      .stepCard.isPrimary .stepTitle{font-size:24px}
+      .stepsBottom{grid-template-columns:1fr}
+      .stepsBottom .stepVisual{grid-template-columns:1fr}
+      .stepsBottom .stepVisual img{width:78%; margin:0 auto}
+      .stepsBottom{grid-template-columns:1fr}
+      .stepsRiver{min-height:auto}
+      .buyTitle{font-size:42px}
+      .buyRight h3{font-size:31px}
+      .footGrid{grid-template-columns:1fr}
+      .stickyBuyBar{left:8px; right:8px; bottom:8px; padding:9px 10px}
+      .stickyBuyBtn{padding:8px 10px; font-size:11px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{animation:none !important; transition:none !important; scroll-behavior:auto !important}
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>Page en preparation</h1>
-    <p>Le mode GAV arrive bientot.</p>
-    <div class="actions">
-      <a class="btn police" href="/gav/feuille/">Voir les feuille</a>
+  <header class="topNav">
+    <div class="container topNavInner">
+      <a class="brand" href="../index.html" aria-label="Retour à l'accueil Fiasco Games">
+        <img src="../assets/fiasco-logo.png" alt="Fiasco Games" />
+      </a>
+
+      <button class="menuBtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks">Menu</button>
+
+      <nav class="navLinks" id="navLinks" aria-label="Navigation GAV">
+        <a href="#le-jeu" class="isActive">LE JEU</a>
+        <a href="#comment-jouer">COMMENT JOUER</a>
+        <a href="#pourquoi">POURQUOI ÇA MARCHE</a>
+        <a href="#faq">FAQ</a>
+        <a href="#avis">AVIS</a>
+      </nav>
+
+      <div class="navCtas">
+        <a class="btn btnGhost" href="#achat">OÙ ACHETER ?</a>
+        <a class="btn btnPrimary" href="#achat">ACHETER LE JEU</a>
+      </div>
     </div>
-    <p class="small">Tu peux deja lancer une partie depuis les feuilles interactives.</p>
-  </main>
+  </header>
+
+  <section class="hero" id="le-jeu">
+    <div class="container heroGrid">
+      <div>
+        <p class="heroKicker">Garde à vue</p>
+        <h1 class="heroTitle">GAV</h1>
+        <p class="heroLead">Le jeu d'ambiance <span class="accent">simple et drôle</span><br/>où vous devez avoir<br/>le même alibi que votre complice.</p>
+        <p class="heroCopy">La police prépare ses questions, vous et votre complice inventez votre alibi. Même réponse le jour J ? Vous êtes libres. Sinon... <strong>direction la prison !</strong></p>
+
+        <div class="storeRow" aria-label="Boutons partenaires">
+          <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">amazon</a>
+          <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">fnac</a>
+          <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura">Cultura</a>
+        </div>
+
+        <div class="metaRow" aria-label="Informations de jeu">
+          <span class="metaChip">3 joueurs et +</span>
+          <span class="metaChip">10 min</span>
+          <span class="metaChip">10+ ans</span>
+          <span class="metaChip">Fun</span>
+          <span class="metaChip">Accessible</span>
+        </div>
+      </div>
+
+      <div class="heroVisual" aria-label="Visuel principal GAV">
+        <img class="heroBox scrollAsset assetRaw" src="../assets/box_GAV.png" alt="Boite de jeu GAV" />
+
+        <article class="heroCard card1">ON ÉTAIT<br/>À LA SALLE<br/>DE SPORT</article>
+        <article class="heroCard card2">ON DIT<br/>TOUJOURS LA<br/>MÊME CHOSE !</article>
+        <article class="heroCard card3">ALIBI EN<br/>BÉTON</article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="comment-jouer">
+    <div class="container">
+      <h2 class="sectionTitle">COMMENT <span class="accent">JOUER</span> ?</h2>
+
+      <div class="stepsLayout">
+        <article class="stepCard isPrimary">
+          <div class="stepHead">
+            <span class="stepNo">1</span>
+            <h3 class="stepTitle">DÉVOILEZ<br/>4 CARTES <span class="accent">PREUVES</span></h3>
+          </div>
+          <div class="stepVisual onlyText">
+            <div class="stepText">
+              <p class="stepLead">4 preuves dévoilées.</p>
+              <p>La police s'isole pour préparer ses 8 questions — et répond elle-même à chacune d'elles. Ce sont ses pièces à conviction : un piège tendu aux suspects, car donner la même réponse que la police fait perdre des points.</p>
+              <p>De leur côté, les binômes réfléchissent ensemble à leur alibi, sans avoir le droit de rien noter. Tout repose sur la complicité et la mémoire.</p>
+            </div>
+          </div>
+
+          <div class="stepsRiver" role="button" tabindex="0" aria-label="Amas de cartes preuves, appuyer pour faire passer la carte suivante">
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/26.png" alt="Carte preuve 26" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/38.png" alt="Carte preuve 38" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/64.png" alt="Carte preuve 64" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/74.png" alt="Carte preuve 74" loading="lazy" /></figure>
+          </div>
+          <p class="stepsRiverHint" aria-hidden="true">Touchez pour distribuer la carte suivante</p>
+        </article>
+
+        <div class="stepsBottom">
+          <article class="stepCard">
+            <div class="stepHead">
+              <span class="stepNo">2</span>
+              <h3 class="stepTitle">LA POLICE PRÉPARE<br/>SES <span class="accent">QUESTIONS</span></h3>
+            </div>
+            <div class="stepVisual">
+              <img class="scrollAsset assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
+              <p class="stepText">Pendant que les enquêteurs préparent leurs questions pièges, votre binôme a 3 minutes pour peaufiner son alibi... sans prendre de notes !</p>
+            </div>
+          </article>
+
+          <article class="stepCard">
+            <div class="stepHead">
+              <span class="stepNo">3</span>
+              <h3 class="stepTitle">L'INTERROGATOIRE<br/><span class="accent">COMMENCE</span></h3>
+            </div>
+            <div class="stepVisual">
+              <img class="scrollAsset assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
+              <p class="stepText">Sans plus vous parler, répondez en même temps que votre complice sur votre feuillet Alibi. Même réponse, vous marquez des points. Sinon... direction la prison !</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="valueBand" id="pourquoi">
+    <div class="container">
+      <h2 class="sectionTitle">POURQUOI <span class="accent">GAV</span> FONCTIONNE SI BIEN ?</h2>
+
+      <div class="whyGrid" aria-label="Atouts du jeu GAV">
+        <article class="whyCard scrollAsset">
+          <div class="whyIcon" aria-hidden="true">✓</div>
+          <h3 class="whyTitle">Simple à comprendre</h3>
+          <p class="whyText">Règles directes, démarrage rapide et tout le monde comprend en quelques secondes.</p>
+        </article>
+        <article class="whyCard scrollAsset">
+          <div class="whyIcon" aria-hidden="true">⏱</div>
+          <h3 class="whyTitle">Rapide à jouer même en grand groupe</h3>
+          <p class="whyText">Des manches courtes qui tournent bien, même avec beaucoup de joueurs autour de la table.</p>
+        </article>
+        <article class="whyCard scrollAsset">
+          <div class="whyIcon" aria-hidden="true">😄</div>
+          <h3 class="whyTitle">Fou rire et pas de prise de tête</h3>
+          <p class="whyText">Le but est simple: se marrer ensemble avec des alibis absurdes et mémorables.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <h2 class="sectionTitle">QUESTIONS <span class="accent">FRÉQUENTES</span></h2>
+
+      <div class="faqWrap">
+        <div class="faqList">
+          <details class="faqItem">
+            <summary>
+              <span class="q"><span class="qno">Q1</span> LE JEU EST BIEN AVEC QUI ?</span>
+              <span class="chev">⌄</span>
+            </summary>
+            <p>GAV est idéal entre amis, en couple ou en famille, dès que vous aimez improviser et rire ensemble.</p>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN ?</span>
+              <span class="chev">⌄</span>
+            </summary>
+            <p>Le jeu fonctionne dès 3 joueurs et tourne parfaitement entre 4 et 8 personnes.</p>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <span class="q"><span class="qno">Q3</span> FAUT-IL JOUER UN RÔLE ?</span>
+              <span class="chev">⌄</span>
+            </summary>
+            <p>Non, pas de rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. Vous, vous improvisez vos réponses et tentez de rester cohérent avec votre complice.</p>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <span class="q"><span class="qno">Q4</span> À PARTIR DE QUEL ÂGE ?</span>
+              <span class="chev">⌄</span>
+            </summary>
+            <p>À partir de 10 ans. Les règles sont simples et les parties restent très accessibles.</p>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <span class="q"><span class="qno">Q5</span> COMBIEN DE TEMPS DURE UNE PARTIE ?</span>
+              <span class="chev">⌄</span>
+            </summary>
+            <p>Environ 10 minutes par manche, ce qui permet d'enchaîner facilement plusieurs tours.</p>
+          </details>
+        </div>
+
+      </div>
+
+      <div class="buyBand" id="achat">
+        <div>
+          <h3 class="buyTitle">PRÊTS À AVOIR<br/>LE <span class="accent">MÊME ALIBI</span> ?</h3>
+          <p class="buyLead">Des fous rires, de la complicité et des histoires improbables vous attendent.</p>
+        </div>
+
+        <div class="buyBox">
+          <img class="scrollAsset assetRaw" src="../assets/box_GAV.png" alt="Boite GAV" loading="lazy" />
+        </div>
+
+        <div class="buyRight">
+          <h3>DISPONIBLE MAINTENANT</h3>
+          <div class="buyStores">
+            <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">amazon</a>
+            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">fnac</a>
+            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura">Cultura</a>
+          </div>
+          <div class="miniMeta">Livraison rapide · Paiement sécurisé · Service client</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footGrid">
+        <div class="footLogo">
+          <img src="../assets/fiasco-logo.png" alt="Fiasco Games" />
+          <p class="footText">Des jeux simples, fun et mémorables. Conçus pour créer des moments ensemble.</p>
+        </div>
+
+        <div class="footCol">
+          <h4>LE JEU</h4>
+          <a href="#le-jeu">Présentation</a>
+          <a href="#comment-jouer">Comment jouer</a>
+          <a href="#pourquoi">Pourquoi ça marche</a>
+        </div>
+
+        <div class="footCol">
+          <h4>À PROPOS</h4>
+          <a href="../accueil/">Notre histoire</a>
+          <a href="../accueil/#values">Nos valeurs</a>
+          <a href="mailto:contact@cambrouillolage.fr">Contact</a>
+        </div>
+
+        <div class="footCol">
+          <h4>AIDE</h4>
+          <a href="#faq">FAQ</a>
+          <a href="./feuille/">Feuilles interactives</a>
+          <a href="./video/">Video</a>
+        </div>
+
+        <div class="footCol">
+          <h4>LEGAL</h4>
+          <a href="../mentions-legales.html">Mentions légales</a>
+          <a href="../politique-confidentialite.html">Politique de confidentialité</a>
+        </div>
+      </div>
+
+      <div class="footBottom">
+        <span>© Fiasco Games 2024 - Tous droits réservés</span>
+        <span>Mentions légales · CGV · Politique de confidentialité</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="stickyBuyBar" id="stickyBuyBar" aria-label="Bandeau achat rapide">
+    <p class="stickyBuyText">Prêt à jouer ? Commandez GAV maintenant.</p>
+    <a class="stickyBuyBtn" href="#achat">Acheter</a>
+  </div>
+
+  <div class="buyModalBackdrop" id="buyModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="buyModalTitle">
+    <div class="buyModal">
+      <button class="buyModalClose" id="buyModalClose" aria-label="Fermer">&times;</button>
+      <h3 class="buyModalTitle" id="buyModalTitle">Jeu disponible <span class="accent">en septembre</span></h3>
+      <p class="buyModalText">GAV n'est pas encore en vente. Laissez-nous votre e-mail pour être prévenu dès sa sortie.</p>
+      <div class="buyModalActions">
+        <a class="btn btnPrimary" href="mailto:contact@fiascogames.fr?subject=Etre%20pr%C3%A9venu%20-%20GAV">Être prévenu →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const linkItems = navLinks.querySelectorAll('a');
+    const stickyBuyBar = document.getElementById('stickyBuyBar');
+
+    const buyModalBackdrop = document.getElementById('buyModalBackdrop');
+    const buyModalClose = document.getElementById('buyModalClose');
+
+    function openBuyModal(){
+      buyModalBackdrop.classList.add('isOpen');
+    }
+    function closeBuyModal(){
+      buyModalBackdrop.classList.remove('isOpen');
+    }
+    document.querySelectorAll('a[href="#achat"]').forEach((link)=>{
+      link.addEventListener('click', (event)=>{
+        event.preventDefault();
+        openBuyModal();
+      });
+    });
+    buyModalClose.addEventListener('click', closeBuyModal);
+    buyModalBackdrop.addEventListener('click', (event)=>{
+      if (event.target === buyModalBackdrop) closeBuyModal();
+    });
+    document.addEventListener('keydown', (event)=>{
+      if (event.key === 'Escape') closeBuyModal();
+    });
+    const stepsRiver = document.querySelector('.stepsRiver');
+    const stepsRiverCards = stepsRiver ? Array.from(stepsRiver.querySelectorAll('.stepsRiverCard')) : [];
+    let cardStackOrder = stepsRiverCards.map((_, i)=> i);
+    const CARD_STACK_OFFSETS = [
+      { x: 0,   y: 0,  rot: 0,   z: 40 },
+      { x: 18,  y: 8,  rot: -9,  z: 30 },
+      { x: -18, y: 15, rot: 8,   z: 20 },
+      { x: 2,   y: 21, rot: -12, z: 10 }
+    ];
+    const STACK_TRANSITION_MS = 460;
+
+    function positionStackCard(card, pos, instant){
+      const o = CARD_STACK_OFFSETS[Math.min(pos, CARD_STACK_OFFSETS.length - 1)];
+      if (instant) card.style.transition = 'none';
+      card.style.setProperty('--stackX', `${o.x}px`);
+      card.style.setProperty('--stackY', `${o.y}px`);
+      card.style.setProperty('--stackRot', `${o.rot}deg`);
+      card.style.zIndex = o.z;
+      if (instant){
+        card.getBoundingClientRect();
+        card.style.transition = '';
+      }
+    }
+
+    function renderCardStack(instant){
+      cardStackOrder.forEach((cardIndex, pos)=> positionStackCard(stepsRiverCards[cardIndex], pos, instant));
+    }
+
+    let isSwipingCard = false;
+    function swipeFrontCard(){
+      if (isSwipingCard || stepsRiverCards.length < 2) return;
+      isSwipingCard = true;
+      cardStackOrder.push(cardStackOrder.shift());
+      renderCardStack(false);
+      window.setTimeout(()=>{ isSwipingCard = false; }, STACK_TRANSITION_MS);
+    }
+
+    if (stepsRiver){
+      stepsRiver.addEventListener('click', ()=>{
+        if (document.body.classList.contains('isCompactMobile')) swipeFrontCard();
+      });
+      stepsRiver.addEventListener('keydown', (e)=>{
+        if ((e.key === 'Enter' || e.key === ' ') && document.body.classList.contains('isCompactMobile')){
+          e.preventDefault();
+          swipeFrontCard();
+        }
+      });
+    }
+
+    const updateCompactMode = ()=>{
+      const wasCompact = document.body.classList.contains('isCompactMobile');
+      const isCompact = window.innerWidth <= 560;
+      document.body.classList.toggle('isCompactMobile', isCompact);
+      if (isCompact && !wasCompact){
+        renderCardStack(true);
+      }
+    };
+    const clamp01 = (v)=> Math.max(0, Math.min(1, v));
+    const easeInOutCubic = (t)=> t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    menuBtn.addEventListener('click', ()=>{
+      const open = navLinks.classList.toggle('isOpen');
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    linkItems.forEach((link)=>{
+      link.addEventListener('click', ()=>{
+        navLinks.classList.remove('isOpen');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const sections = ['le-jeu', 'comment-jouer', 'pourquoi', 'faq', 'avis'];
+    const nodes = sections.map((id)=> document.getElementById(id)).filter(Boolean);
+
+    function setActiveNav(){
+      updateCompactMode();
+      let current = 'le-jeu';
+      const y = window.scrollY + 120;
+      nodes.forEach((node)=>{
+        if (node.offsetTop <= y) current = node.id;
+      });
+      linkItems.forEach((link)=>{
+        const target = link.getAttribute('href').replace('#', '');
+        link.classList.toggle('isActive', target === current);
+      });
+
+      const showBuy = window.scrollY > 320 && window.innerWidth <= 820;
+      stickyBuyBar.classList.toggle('isVisible', showBuy);
+
+      if (stepsRiver && !document.body.classList.contains('isCompactMobile')){
+        const rect = stepsRiver.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const outOfView = rect.bottom <= 0 || rect.top >= vh;
+
+        const sectionProgress = clamp01((vh - rect.top) / (vh + rect.height));
+
+        if (outOfView){
+          stepsRiver.style.setProperty('--riverShift', '0px');
+          stepsRiver.style.setProperty('--riverWobble', '0px');
+          stepsRiver.style.setProperty('--riverFlip', '0deg');
+        } else {
+          const drift = (sectionProgress - 0.5) * 12;
+          const wobble = Math.sin((window.scrollY + rect.top) * 0.03) * 3;
+          const flip = Math.sin((window.scrollY + rect.top) * 0.025) * 16;
+          stepsRiver.style.setProperty('--riverShift', `${drift.toFixed(3)}px`);
+          stepsRiver.style.setProperty('--riverWobble', `${wobble.toFixed(3)}px`);
+          stepsRiver.style.setProperty('--riverFlip', `${flip.toFixed(3)}deg`);
+        }
+
+        stepsRiverCards.forEach((card, i)=>{
+          const dealStart = 0.06 + i * 0.09;
+          const dealProgress = easeInOutCubic(clamp01((sectionProgress - dealStart) / 0.32));
+          const takeStart = 0.64 + i * 0.07;
+          const takeProgress = easeInOutCubic(clamp01((sectionProgress - takeStart) / 0.28));
+          card.style.setProperty('--dealProgress', dealProgress.toFixed(3));
+          card.style.setProperty('--takeProgress', takeProgress.toFixed(3));
+        });
+      }
+
+      const stepAssets = document.querySelectorAll('.stepsBottom .stepVisual img');
+      if (stepAssets.length){
+        const bob = Math.sin(window.scrollY * 0.016) * 3;
+        stepAssets.forEach((img, idx)=>{
+          const direction = idx % 2 === 0 ? 1 : -1;
+          img.style.setProperty('--assetShift', `${(bob * direction).toFixed(3)}px`);
+        });
+      }
+    }
+
+    window.addEventListener('scroll', setActiveNav, { passive:true });
+    window.addEventListener('resize', ()=>{
+      updateCompactMode();
+      setActiveNav();
+    });
+    window.addEventListener('load', updateCompactMode);
+    window.addEventListener('pageshow', updateCompactMode);
+    updateCompactMode();
+    requestAnimationFrame(setActiveNav);
+    setTimeout(updateCompactMode, 50);
+    setTimeout(setActiveNav, 50);
+    setActiveNav();
+
+    const revealTargets = Array.from(document.querySelectorAll('.scrollAsset'));
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+      document.documentElement.classList.add('jsReveal');
+      const revealObserver = new IntersectionObserver((entries, observer)=>{
+        entries.forEach((entry)=>{
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('isInView');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin:'0px 0px -5% 0px', threshold:0.05 });
+
+      revealTargets.forEach((el, index)=>{
+        el.style.transitionDelay = `${Math.min(index * 45, 260)}ms`;
+        revealObserver.observe(el);
+      });
+    } else {
+      revealTargets.forEach((el)=> el.classList.add('isInView'));
+    }
+  </script>
 </body>
 </html>
