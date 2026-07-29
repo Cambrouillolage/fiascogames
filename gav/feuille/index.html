@@ -116,30 +116,6 @@
       border:2px solid rgba(0,0,0,.35);
       background: rgba(255,255,255,.35);
     }
-    .download-card{
-      padding:12px;
-      border-radius:14px;
-      border:2px solid rgba(0,0,0,.35);
-      background: rgba(255,255,255,.35);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .download-card .title{
-      font-weight:1000;
-      font-size:14px;
-    }
-    .download-actions{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:8px;
-    }
-    .download-actions .btn{
-      text-decoration:none;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
 
     /* Barre condamnations */
     .sentences{
@@ -201,9 +177,6 @@
       .dot{
         width:10px;
         height:10px;
-      }
-      .download-actions{
-        grid-template-columns:1fr;
       }
     }
 
@@ -388,7 +361,7 @@
       font-family: 'Courier New', Courier, monospace;
       letter-spacing: .5px;
     }
-    #inspector .head .insp-title-row .back-btn{ margin-left: auto; }
+    .title-actions{display:flex;gap:8px;margin-left:auto}
     #inspector .head .insp-npreuve{
       display: flex;
       align-items: center;
@@ -487,8 +460,10 @@
       #inspector .head .insp-title-row h1{
         font-size: 22px;
       }
-      #inspector .head .insp-title-row .back-btn{
+      #inspector .head .insp-title-row .title-actions{
         margin-left: auto;
+      }
+      #inspector .head .insp-title-row .title-actions .btn{
         padding: 8px 10px;
       }
       #inspector .head .insp-npreuve{
@@ -544,12 +519,6 @@
       .scene{height:74px}
       .scene .thief{font-size:28px}
     }
-
-    @media (min-width: 540px){
-      .download-actions{
-        grid-template-columns:1fr 1fr;
-      }
-    }
   </style>
 </head>
 <body>
@@ -566,21 +535,20 @@
         <div class="muted">Choisis ton rôle</div>
       </div>
       <div class="body" style="display:flex;flex-direction:column;gap:10px">
-        <div class="download-card">
-          <div class="title">Télécharger les feuilles</div>
-          <div class="download-actions">
-            <a class="btn" href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer">Feuille Police</a>
-            <a class="btn light" href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer">Feuille Suspect</a>
-          </div>
-        </div>
         <button class="btn" id="goSuspect">Suspect</button>
         <button class="btn light" id="goInspector">Inspecteur</button>
       </div>
     </section>
 
-    <div style="padding:12px;border-radius:12px;border:2px solid rgba(0,0,0,.25);background:rgba(255,255,255,.3);font-size:13px;line-height:1.5">
-      Tu as aimé GAV ? Découvre <strong>Cambrouillolage</strong> — la fuite des voleurs avant de se faire attraper !<br>
-      <a href="https://fiascogames.fr/cambrouillolage/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;padding:8px 16px;background:#b45309;color:#fff;font-weight:800;border-radius:10px;text-decoration:none">Découvrir →</a>
+    <div id="downloadCard" style="text-align:center;font-size:11px;line-height:1.7;color:rgba(0,0,0,.45)">
+      Besoin d'un feuillet en plus ?
+      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit">Feuille Police</a>
+      ·
+      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit">Feuille Suspect</a>
+    </div>
+
+    <div id="publisherCard" style="text-align:center;font-size:11px;line-height:1.7;color:rgba(0,0,0,.45)">
+      Découvre <a href="https://fiascogames.fr/accueil/" target="_blank" rel="noopener" style="color:inherit">la maison d'édition</a> derrière GAV
     </div>
 
     <!-- INSPECTEUR -->
@@ -589,7 +557,10 @@
         <div class="insp-title-row">
           <span style="font-size:28px">👮</span>
           <h1>Carnet d'enquête</h1>
-          <button class="btn inline light back-btn" id="backFromInspector">Accueil</button>
+          <div class="title-actions">
+            <button class="btn inline light" id="resetFromInspector">Reset</button>
+            <button class="btn inline light" id="backFromInspector">Accueil</button>
+          </div>
         </div>
         <div class="insp-npreuve">
           <span>N°preuve</span>
@@ -611,7 +582,10 @@
     <section class="paper" id="suspect" style="display:none">
       <div class="head">
         <h1>Alibi</h1>
-        <button class="btn inline light" id="backFromSuspect">Accueil</button>
+        <div class="title-actions">
+          <button class="btn inline light" id="resetFromSuspect">Reset</button>
+          <button class="btn inline light" id="backFromSuspect">Accueil</button>
+        </div>
       </div>
       <div class="body">
         <div class="grid-head" style="grid-template-columns:44px 1fr 80px 66px">
@@ -702,6 +676,8 @@
     const home = document.getElementById("home");
     const inspector = document.getElementById("inspector");
     const suspect = document.getElementById("suspect");
+    const downloadCard = document.getElementById("downloadCard");
+    const publisherCard = document.getElementById("publisherCard");
 
     const inspectorRows = document.getElementById("inspectorRows");
     const suspectRows = document.getElementById("suspectRows");
@@ -735,6 +711,8 @@
       home.style.display = which==="home" ? "" : "none";
       inspector.style.display = which==="inspector" ? "" : "none";
       suspect.style.display = which==="suspect" ? "" : "none";
+      downloadCard.style.display = which==="home" ? "" : "none";
+      publisherCard.style.display = which==="home" ? "" : "none";
       state.role = which;
     }
 
@@ -940,6 +918,9 @@
 
     document.getElementById("backFromInspector").addEventListener("click", ()=> show("home"));
     document.getElementById("backFromSuspect").addEventListener("click", ()=> show("home"));
+
+    document.getElementById("resetFromInspector").addEventListener("click", reset);
+    document.getElementById("resetFromSuspect").addEventListener("click", reset);
 
     partnerTotalEl.addEventListener("input", updateTotals);
 

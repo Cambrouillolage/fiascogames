@@ -51,6 +51,7 @@
     }
     .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff}
     .brand img{height:42px; width:auto}
+    .mobileBrand{display:none; height:34px; width:auto}
 
     .menuBtn{display:none; border:1px solid rgba(255,255,255,.2); background:transparent; color:#fff; border-radius:10px; padding:10px 12px; font-weight:800}
     .navLinks{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
@@ -70,8 +71,8 @@
     .navCtas{display:flex; gap:10px; align-items:center}
     .btn{
       border:1px solid rgba(255,255,255,.2);
-      border-radius:10px;
-      padding:11px 14px;
+      border-radius:999px;
+      padding:11px 18px;
       font-weight:800;
       font-size:13px;
       text-decoration:none;
@@ -79,12 +80,18 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      transition:transform .2s ease, filter .2s ease;
+      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
       cursor:pointer;
     }
     .btn:hover{transform:translateY(-1px); filter:brightness(1.06)}
     .btnGhost{color:#fff; background:transparent}
-    .btnPrimary{color:#fff; background:linear-gradient(180deg, #ff8c2c, #ea6f11); border-color:#df6410}
+    .btnPrimary{
+      color:#fff;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      border-color:#df6410;
+      box-shadow:0 8px 18px rgba(234,111,17,.35);
+    }
+    .btnPrimary:hover{box-shadow:0 10px 22px rgba(234,111,17,.42)}
 
     .hero{
       background:
@@ -133,10 +140,10 @@
 
     .storeRow{margin-top:20px; display:flex; gap:9px; flex-wrap:wrap}
     .storeBtn{
-      background:#fff;
+      background:linear-gradient(180deg, #fff, #f0ede6);
       color:#222;
       border:1px solid #cec2ac;
-      border-radius:8px;
+      border-radius:999px;
       height:45px;
       min-width:100px;
       padding:0 16px;
@@ -146,10 +153,12 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      box-shadow:var(--shadow);
+      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+      box-shadow:0 8px 18px rgba(19,19,19,.16);
     }
-    .storeBtn.fnac{background:#f6bf33; color:#fff}
-    .storeBtn.cultura{background:#215b9e; color:#fff}
+    .storeBtn:hover{transform:translateY(-1px); filter:brightness(1.04)}
+    .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#fff; border-color:#dba417; box-shadow:0 8px 18px rgba(246,191,51,.35)}
+    .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #215b9e); color:#fff; border-color:#194a83; box-shadow:0 8px 18px rgba(33,91,158,.35)}
 
     .metaRow{margin-top:14px; display:flex; flex-wrap:wrap; gap:8px}
     .metaChip{
@@ -364,7 +373,7 @@
       background:linear-gradient(180deg, #191919, #121212);
       border-top:1px solid rgba(255,255,255,.14);
       border-bottom:1px solid rgba(255,255,255,.14);
-      padding:30px 0 34px;
+      padding:36px 0;
       color:#fff;
     }
     .valueBand .sectionTitle{color:#fff}
@@ -556,11 +565,12 @@
     .stickyBuyText{font-size:13px; line-height:1.2; font-weight:800; color:#f5e7d7}
     .stickyBuyBtn{
       text-decoration:none;
-      background:linear-gradient(180deg, #ff8c2c, #ea6f11);
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
       color:#fff;
       border:1px solid #df6410;
-      border-radius:9px;
-      padding:9px 12px;
+      border-radius:999px;
+      box-shadow:0 8px 18px rgba(234,111,17,.35);
+      padding:9px 16px;
       font-weight:900;
       font-size:12px;
       white-space:nowrap;
@@ -666,7 +676,8 @@
 
     @media (max-width:1080px){
       .heroGrid{grid-template-columns:1fr}
-      .heroVisual{min-height:380px}
+      .heroVisual{min-height:380px; order:-1}
+      .heroKicker, .heroTitle{display:none}
       .heroCard.card1{left:6%; top:8%}
       .heroCard.card2{right:6%; top:0}
       .stepsBottom{grid-template-columns:1fr 1fr}
@@ -687,7 +698,8 @@
       .navCtas{display:flex}
       .navCtas .btnGhost{display:none}
       .navCtas .btnPrimary{padding:9px 16px; font-size:12px}
-      .topNavInner{min-height:64px; justify-content:center}
+      .topNavInner{min-height:64px; justify-content:space-between}
+      .mobileBrand{display:block}
       .heroCopy{font-size:18px}
       .heroCard{width:134px; font-size:13px; padding:10px}
       .stepVisual{grid-template-columns:120px 1fr}
@@ -711,10 +723,11 @@
       .heroCard.card2{right:2%; top:2%}
       .heroCard.card3{right:3%; bottom:4%}
       .storeBtn{font-size:22px; min-width:84px}
-      .sectionTitle{font-size:36px}
+      .sectionTitle{font-size:33px}
       .stepVisual{grid-template-columns:1fr}
       .stepCard.isPrimary .stepVisual{grid-template-columns:1fr}
-      .stepCard.isPrimary .stepTitle{font-size:24px}
+      .stepTitle{font-size:14px; white-space:nowrap}
+      .stepCard.isPrimary .stepTitle{font-size:17px; white-space:nowrap}
       .stepsBottom{grid-template-columns:1fr}
       .stepsBottom .stepVisual{grid-template-columns:1fr}
       .stepsBottom .stepVisual img{width:78%; margin:0 auto}
@@ -738,6 +751,7 @@
       <a class="brand" href="../index.html" aria-label="Retour à l'accueil Fiasco Games">
         <img src="../assets/fiasco-logo.png" alt="Fiasco Games" />
       </a>
+      <img class="mobileBrand" src="../assets/GAV1.png" alt="GAV" />
 
       <button class="menuBtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks">Menu</button>
 
@@ -762,7 +776,7 @@
         <p class="heroKicker">Garde à vue</p>
         <h1 class="heroTitle">GAV</h1>
         <p class="heroLead">Le jeu d'ambiance <span class="accent">simple et drôle</span><br/>où vous devez avoir<br/>le même alibi que votre complice.</p>
-        <p class="heroCopy">La police prépare ses questions, vous et votre complice inventez votre alibi. Même réponse le jour J ? Vous êtes libres. Sinon... <strong>direction la prison !</strong></p>
+        <p class="heroCopy">La police prépare ses questions, vous et votre complice inventez votre alibi. Même réponse lors de l'interrogatoire ? Vous êtes libres. Sinon... <strong>direction la prison !</strong></p>
 
         <div class="storeRow" aria-label="Boutons partenaires">
           <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">amazon</a>
@@ -794,10 +808,10 @@
       <h2 class="sectionTitle">COMMENT <span class="accent">JOUER</span> ?</h2>
 
       <div class="stepsLayout">
-        <article class="stepCard isPrimary">
+        <article class="stepCard isPrimary scrollAsset">
           <div class="stepHead">
             <span class="stepNo">1</span>
-            <h3 class="stepTitle">DÉVOILEZ<br/>4 CARTES <span class="accent">PREUVES</span></h3>
+            <h3 class="stepTitle">DÉVOILEZ 4 CARTES <span class="accent">PREUVES</span></h3>
           </div>
           <div class="stepVisual onlyText">
             <div class="stepText">
@@ -817,24 +831,24 @@
         </article>
 
         <div class="stepsBottom">
-          <article class="stepCard">
+          <article class="stepCard scrollAsset">
             <div class="stepHead">
               <span class="stepNo">2</span>
-              <h3 class="stepTitle">LA POLICE PRÉPARE<br/>SES <span class="accent">QUESTIONS</span></h3>
+              <h3 class="stepTitle">LA POLICE PRÉPARE SES <span class="accent">QUESTIONS</span></h3>
             </div>
             <div class="stepVisual">
-              <img class="scrollAsset assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
+              <img class="assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
               <p class="stepText">Pendant que les enquêteurs préparent leurs questions pièges, votre binôme a <strong>3 minutes</strong> pour peaufiner son alibi... <strong>sans prendre de notes</strong> !</p>
             </div>
           </article>
 
-          <article class="stepCard">
+          <article class="stepCard scrollAsset">
             <div class="stepHead">
               <span class="stepNo">3</span>
-              <h3 class="stepTitle">L'INTERROGATOIRE<br/><span class="accent">COMMENCE</span></h3>
+              <h3 class="stepTitle">L'INTERROGATOIRE <span class="accent">COMMENCE</span></h3>
             </div>
             <div class="stepVisual">
-              <img class="scrollAsset assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
+              <img class="assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
               <p class="stepText">Sans plus vous parler, répondez en même temps que votre complice sur votre feuillet Alibi. <strong>Même réponse, vous marquez des points.</strong> Sinon... <strong>direction la prison !</strong></p>
             </div>
           </article>
