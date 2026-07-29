@@ -234,7 +234,7 @@
     .stepVisual{display:grid; grid-template-columns:140px minmax(0,1fr); gap:11px; align-items:center; min-width:0}
     .stepVisual img{width:100%; height:auto; display:block; filter:drop-shadow(0 8px 14px rgba(0,0,0,.2))}
     .stepVisual.onlyText{grid-template-columns:1fr}
-    .stepText{font-size:14px; color:#3f372f; line-height:1.3; font-weight:700; min-width:0; overflow-wrap:anywhere}
+    .stepText{font-size:14px; color:#3f372f; line-height:1.3; font-weight:500; min-width:0; overflow-wrap:anywhere}
     .stepCard.isPrimary .stepVisual{
       grid-template-columns:minmax(0,170px) minmax(0,1fr);
       gap:14px;
@@ -313,7 +313,7 @@
     }
     .stepsRiverCard{
       width:min(180px, 22vw);
-      margin-left:-54px;
+      margin-left:-34px;
       filter:drop-shadow(0 12px 16px rgba(0,0,0,.18));
       transform-origin:50% 100%;
       transition:transform .5s cubic-bezier(.22,.85,.32,1), opacity .4s ease;
@@ -677,7 +677,7 @@
       .buyBand{grid-template-columns:1fr}
       .buyRight h3{text-align:left}
       .footGrid{grid-template-columns:1fr 1fr}
-      .stepsRiverCard{width:min(160px, 30vw); margin-left:-44px}
+      .stepsRiverCard{width:min(160px, 30vw); margin-left:-28px}
     }
 
     @media (max-width:820px){
@@ -698,7 +698,7 @@
       .stepsBottom .stepVisual img{width:100%; max-width:132px}
       .stickyBuyText{font-size:12px}
       .stepsRiver{min-height:180px}
-      .stepsRiverCard{width:min(128px, 34vw); margin-left:-34px}
+      .stepsRiverCard{width:min(128px, 34vw); margin-left:-20px}
       .stickyBuyBar{display:flex}
     }
 
@@ -783,8 +783,8 @@
         <img class="heroBox scrollAsset assetRaw" src="../assets/box_GAV.png" alt="Boite de jeu GAV" />
 
         <article class="heroCard card1">ON ÉTAIT<br/>À LA SALLE<br/>DE SPORT</article>
-        <article class="heroCard card2">ON DIT<br/>TOUJOURS LA<br/>MÊME CHOSE !</article>
-        <article class="heroCard card3">ALIBI EN<br/>BÉTON</article>
+        <article class="heroCard card2">OÙ ÉTIEZ-VOUS<br/>HIER SOIR ?</article>
+        <article class="heroCard card3">AU CINÉMA</article>
       </div>
     </div>
   </section>
@@ -802,8 +802,8 @@
           <div class="stepVisual onlyText">
             <div class="stepText">
               <p class="stepLead">4 preuves dévoilées.</p>
-              <p>La police s'isole pour préparer ses 8 questions — et répond elle-même à chacune d'elles. Ce sont ses pièces à conviction : un piège tendu aux suspects, car donner la même réponse que la police fait perdre des points.</p>
-              <p>De leur côté, les binômes réfléchissent ensemble à leur alibi, sans avoir le droit de rien noter. Tout repose sur la complicité et la mémoire.</p>
+              <p>La police s'isole pour préparer ses 8 questions — et <strong>répond elle-même à chacune d'elles</strong>. Ce sont ses pièces à conviction : un piège tendu aux suspects, car <strong>donner la même réponse que la police fait perdre des points</strong>.</p>
+              <p>De leur côté, les binômes réfléchissent ensemble à leur alibi, <strong>sans avoir le droit de rien noter</strong>. Tout repose sur la <strong>complicité</strong> et la <strong>mémoire</strong>.</p>
             </div>
           </div>
 
@@ -824,7 +824,7 @@
             </div>
             <div class="stepVisual">
               <img class="scrollAsset assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
-              <p class="stepText">Pendant que les enquêteurs préparent leurs questions pièges, votre binôme a 3 minutes pour peaufiner son alibi... sans prendre de notes !</p>
+              <p class="stepText">Pendant que les enquêteurs préparent leurs questions pièges, votre binôme a <strong>3 minutes</strong> pour peaufiner son alibi... <strong>sans prendre de notes</strong> !</p>
             </div>
           </article>
 
@@ -835,7 +835,7 @@
             </div>
             <div class="stepVisual">
               <img class="scrollAsset assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
-              <p class="stepText">Sans plus vous parler, répondez en même temps que votre complice sur votre feuillet Alibi. Même réponse, vous marquez des points. Sinon... direction la prison !</p>
+              <p class="stepText">Sans plus vous parler, répondez en même temps que votre complice sur votre feuillet Alibi. <strong>Même réponse, vous marquez des points.</strong> Sinon... <strong>direction la prison !</strong></p>
             </div>
           </article>
         </div>
