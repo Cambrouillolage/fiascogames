@@ -1,0 +1,14 @@
+{
+  "name": "fiascogames",
+  "version": "1.0.0",
+  "description": "Fiasco Games static site",
+  "scripts": {
+    "optimize-hero-frames": "node scripts/optimize-hero-frames.mjs"
+  },
+  "license": "ISC",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "sharp": "^0.35.3"
+  }
+}
