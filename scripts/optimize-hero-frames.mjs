@@ -6,8 +6,8 @@
  * extracted from the box-rotation video — see extract-hero-frames.sh) and
  * writes two lightweight WebP sets sized for scrubbing on a <canvas>:
  *
- *   assets/hero-frames/mobile/hero-frame-###.webp   (~750px wide  — phones)
- *   assets/hero-frames/desktop/hero-frame-###.webp  (~1600px wide — desktop)
+ *   assets/hero-frames/mobile/hero-frame-###.webp   (~900px wide  — phones)
+ *   assets/hero-frames/desktop/hero-frame-###.webp  (~1920px wide — desktop)
  *
  * Also writes a tiny two-file poster fallback (mobile + desktop, JPEG) used
  * by the <picture> element that renders when JS / canvas isn't available
@@ -27,10 +27,10 @@ const SRC_DIR = path.join(ROOT, 'assets/hero-frames');
 const MOBILE_DIR = path.join(SRC_DIR, 'mobile');
 const DESKTOP_DIR = path.join(SRC_DIR, 'desktop');
 
-const MOBILE_WIDTH = 750;   // ~2x a 375px-wide phone viewport, sharp on retina
-const DESKTOP_WIDTH = 1600; // matches the source render, no upscaling
-const MOBILE_QUALITY = 76;
-const DESKTOP_QUALITY = 80;
+const MOBILE_WIDTH = 900;   // covers even large/high-DPR phones without upscaling
+const DESKTOP_WIDTH = 1920; // matches the new source render (1920x1080), no upscaling
+const MOBILE_QUALITY = 80;
+const DESKTOP_QUALITY = 82;
 const ENCODE_EFFORT = 6;
 const CONCURRENCY = 8;
 const POSTER_FRAME = 'hero-frame-011.jpg'; // matches FRAME_START in gav/index.html

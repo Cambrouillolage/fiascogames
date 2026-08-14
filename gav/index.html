@@ -99,6 +99,8 @@
     .btnPrimary:hover{box-shadow:0 10px 22px rgba(234,111,17,.42)}
 
     .hero{
+      position:relative;
+      z-index:1;
       background:
         radial-gradient(760px 400px at 18% 16%, rgba(255,168,91,.12), transparent 68%),
         radial-gradient(620px 360px at 82% 80%, rgba(255,255,255,.07), transparent 68%),
@@ -106,6 +108,14 @@
       color:#fff;
       padding:34px 0 28px;
       border-bottom:2px solid rgba(255,255,255,.08);
+    }
+    /* The heroCta block stays pinned so "Comment jouer" can slide up and
+       cover it — same stacking technique as the step cards below (needs a
+       real height on the wrapper, not padding, for sticky to hold). */
+    .heroCtaStack{position:relative}
+    @media (prefers-reduced-motion: no-preference){
+      .heroCtaStack{min-height:100vh}
+      .heroCta{position:sticky; top:calc(var(--navH) + 14px)}
     }
     .heroIntro{max-width:640px; margin:0 auto; text-align:center}
     .heroKicker{
@@ -138,19 +148,15 @@
     .promoBlock{margin-top:22px}
     .promoTitle{
       margin:0 auto;
-      max-width:24ch;
-      background:linear-gradient(180deg, var(--orange-2), var(--orange));
-      color:#141414;
+      max-width:26ch;
+      color:#fff;
       text-align:center;
       text-transform:uppercase;
       font-family:"Bebas Neue", "Impact", sans-serif;
       font-weight:900;
       letter-spacing:.015em;
-      font-size:clamp(24px, 6vw, 34px);
-      line-height:1.2;
-      padding:14px 18px;
-      border-radius:14px;
-      box-shadow:0 8px 18px rgba(234,111,17,.35);
+      font-size:clamp(28px, 6.5vw, 42px);
+      line-height:1.25;
     }
     .promoText{
       margin:16px auto 0;
@@ -182,14 +188,11 @@
     .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 8px 18px rgba(246,191,51,.35)}
     .buyBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 8px 18px rgba(33,91,158,.35)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
-    /* amazon.png has no real alpha channel (flattened checkerboard baked into the
-       pixels, confirmed via metadata) — on the dark button it renders as a dirty
-       grey smudge instead of a clean white mark, so it stays hidden (text-only
-       fallback) until a properly-transparent export is provided. */
-    .buyLogo.amazon{display:none}
-    /* Fnac/Cultura marks are colored/dark — a small white chip keeps them legible
-       whatever the button background ends up being. */
-    .buyLogo.fnac{width:64px; height:28px; background-image:url(../assets/fnac.png); background-color:#fff; background-size:78%; border-radius:6px}
+    /* All 3 marks sit on their own solid/near-solid background (not true
+       transparency) — a small white chip keeps them legible whatever the
+       button background ends up being. */
+    .buyLogo.amazon{width:40px; height:34px; background-image:url(../assets/amazon.png); background-color:#fff; background-size:78%; border-radius:6px}
+    .buyLogo.fnac{width:64px; height:28px; background-image:url(../assets/fnac.jpeg); background-color:#fff; background-size:78%; border-radius:6px}
     .buyLogo.cultura{width:76px; height:26px; background-image:url(../assets/cultura.png); background-color:#fff; background-size:82%; border-radius:6px}
 
     .quickInfoBar{
@@ -333,6 +336,14 @@
     }
 
     .section{padding:36px 0}
+    /* Sits above .hero (z-index:1) with its own opaque backdrop so it fully
+       covers the pinned heroCta as it slides up over it. */
+    #comment-jouer{position:relative; z-index:2; background:var(--bg)}
+    @media (prefers-reduced-motion: no-preference){
+      /* Same reasoning as .stepStackItem: pull the section up so it visibly
+         slides over the still-pinned heroCta instead of just touching it. */
+      #comment-jouer{margin-top:-45vh}
+    }
     .sectionTitle{
       margin:0;
       text-align:center;
@@ -344,20 +355,30 @@
     }
     .sectionTitle .accent{color:var(--orange)}
 
-    .stepsLayout{
+    .stepsStack{
       margin-top:18px;
-      display:grid;
-      gap:16px;
       width:100%;
       max-width:100%;
     }
-    .stepsBottom{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-      min-width:0;
-      width:100%;
-      max-width:100%;
+    /* Each card sits inside a taller wrapper so there's scroll room before it
+       hands off to the next one; the card itself is what actually sticks.
+       Needs a real height (not padding-bottom) — padding on an auto-height
+       parent doesn't reliably extend the sticky "travel" range in Chromium. */
+    .stepStackItem{padding-bottom:20px}
+    .stepStackItem:last-child{padding-bottom:0}
+    @media (prefers-reduced-motion: no-preference){
+      .stepStackItem{padding-bottom:0; min-height:100vh}
+      .stepStackItem:last-child{min-height:0}
+      /* Pull each next card up into the previous one's still-visible space —
+         with same-height siblings, the natural handoff point alone only
+         gives a sliver of overlap (bounded by the sticky "top" offset); the
+         negative margin is what makes the cover actually read as passing
+         over rather than just touching the edge. */
+      .stepStackItem:not(:first-child){margin-top:-45vh}
+      .stepStackItem .stepCard{position:sticky; top:calc(var(--navH) + 14px)}
+      .stepStackItem:nth-child(1) .stepCard{z-index:1}
+      .stepStackItem:nth-child(2) .stepCard{z-index:2}
+      .stepStackItem:nth-child(3) .stepCard{z-index:3}
     }
     .stepCard{
       border:2px solid #d7c8af;
@@ -373,33 +394,27 @@
       padding:18px;
       background:linear-gradient(180deg, #fbf6ec, #f6eddd);
     }
-    .stepHead{display:flex; align-items:flex-start; gap:10px; margin-bottom:10px}
+    .stepHead{display:flex; align-items:center; gap:10px; margin-bottom:10px}
     .stepNo{
       width:38px; height:38px; border-radius:50%;
       display:grid; place-items:center;
       background:#171717; color:#fff; font-weight:900; font-size:21px;
       flex:0 0 38px;
     }
-    .stepTitle{margin:0; text-transform:uppercase; line-height:1.2; font-size:19px; font-weight:900}
+    /* Same type scale for all 3 cards — hierarchy comes from weight/case/color,
+       not size (see .stepText below). */
+    .stepTitle{margin:0; text-transform:uppercase; line-height:1.2; font-size:21px; font-weight:900}
     .stepTitle .accent{color:var(--orange)}
     .stepVisual{display:grid; grid-template-columns:140px minmax(0,1fr); gap:11px; align-items:center; min-width:0}
     .stepVisual img{width:100%; height:auto; display:block; filter:drop-shadow(0 8px 14px rgba(0,0,0,.2))}
     .stepVisual.onlyText{grid-template-columns:1fr}
-    .stepText{font-size:19px; color:#3f372f; line-height:1.45; font-weight:500; min-width:0; overflow-wrap:anywhere}
-    .stepCard.isPrimary .stepVisual{
-      grid-template-columns:minmax(0,170px) minmax(0,1fr);
-      gap:14px;
-    }
-    .stepCard.isPrimary .stepTitle{font-size:21px}
-    .stepCard.isPrimary .stepText{font-size:21px; line-height:1.45}
+    .stepText{font-size:21px; color:#3f372f; line-height:1.5; font-weight:500; min-width:0; overflow-wrap:anywhere}
     .stepCard.isPrimary .stepVisual.onlyText{
       display:block;
     }
     .stepCard.isPrimary .stepVisual.onlyText .stepText{
       width:100%;
       max-width:none;
-      font-size:21px;
-      line-height:1.5;
       margin:0;
     }
     .stepCard.isPrimary .stepVisual.onlyText .stepText p{
@@ -408,45 +423,14 @@
     .stepCard.isPrimary .stepVisual.onlyText .stepText p:last-child{
       margin-bottom:0;
     }
-    .stepCard.isPrimary .stepVisual.onlyText .stepText .stepLead{
-      font-size:clamp(19px, 2.1vw, 24px);
-      font-weight:900;
-      color:var(--ink);
-      margin-bottom:10px;
-    }
 
-    .stepsBottom .stepVisual{
-      grid-template-columns:minmax(0, 220px) minmax(0, 1fr);
-      gap:16px;
-      align-items:center;
-      background:transparent;
-      min-width:0;
-    }
-    .stepsBottom .stepVisual img{
+    /* Card 2/3 image: a plain block below the text, not beside it. */
+    .stepImg{
+      display:block;
+      margin:16px auto 0;
       width:100%;
-      max-width:210px;
-      justify-self:center;
-      filter:none;
-      background:transparent;
-      border:0;
-      box-shadow:none;
-      transition:transform .28s ease;
-      transform:translateY(var(--assetShift, 0px));
-    }
-    .stepsBottom .stepText{
-      margin:0;
-      position:relative;
-      z-index:1;
-      min-width:0;
-    }
-    .stepsBottom .stepCard{
-      background:transparent;
-      box-shadow:none;
-      border:1px solid rgba(120,85,52,.20);
-      max-width:100%;
-    }
-    .stepsBottom .stepCard:hover .stepVisual img{
-      transform:translateY(calc(var(--assetShift, 0px) - 6px)) scale(1.03);
+      max-width:220px;
+      filter:drop-shadow(0 8px 14px rgba(0,0,0,.2));
     }
 
     .stepsRiver{
@@ -629,6 +613,21 @@
     .buyBox img{width:133px; height:auto; filter:drop-shadow(0 12px 18px rgba(0,0,0,.35))}
     .buyRight h3{margin:0; text-transform:uppercase; font-size:39px; line-height:.95; font-weight:900}
     .buyStores{margin-top:12px; display:flex; gap:9px; flex-wrap:wrap}
+    .storeBtn{
+      display:inline-flex; align-items:center; gap:7px;
+      height:38px; padding:0 16px; border-radius:999px;
+      font-size:13px; font-weight:800; letter-spacing:.02em; text-transform:uppercase;
+      text-decoration:none; color:#fff;
+      background:linear-gradient(180deg, #1c2b3a, #0f1a26);
+      box-shadow:0 6px 14px rgba(15,26,38,.35);
+      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .storeBtn:hover{transform:translateY(-1px); filter:brightness(1.06)}
+    .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 6px 14px rgba(246,191,51,.35)}
+    .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 6px 14px rgba(33,91,158,.35)}
+    .storeBtn .buyLogo{width:18px; height:18px}
+    .storeBtn .buyLogo.fnac{width:40px; height:18px; background-size:80%}
+    .storeBtn .buyLogo.cultura{width:46px; height:16px; background-size:84%}
     .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
 
     .buyModalBackdrop{
@@ -720,30 +719,12 @@
       letter-spacing:.02em;
     }
 
-    .isCompactMobile .stepsLayout,
-    .isCompactMobile .stepsBottom,
+    .isCompactMobile .stepsStack,
     .isCompactMobile .stepCard,
     .isCompactMobile .stepCard.isPrimary{
       width:100%;
       max-width:100%;
       min-width:0;
-    }
-    .isCompactMobile .stepsBottom{
-      display:block;
-    }
-    .isCompactMobile .stepsBottom .stepCard{
-      margin-top:16px;
-    }
-    .isCompactMobile .stepsBottom .stepVisual{
-      display:grid;
-      grid-template-columns:minmax(92px, 120px) minmax(0, 1fr);
-      gap:12px;
-      width:100%;
-      max-width:100%;
-    }
-    .isCompactMobile .stepsBottom .stepVisual img{
-      width:100%;
-      max-width:120px;
     }
     .stepsRiverHint{display:none}
     .stepsRiver:focus{outline:none}
@@ -817,10 +798,8 @@
     }
 
     @media (max-width:1080px){
-      .stepsBottom{grid-template-columns:1fr 1fr}
-      .stepCard.isPrimary .stepVisual{grid-template-columns:140px 1fr}
-      .stepCard.isPrimary .stepTitle{font-size:19px}
-      .stepCard.isPrimary .stepVisual.onlyText .stepText{font-size:19px}
+      .stepTitle{font-size:19px}
+      .stepText{font-size:19px}
       .whyGrid{grid-template-columns:1fr}
       .buyBand{grid-template-columns:1fr}
       .buyRight h3{text-align:left}
@@ -842,13 +821,8 @@
       .quickInfoBar{flex-wrap:nowrap}
       .quickInfoItem{flex:1 1 0; min-width:0; padding:10px 6px; font-size:12px; gap:5px; white-space:nowrap}
       .quickInfoIcon{font-size:17px}
-      .stepVisual{grid-template-columns:120px 1fr}
-      .stepCard.isPrimary .stepVisual{grid-template-columns:120px 1fr}
-      .stepCard.isPrimary .stepTitle{font-size:18px}
-      .stepCard.isPrimary .stepVisual.onlyText .stepText{font-size:18px}
-      .stepsBottom{grid-template-columns:1fr}
-      .stepsBottom .stepVisual{grid-template-columns:minmax(100px, 132px) minmax(0, 1fr)}
-      .stepsBottom .stepVisual img{width:100%; max-width:132px}
+      .stepTitle{font-size:18px}
+      .stepText{font-size:18px}
       .stickyBuyText{font-size:12px}
       .stepsRiver{min-height:180px}
       .stepsRiverCard{width:min(128px, 34vw); margin-left:-20px}
@@ -864,16 +838,9 @@
       .quickInfoIcon{font-size:15px}
       .buyBtn{height:50px; font-size:14px}
       .sectionTitle{font-size:33px}
-      .stepVisual{grid-template-columns:1fr}
-      .stepCard.isPrimary .stepVisual{grid-template-columns:1fr}
-      .stepTitle{font-size:14px; white-space:nowrap}
-      .stepText{font-size:14px}
-      .stepCard.isPrimary .stepTitle{font-size:17px; white-space:nowrap}
-      .stepCard.isPrimary .stepVisual.onlyText .stepText{font-size:17px}
-      .stepsBottom{grid-template-columns:1fr}
-      .stepsBottom .stepVisual{grid-template-columns:1fr}
-      .stepsBottom .stepVisual img{width:78%; margin:0 auto}
-      .stepsBottom{grid-template-columns:1fr}
+      .stepTitle{font-size:16px}
+      .stepText{font-size:16px}
+      .stepImg{max-width:170px}
       .stepsRiver{min-height:auto}
       .buyTitle{font-size:42px}
       .buyRight h3{font-size:31px}
@@ -966,6 +933,9 @@
       </div>
     </div>
 
+    <!-- Même principe que le stack de "Comment jouer" : ce bloc reste épinglé
+         le temps que la section suivante arrive et le recouvre. -->
+    <div class="heroCtaStack">
     <div class="container heroCta">
       <div class="quickInfoBar" aria-label="Informations rapides">
         <div class="quickInfoItem">
@@ -983,7 +953,7 @@
       </div>
 
       <div class="promoBlock">
-        <p class="promoTitle">Aurez-vous le même alibi<br />que votre complice</p>
+        <p class="promoTitle">Aurez-vous le même <span class="hl">alibi</span><br />que votre <span class="hl">complice</span></p>
         <div class="promoText">
           <p>La police prépare ses questions</p>
           <p>Vous et votre complice inventez votre alibi.</p>
@@ -1003,56 +973,64 @@
         </a>
       </div>
     </div>
+    </div>
   </section>
 
   <section class="section" id="comment-jouer">
     <div class="container">
       <h2 class="sectionTitle">COMMENT <span class="accent">JOUER</span> ?</h2>
 
-      <div class="stepsLayout">
-        <article class="stepCard isPrimary scrollAsset">
-          <div class="stepHead">
-            <span class="stepNo">1</span>
-            <h3 class="stepTitle">DÉVOILEZ 4 CARTES <span class="accent">PREUVES</span></h3>
-          </div>
-          <div class="stepVisual onlyText">
-            <div class="stepText">
-              <p class="stepLead">4 preuves dévoilées.</p>
-              <p>La police s'isole pour préparer ses 8 questions — et <strong>répond elle-même à chacune d'elles</strong>. Ce sont ses pièces à conviction : un piège tendu aux suspects, car <strong>donner la même réponse que la police fait perdre des points</strong>.</p>
-              <p>De leur côté, les binômes réfléchissent ensemble à leur alibi, <strong>sans avoir le droit de rien noter</strong>. Tout repose sur la <strong>complicité</strong> et la <strong>mémoire</strong>.</p>
+      <!--
+        Les 3 étapes s'empilent au scroll (position:sticky, même palier "top" pour
+        les 3) : chaque carte reste épinglée jusqu'à ce que la suivante vienne la
+        recouvrir, comme sur sandracreates.com (section Works). Chaque
+        .stepStackItem est plus haut que sa carte pour laisser de la place au
+        scroll avant que la carte ne se décroche ; le z-index croissant garantit
+        que la carte suivante recouvre bien la précédente. Sous
+        prefers-reduced-motion, tout repasse en flux normal (voir media query).
+      -->
+      <div class="stepsStack">
+        <div class="stepStackItem">
+          <article class="stepCard isPrimary scrollAsset">
+            <div class="stepHead">
+              <span class="stepNo">1</span>
+              <h3 class="stepTitle">DÉVOILEZ 4 CARTES <span class="accent">PREUVES</span></h3>
             </div>
-          </div>
+            <div class="stepVisual onlyText">
+              <div class="stepText">
+                <p>La police s'isole pour inventer 8 questions en rapport avec les cartes preuves. Pendant ce temps les suspects regroupés en binôme réfléchissent à leur alibi.</p>
+              </div>
+            </div>
 
-          <div class="stepsRiver" role="button" tabindex="0" aria-label="Amas de cartes preuves, appuyer pour faire passer la carte suivante">
-            <figure class="stepsRiverCard assetRaw"><img src="../assets/26.png" alt="Carte preuve 26" loading="lazy" /></figure>
-            <figure class="stepsRiverCard assetRaw"><img src="../assets/38.png" alt="Carte preuve 38" loading="lazy" /></figure>
-            <figure class="stepsRiverCard assetRaw"><img src="../assets/64.png" alt="Carte preuve 64" loading="lazy" /></figure>
-            <figure class="stepsRiverCard assetRaw"><img src="../assets/74.png" alt="Carte preuve 74" loading="lazy" /></figure>
-          </div>
-          <p class="stepsRiverHint" aria-hidden="true">Touchez pour distribuer la carte suivante</p>
-        </article>
+            <div class="stepsRiver" role="button" tabindex="0" aria-label="Amas de cartes preuves, appuyer pour faire passer la carte suivante">
+              <figure class="stepsRiverCard assetRaw"><img src="../assets/26.png" alt="Carte preuve 26" loading="lazy" /></figure>
+              <figure class="stepsRiverCard assetRaw"><img src="../assets/38.png" alt="Carte preuve 38" loading="lazy" /></figure>
+              <figure class="stepsRiverCard assetRaw"><img src="../assets/64.png" alt="Carte preuve 64" loading="lazy" /></figure>
+              <figure class="stepsRiverCard assetRaw"><img src="../assets/74.png" alt="Carte preuve 74" loading="lazy" /></figure>
+            </div>
+            <p class="stepsRiverHint" aria-hidden="true">Touchez pour distribuer la carte suivante</p>
+          </article>
+        </div>
 
-        <div class="stepsBottom">
+        <div class="stepStackItem">
           <article class="stepCard scrollAsset">
             <div class="stepHead">
               <span class="stepNo">2</span>
-              <h3 class="stepTitle">LA POLICE PRÉPARE SES <span class="accent">QUESTIONS</span></h3>
+              <h3 class="stepTitle">LA POLICE DÉMARRE <span class="accent">L'INTERROGATOIRE</span></h3>
             </div>
-            <div class="stepVisual">
-              <img class="assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
-              <p class="stepText">Pendant que les enquêteurs préparent leurs questions pièges, votre binôme a <strong>3 minutes</strong> pour peaufiner son alibi... <strong>sans prendre de notes</strong> !</p>
-            </div>
+            <p class="stepText">Lorsque les 8 questions ont été écrites, la police les pose à l'ensemble des binômes. Ces derniers y répondent chacun de leur côté, sans se consulter.</p>
+            <img class="stepImg assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
           </article>
+        </div>
 
+        <div class="stepStackItem">
           <article class="stepCard scrollAsset">
             <div class="stepHead">
               <span class="stepNo">3</span>
-              <h3 class="stepTitle">L'INTERROGATOIRE <span class="accent">COMMENCE</span></h3>
+              <h3 class="stepTitle">LE <span class="accent">VERDICT</span></h3>
             </div>
-            <div class="stepVisual">
-              <img class="assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
-              <p class="stepText">Sans plus vous parler, répondez en même temps que votre complice sur votre feuillet Alibi. <strong>Même réponse, vous marquez des points.</strong> Sinon... <strong>direction la prison !</strong></p>
-            </div>
+            <p class="stepText">Si le binôme a la même réponse, alors il marque des points, mais attention de ne pas répondre comme la police pour ne pas en perdre ! Qui arrivera à éviter la prison ?</p>
+            <img class="stepImg assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
           </article>
         </div>
       </div>
@@ -1102,7 +1080,7 @@
               <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>Le jeu fonctionne dès 3 joueurs et tourne parfaitement entre 4 et 8 personnes.</p>
+            <p>Le jeu se joue à partir de 3 joueurs, et autant que vous voulez ensuite — notre record est de 25 joueurs autour de la table !</p>
           </details>
 
           <details class="faqItem">
@@ -1145,9 +1123,15 @@
         <div class="buyRight">
           <h3>DISPONIBLE MAINTENANT</h3>
           <div class="buyStores">
-            <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">amazon</a>
-            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">fnac</a>
-            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura">Cultura</a>
+            <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">
+              <span class="buyLogo amazon" aria-hidden="true"></span>amazon
+            </a>
+            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">
+              <span class="buyLogo fnac" aria-hidden="true"></span>fnac
+            </a>
+            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura">
+              <span class="buyLogo cultura" aria-hidden="true"></span>Cultura
+            </a>
           </div>
           <div class="miniMeta">Livraison rapide · Paiement sécurisé · Service client</div>
         </div>
@@ -1367,15 +1351,6 @@
           card.style.setProperty('--takeProgress', takeProgress.toFixed(3));
         });
       }
-
-      const stepAssets = document.querySelectorAll('.stepsBottom .stepVisual img');
-      if (stepAssets.length){
-        const bob = Math.sin(window.scrollY * 0.016) * 3;
-        stepAssets.forEach((img, idx)=>{
-          const direction = idx % 2 === 0 ? 1 : -1;
-          img.style.setProperty('--assetShift', `${(bob * direction).toFixed(3)}px`);
-        });
-      }
     }
 
     window.addEventListener('scroll', setActiveNav, { passive:true });
@@ -1427,6 +1402,10 @@
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const ctx = canvas.getContext('2d');
+      // Browsers default to a low-quality resample for drawImage upscaling —
+      // explicit 'high' keeps every frame crisp instead of soft by default.
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       const captions = Array.from(storyWrap.querySelectorAll('.storyCaption'));
       const progressFill = document.getElementById('storyProgressFill');
       const storyVisual = document.getElementById('storyVisual');
