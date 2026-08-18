@@ -28,9 +28,19 @@
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%; overflow-x:clip}
+    /* min-height, not height: `height:100%` caps body's box at exactly one
+       viewport tall, which becomes the header's sticky *containing block*.
+       A sticky element stops sticking once it hits the bottom of its
+       containing block — with a real multi-screen-tall page but a
+       body box frozen at 100vh, that bottom arrives after about one
+       viewport of scrolling, so the header detaches and scrolls away with
+       the rest of the page instead of staying pinned. min-height still
+       guarantees a full-viewport background on short pages, but lets the
+       box (and the sticky range) grow with the actual content. */
+    html,body{min-height:100%}
     body{
       margin:0;
+      overflow-x:clip;
       font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:var(--bg);
       color:var(--ink);
@@ -109,14 +119,6 @@
       padding:34px 0 28px;
       border-bottom:2px solid rgba(255,255,255,.08);
     }
-    /* The heroCta block stays pinned so "Comment jouer" can slide up and
-       cover it — same stacking technique as the step cards below (needs a
-       real height on the wrapper, not padding, for sticky to hold). */
-    .heroCtaStack{position:relative}
-    @media (prefers-reduced-motion: no-preference){
-      .heroCtaStack{min-height:100vh}
-      .heroCta{position:sticky; top:calc(var(--navH) + 14px)}
-    }
     .heroIntro{max-width:640px; margin:0 auto; text-align:center}
     .heroKicker{
       margin:0;
@@ -185,15 +187,18 @@
       transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
     }
     .buyBtn:hover{transform:translateY(-1px); filter:brightness(1.06)}
+    /* Amazon logo is recoloured (white wordmark, orange smile — Amazon's
+       own dark-mode treatment) so it reads on the same dark button as
+       everything else, no light backdrop needed. */
     .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 8px 18px rgba(246,191,51,.35)}
     .buyBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 8px 18px rgba(33,91,158,.35)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
-    /* All 3 marks sit on their own solid/near-solid background (not true
-       transparency) — a small white chip keeps them legible whatever the
-       button background ends up being. */
-    .buyLogo.amazon{width:40px; height:34px; background-image:url(../assets/amazon.png); background-color:#fff; background-size:78%; border-radius:6px}
-    .buyLogo.fnac{width:64px; height:28px; background-image:url(../assets/fnac.jpeg); background-color:#fff; background-size:78%; border-radius:6px}
-    .buyLogo.cultura{width:76px; height:26px; background-image:url(../assets/cultura.png); background-color:#fff; background-size:82%; border-radius:6px}
+    /* Logos are cut out with a transparent background (no white chip) so
+       each retailer's mark sits directly on the button colour — the button
+       colours below are picked to keep every mark legible on its own. */
+    .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon.png)}
+    .buyLogo.fnac{width:60px; height:34px; background-image:url(../assets/fnac.png)}
+    .buyLogo.cultura{width:48px; height:32px; background-image:url(../assets/cultura.png)}
 
     .quickInfoBar{
       margin-top:20px;
@@ -336,14 +341,7 @@
     }
 
     .section{padding:36px 0}
-    /* Sits above .hero (z-index:1) with its own opaque backdrop so it fully
-       covers the pinned heroCta as it slides up over it. */
-    #comment-jouer{position:relative; z-index:2; background:var(--bg)}
-    @media (prefers-reduced-motion: no-preference){
-      /* Same reasoning as .stepStackItem: pull the section up so it visibly
-         slides over the still-pinned heroCta instead of just touching it. */
-      #comment-jouer{margin-top:-45vh}
-    }
+    #comment-jouer{position:relative; background:var(--bg)}
     .sectionTitle{
       margin:0;
       text-align:center;
@@ -355,31 +353,10 @@
     }
     .sectionTitle .accent{color:var(--orange)}
 
-    .stepsStack{
-      margin-top:18px;
-      width:100%;
-      max-width:100%;
-    }
-    /* Each card sits inside a taller wrapper so there's scroll room before it
-       hands off to the next one; the card itself is what actually sticks.
-       Needs a real height (not padding-bottom) — padding on an auto-height
-       parent doesn't reliably extend the sticky "travel" range in Chromium. */
-    .stepStackItem{padding-bottom:20px}
-    .stepStackItem:last-child{padding-bottom:0}
-    @media (prefers-reduced-motion: no-preference){
-      .stepStackItem{padding-bottom:0; min-height:100vh}
-      .stepStackItem:last-child{min-height:0}
-      /* Pull each next card up into the previous one's still-visible space —
-         with same-height siblings, the natural handoff point alone only
-         gives a sliver of overlap (bounded by the sticky "top" offset); the
-         negative margin is what makes the cover actually read as passing
-         over rather than just touching the edge. */
-      .stepStackItem:not(:first-child){margin-top:-45vh}
-      .stepStackItem .stepCard{position:sticky; top:calc(var(--navH) + 14px)}
-      .stepStackItem:nth-child(1) .stepCard{z-index:1}
-      .stepStackItem:nth-child(2) .stepCard{z-index:2}
-      .stepStackItem:nth-child(3) .stepCard{z-index:3}
-    }
+    /* "Comment jouer" : plus d'effet de scroll ici, seulement le hero
+       vidéo au-dessus en garde un. Les 3 étapes s'affichent simplement
+       l'une après l'autre dans le flux normal de la page. */
+    .stepsList{margin-top:18px; width:100%; max-width:100%; display:flex; flex-direction:column; gap:16px}
     .stepCard{
       border:2px solid #d7c8af;
       border-radius:14px;
@@ -626,8 +603,9 @@
     .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 6px 14px rgba(246,191,51,.35)}
     .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 6px 14px rgba(33,91,158,.35)}
     .storeBtn .buyLogo{width:18px; height:18px}
-    .storeBtn .buyLogo.fnac{width:40px; height:18px; background-size:80%}
-    .storeBtn .buyLogo.cultura{width:46px; height:16px; background-size:84%}
+    .storeBtn .buyLogo.amazon{width:19px; height:19px}
+    .storeBtn .buyLogo.fnac{width:33px; height:19px}
+    .storeBtn .buyLogo.cultura{width:27px; height:18px}
     .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
 
     .buyModalBackdrop{
@@ -719,7 +697,7 @@
       letter-spacing:.02em;
     }
 
-    .isCompactMobile .stepsStack,
+    .isCompactMobile .stepsList,
     .isCompactMobile .stepCard,
     .isCompactMobile .stepCard.isPrimary{
       width:100%;
@@ -933,9 +911,6 @@
       </div>
     </div>
 
-    <!-- Même principe que le stack de "Comment jouer" : ce bloc reste épinglé
-         le temps que la section suivante arrive et le recouvre. -->
-    <div class="heroCtaStack">
     <div class="container heroCta">
       <div class="quickInfoBar" aria-label="Informations rapides">
         <div class="quickInfoItem">
@@ -973,66 +948,50 @@
         </a>
       </div>
     </div>
-    </div>
   </section>
 
   <section class="section" id="comment-jouer">
     <div class="container">
       <h2 class="sectionTitle">COMMENT <span class="accent">JOUER</span> ?</h2>
 
-      <!--
-        Les 3 étapes s'empilent au scroll (position:sticky, même palier "top" pour
-        les 3) : chaque carte reste épinglée jusqu'à ce que la suivante vienne la
-        recouvrir, comme sur sandracreates.com (section Works). Chaque
-        .stepStackItem est plus haut que sa carte pour laisser de la place au
-        scroll avant que la carte ne se décroche ; le z-index croissant garantit
-        que la carte suivante recouvre bien la précédente. Sous
-        prefers-reduced-motion, tout repasse en flux normal (voir media query).
-      -->
-      <div class="stepsStack">
-        <div class="stepStackItem">
-          <article class="stepCard isPrimary scrollAsset">
-            <div class="stepHead">
-              <span class="stepNo">1</span>
-              <h3 class="stepTitle">DÉVOILEZ 4 CARTES <span class="accent">PREUVES</span></h3>
+      <div class="stepsList">
+        <article class="stepCard isPrimary">
+          <div class="stepHead">
+            <span class="stepNo">1</span>
+            <h3 class="stepTitle">DÉVOILEZ 4 CARTES <span class="accent">PREUVES</span></h3>
+          </div>
+          <div class="stepVisual onlyText">
+            <div class="stepText">
+              <p>La police s'isole pour inventer 8 questions en rapport avec les cartes preuves. Pendant ce temps les suspects regroupés en binôme réfléchissent à leur alibi.</p>
             </div>
-            <div class="stepVisual onlyText">
-              <div class="stepText">
-                <p>La police s'isole pour inventer 8 questions en rapport avec les cartes preuves. Pendant ce temps les suspects regroupés en binôme réfléchissent à leur alibi.</p>
-              </div>
-            </div>
+          </div>
 
-            <div class="stepsRiver" role="button" tabindex="0" aria-label="Amas de cartes preuves, appuyer pour faire passer la carte suivante">
-              <figure class="stepsRiverCard assetRaw"><img src="../assets/26.png" alt="Carte preuve 26" loading="lazy" /></figure>
-              <figure class="stepsRiverCard assetRaw"><img src="../assets/38.png" alt="Carte preuve 38" loading="lazy" /></figure>
-              <figure class="stepsRiverCard assetRaw"><img src="../assets/64.png" alt="Carte preuve 64" loading="lazy" /></figure>
-              <figure class="stepsRiverCard assetRaw"><img src="../assets/74.png" alt="Carte preuve 74" loading="lazy" /></figure>
-            </div>
-            <p class="stepsRiverHint" aria-hidden="true">Touchez pour distribuer la carte suivante</p>
-          </article>
-        </div>
+          <div class="stepsRiver" role="button" tabindex="0" aria-label="Amas de cartes preuves, appuyer pour faire passer la carte suivante">
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/26.png" alt="Carte preuve 26" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/38.png" alt="Carte preuve 38" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/64.png" alt="Carte preuve 64" loading="lazy" /></figure>
+            <figure class="stepsRiverCard assetRaw"><img src="../assets/74.png" alt="Carte preuve 74" loading="lazy" /></figure>
+          </div>
+          <p class="stepsRiverHint" aria-hidden="true">Touchez pour distribuer la carte suivante</p>
+        </article>
 
-        <div class="stepStackItem">
-          <article class="stepCard scrollAsset">
-            <div class="stepHead">
-              <span class="stepNo">2</span>
-              <h3 class="stepTitle">LA POLICE DÉMARRE <span class="accent">L'INTERROGATOIRE</span></h3>
-            </div>
-            <p class="stepText">Lorsque les 8 questions ont été écrites, la police les pose à l'ensemble des binômes. Ces derniers y répondent chacun de leur côté, sans se consulter.</p>
-            <img class="stepImg assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
-          </article>
-        </div>
+        <article class="stepCard">
+          <div class="stepHead">
+            <span class="stepNo">2</span>
+            <h3 class="stepTitle">LA POLICE DÉMARRE <span class="accent">L'INTERROGATOIRE</span></h3>
+          </div>
+          <p class="stepText">Lorsque les 8 questions ont été écrites, la police les pose à l'ensemble des binômes. Ces derniers y répondent chacun de leur côté, sans se consulter.</p>
+          <img class="stepImg assetRaw" src="../assets/notepad_police.png" alt="Bloc note police" loading="lazy" />
+        </article>
 
-        <div class="stepStackItem">
-          <article class="stepCard scrollAsset">
-            <div class="stepHead">
-              <span class="stepNo">3</span>
-              <h3 class="stepTitle">LE <span class="accent">VERDICT</span></h3>
-            </div>
-            <p class="stepText">Si le binôme a la même réponse, alors il marque des points, mais attention de ne pas répondre comme la police pour ne pas en perdre ! Qui arrivera à éviter la prison ?</p>
-            <img class="stepImg assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
-          </article>
-        </div>
+        <article class="stepCard">
+          <div class="stepHead">
+            <span class="stepNo">3</span>
+            <h3 class="stepTitle">LE <span class="accent">VERDICT</span></h3>
+          </div>
+          <p class="stepText">Si le binôme a la même réponse, alors il marque des points, mais attention de ne pas répondre comme la police pour ne pas en perdre ! Qui arrivera à éviter la prison ?</p>
+          <img class="stepImg assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
+        </article>
       </div>
     </div>
   </section>
@@ -1072,7 +1031,7 @@
               <span class="q"><span class="qno">Q1</span> LE JEU EST BIEN AVEC QUI ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>GAV est idéal entre amis, en couple ou en famille, dès que vous aimez improviser et rire ensemble.</p>
+            <p>Entre amis pour un apéro qui dérape, en couple pour tester votre complicité, en famille pour un fou rire général, ou entre collègues pour briser la glace comme jamais — GAV s'invite partout où on aime rire ensemble.</p>
           </details>
 
           <details class="faqItem">
@@ -1080,7 +1039,7 @@
               <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>Le jeu se joue à partir de 3 joueurs, et autant que vous voulez ensuite — notre record est de 25 joueurs autour de la table !</p>
+            <p>De 3 à autant que vous voulez — notre record est de 25 joueurs autour de la même table. GAV s'adapte aussi bien à un apéro entre potes qu'à une soirée qui rassemble tout le monde.</p>
           </details>
 
           <details class="faqItem">
@@ -1088,7 +1047,7 @@
               <span class="q"><span class="qno">Q3</span> FAUT-IL JOUER UN RÔLE ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>Non, pas de rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. Vous, vous improvisez vos réponses et tentez de rester cohérent avec votre complice.</p>
+            <p>Aucun rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. À vous d'improviser et de rester cohérent avec votre complice, sous la pression.</p>
           </details>
 
           <details class="faqItem">
@@ -1096,7 +1055,7 @@
               <span class="q"><span class="qno">Q4</span> À PARTIR DE QUEL ÂGE ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>À partir de 10 ans. Les règles sont simples et les parties restent très accessibles.</p>
+            <p>Dès 10 ans. Des règles simples, aucun temps mort — toute la famille joue, et les ados adorent piéger leurs parents.</p>
           </details>
 
           <details class="faqItem">
@@ -1104,7 +1063,7 @@
               <span class="q"><span class="qno">Q5</span> COMBIEN DE TEMPS DURE UNE PARTIE ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>Environ 10 minutes par manche, ce qui permet d'enchaîner facilement plusieurs tours.</p>
+            <p>10 minutes par manche. Le temps de dire « on fait qu'une partie » avant d'enchaîner cinq fois de suite.</p>
           </details>
         </div>
 
@@ -1123,7 +1082,7 @@
         <div class="buyRight">
           <h3>DISPONIBLE MAINTENANT</h3>
           <div class="buyStores">
-            <a class="storeBtn" href="#achat" aria-label="Acheter sur Amazon">
+            <a class="storeBtn amazon" href="#achat" aria-label="Acheter sur Amazon">
               <span class="buyLogo amazon" aria-hidden="true"></span>amazon
             </a>
             <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">
@@ -1551,9 +1510,12 @@
           drawFrame(targetFrame);
         }
 
-        // --- Zoom: slow, continuous push-in through the whole sequence. ---
+        // --- Zoom: slow, continuous push-in through the whole sequence.
+        // Kept subtle on purpose — this transform is a CSS compositor
+        // upscale applied on top of the canvas, so a bigger value (this was
+        // 0.12) visibly softens the frame, especially on high-DPR phones. ---
         if (storyVisual){
-          const zoom = 1 + 0.12 * easeOutCubic(progress);
+          const zoom = 1 + 0.03 * easeOutCubic(progress);
           storyVisual.style.setProperty('--zoom', zoom.toFixed(4));
         }
 
@@ -1589,6 +1551,7 @@
       window.addEventListener('resize', onResize);
       update();
     })();
+
   </script>
 </body>
 </html>
