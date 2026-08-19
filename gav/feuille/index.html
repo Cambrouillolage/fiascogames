@@ -637,32 +637,32 @@
             <div class="tick">
               <div class="lbl" style="color:var(--red)">Perpétuité</div>
               <div class="dot"></div>
-              <div class="pts">&gt;0 pts</div>
+              <div class="pts">&lt;0 pts</div>
             </div>
             <div class="tick">
               <div class="lbl" style="color:var(--red)">20 ans<br/>ferme</div>
               <div class="dot"></div>
-              <div class="pts">5 pts</div>
+              <div class="pts">3 pts</div>
             </div>
             <div class="tick">
-              <div class="lbl" style="color:var(--red)">3 ans<br/>sursis</div>
+              <div class="lbl" style="color:var(--red)">3 ans<br/>ferme</div>
               <div class="dot"></div>
-              <div class="pts">10 pts</div>
+              <div class="pts">7 pts</div>
             </div>
             <div class="tick">
-              <div class="lbl" style="color:var(--red)">21 jours<br/>en prison</div>
+              <div class="lbl" style="color:var(--red)">21 jours<br/>ferme</div>
               <div class="dot"></div>
-              <div class="pts">14 pts</div>
+              <div class="pts">11 pts</div>
             </div>
             <div class="tick">
-              <div class="lbl" style="color:var(--red)">Libéré(e)<br/>sous caution</div>
+              <div class="lbl" style="color:var(--red)">Bracelet<br/>électronique</div>
               <div class="dot"></div>
-              <div class="pts">16 pts</div>
+              <div class="pts">13 pts</div>
             </div>
             <div class="tick">
               <div class="lbl" style="color:var(--green)">Innocent</div>
               <div class="dot green"></div>
-              <div class="pts" style="color:var(--green)">18 pts</div>
+              <div class="pts" style="color:var(--green)">15 pts</div>
             </div>
           </div>
         </div>
@@ -883,7 +883,7 @@
       verdictSceneEl.classList.add("show");
       verdictTitleEl.textContent = `Score final: ${final}`;
 
-      if(final >= 18){
+      if(final >= 15){
         verdictTitleEl.textContent += " - Les voleurs s'enfuient, libres.";
         jailSceneEl.style.display = "none";
         fleeSceneEl.style.display = "block";

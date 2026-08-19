@@ -27,10 +27,10 @@ const SRC_DIR = path.join(ROOT, 'assets/hero-frames');
 const MOBILE_DIR = path.join(SRC_DIR, 'mobile');
 const DESKTOP_DIR = path.join(SRC_DIR, 'desktop');
 
-const MOBILE_WIDTH = 900;   // covers even large/high-DPR phones without upscaling
+const MOBILE_WIDTH = 1080;  // extra headroom above what DPR-capped phones need, less visible WebP banding
 const DESKTOP_WIDTH = 1920; // matches the new source render (1920x1080), no upscaling
-const MOBILE_QUALITY = 80;
-const DESKTOP_QUALITY = 82;
+const MOBILE_QUALITY = 86;
+const DESKTOP_QUALITY = 84;
 const ENCODE_EFFORT = 6;
 const CONCURRENCY = 8;
 const POSTER_FRAME = 'hero-frame-011.jpg'; // matches FRAME_START in gav/index.html
