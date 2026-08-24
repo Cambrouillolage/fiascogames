@@ -84,9 +84,12 @@
     .navLinks a.isActive{opacity:1; border-color:var(--orange)}
 
     .navCtas{display:flex; gap:10px; align-items:center}
+    /* "Bonbon" candy-button treatment: same recipe as .buyBtn — a flat fill
+       plus a hard (unblurred) offset shadow standing in for a 3D bevel, and
+       a press state that drops the button into its own shadow. */
     .btn{
-      border:1px solid rgba(255,255,255,.2);
-      border-radius:999px;
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:14px;
       padding:11px 18px;
       font-weight:800;
       font-size:13px;
@@ -95,18 +98,24 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
       cursor:pointer;
     }
-    .btn:hover{transform:translateY(-1px); filter:brightness(1.06)}
-    .btnGhost{color:#fff; background:transparent}
+    .btnGhost{
+      color:#fff;
+      background:transparent;
+      box-shadow:0 4px 0 rgba(255,255,255,.16);
+    }
+    .btnGhost:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .btnGhost:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(255,255,255,.16)}
     .btnPrimary{
       color:#fff;
       background:linear-gradient(180deg, #ff9e44, #ea6f11);
-      border-color:#df6410;
-      box-shadow:0 8px 18px rgba(234,111,17,.35);
+      border-color:rgba(255,255,255,.22);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
     }
-    .btnPrimary:hover{box-shadow:0 10px 22px rgba(234,111,17,.42)}
+    .btnPrimary:hover{transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 5px 0 #b34f09, 0 14px 26px rgba(234,111,17,.42)}
+    .btnPrimary:active{transform:translateY(3px); box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.32)}
 
     .hero{
       position:relative;
@@ -158,7 +167,7 @@
       font-weight:900;
       letter-spacing:.015em;
       font-size:clamp(28px, 6.5vw, 42px);
-      line-height:1.25;
+      line-height:1.7;
     }
     .promoText{
       margin:16px auto 0;
@@ -176,27 +185,36 @@
     /* Buy buttons: full-width stacked, one retailer per row (logo via CSS
        background-image so a not-yet-provided logo file just leaves an empty
        slot instead of a broken-image glyph — the label stays readable). */
-    .buyRow{margin-top:22px; display:flex; flex-direction:column; gap:10px}
+    .buyRow{margin-top:22px; display:flex; flex-direction:column; gap:12px}
+    /* Chunky "candy" buttons: a flat retailer colour plus a hard (unblurred)
+       offset shadow underneath stands in for a 3D bevel — press it and the
+       button drops into its own shadow, like a physical button. */
     .buyBtn{
       display:flex; align-items:center; justify-content:center; gap:10px;
-      width:100%; height:56px; border-radius:999px;
+      width:100%; height:58px; border-radius:16px;
       font-size:16px; font-weight:800; letter-spacing:.02em; text-transform:uppercase;
       text-decoration:none; color:#fff;
       background:linear-gradient(180deg, #1c2b3a, #0f1a26);
-      box-shadow:0 8px 18px rgba(15,26,38,.35);
-      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+      border:2px solid rgba(255,255,255,.14);
+      box-shadow:0 5px 0 #08131c, 0 12px 22px rgba(15,26,38,.35);
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
     }
-    .buyBtn:hover{transform:translateY(-1px); filter:brightness(1.06)}
-    /* Amazon logo is recoloured (white wordmark, orange smile — Amazon's
-       own dark-mode treatment) so it reads on the same dark button as
-       everything else, no light backdrop needed. */
-    .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 8px 18px rgba(246,191,51,.35)}
-    .buyBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 8px 18px rgba(33,91,158,.35)}
+    .buyBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .buyBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #08131c, 0 4px 10px rgba(15,26,38,.3)}
+    /* Amazon = brand orange (matches the site's own CTA orange), Fnac =
+       brand yellow, Cultura = brand blue — retailer colours, not ours to
+       change, so borrowed straight from each retailer's own palette. */
+    .buyBtn.amazon{background:linear-gradient(180deg, var(--orange-2), var(--orange)); border-color:rgba(255,255,255,.22); box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.38)}
+    .buyBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.32)}
+    .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 5px 0 #caa02a, 0 12px 22px rgba(246,191,51,.38)}
+    .buyBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 4px 10px rgba(246,191,51,.32)}
+    .buyBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 5px 0 #123762, 0 12px 22px rgba(33,91,158,.38)}
+    .buyBtn.cultura:active{box-shadow:0 1px 0 #123762, 0 4px 10px rgba(33,91,158,.32)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
     /* Logos are cut out with a transparent background (no white chip) so
        each retailer's mark sits directly on the button colour — the button
        colours below are picked to keep every mark legible on its own. */
-    .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon.png)}
+    .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon-white.png)}
     .buyLogo.fnac{width:60px; height:34px; background-image:url(../assets/fnac.png)}
     .buyLogo.cultura{width:48px; height:32px; background-image:url(../assets/cultura.png)}
 
@@ -205,9 +223,9 @@
       display:flex;
       flex-wrap:wrap;
       background:linear-gradient(180deg, #ff9e44, #ea6f11);
-      border:1px solid #df6410;
+      border:2px solid rgba(255,255,255,.22);
       border-radius:14px;
-      box-shadow:0 8px 18px rgba(234,111,17,.35);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
       overflow:hidden;
     }
     .quickInfoItem{
@@ -287,16 +305,21 @@
     .storyCaption{color:#fff; text-align:center; opacity:1; position:relative}
     .storyCaptionTitle{
       margin:0 auto; max-width:22ch; font-size:clamp(26px, 7vw, 36px); font-weight:900;
-      line-height:1.2; text-transform:uppercase;
+      line-height:1.6; text-transform:uppercase;
       font-family:"Bebas Neue", "Impact", sans-serif; letter-spacing:.015em;
     }
-    /* Highlight: a solid rectangle behind a key word/phrase, marker-style */
+    /* Highlight: a solid rectangle behind a key word/phrase, marker-style —
+       same "candy" hard-shadow bevel as the buttons, scaled in em so it
+       stays proportional whether the caption is 26px or 72px. */
     .hl{
       display:inline-block;
       background:linear-gradient(180deg, var(--orange-2), var(--orange));
       color:#141414;
+      margin:.1em 0;
       padding:.04em .32em;
-      border-radius:.14em;
+      border-radius:.16em;
+      border:.05em solid rgba(255,255,255,.28);
+      box-shadow:.06em .08em 0 #b34f09;
       white-space:nowrap;
       text-shadow:none;
     }
@@ -356,36 +379,48 @@
     /* "Comment jouer" : plus d'effet de scroll ici, seulement le hero
        vidéo au-dessus en garde un. Les 3 étapes s'affichent simplement
        l'une après l'autre dans le flux normal de la page. */
-    .stepsList{margin-top:18px; width:100%; max-width:100%; display:flex; flex-direction:column; gap:16px}
+    .stepsList{margin-top:34px; width:100%; max-width:100%; display:flex; flex-direction:column; gap:34px}
+    /* Chunky bordered "card" with a numbered badge popped over its top-left
+       corner: the badge sits half outside the card (negative top), and a
+       hard (unblurred) offset box-shadow stands in for a 3D drop shadow
+       instead of a blurred one — same trick as the buy buttons above. */
     .stepCard{
-      border:2px solid #d7c8af;
-      border-radius:14px;
-      background:var(--bg-2);
-      padding:14px;
-      box-shadow:0 10px 20px rgba(36,22,8,.08);
+      position:relative;
+      z-index:1;
+      border:3px solid #dba25a;
+      border-radius:24px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      padding:34px 18px 20px;
+      box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
       min-width:0;
       width:100%;
       max-width:100%;
     }
     .stepCard.isPrimary{
-      padding:18px;
-      background:linear-gradient(180deg, #fbf6ec, #f6eddd);
+      padding:38px 20px 24px;
+      background:linear-gradient(180deg, #fdf7ea, #f5e6c4);
     }
-    .stepHead{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+    .stepHead{margin-bottom:10px}
     .stepNo{
-      width:38px; height:38px; border-radius:50%;
+      position:absolute;
+      top:-24px;
+      left:24px;
+      width:52px; height:52px; border-radius:50%;
       display:grid; place-items:center;
-      background:#171717; color:#fff; font-weight:900; font-size:21px;
-      flex:0 0 38px;
+      background:linear-gradient(180deg, var(--orange-2), var(--orange));
+      border:4px solid #a8420c;
+      color:#fff; font-weight:900; font-size:24px;
+      box-shadow:0 6px 14px rgba(36,22,8,.3);
+      z-index:2;
     }
     /* Same type scale for all 3 cards — hierarchy comes from weight/case/color,
-       not size (see .stepText below). */
-    .stepTitle{margin:0; text-transform:uppercase; line-height:1.2; font-size:21px; font-weight:900}
+       not size (see .stepText below). Centered, like the reference cards. */
+    .stepTitle{margin:0; text-align:center; text-transform:uppercase; line-height:1.2; font-size:21px; font-weight:900; color:#a8420c}
     .stepTitle .accent{color:var(--orange)}
     .stepVisual{display:grid; grid-template-columns:140px minmax(0,1fr); gap:11px; align-items:center; min-width:0}
     .stepVisual img{width:100%; height:auto; display:block; filter:drop-shadow(0 8px 14px rgba(0,0,0,.2))}
     .stepVisual.onlyText{grid-template-columns:1fr}
-    .stepText{font-size:21px; color:#3f372f; line-height:1.5; font-weight:500; min-width:0; overflow-wrap:anywhere}
+    .stepText{font-size:21px; color:#3f372f; line-height:1.5; font-weight:500; min-width:0; overflow-wrap:anywhere; text-align:center}
     .stepCard.isPrimary .stepVisual.onlyText{
       display:block;
     }
@@ -472,6 +507,20 @@
       box-shadow:none;
     }
 
+    /* Idle "alive" motion for the step assets on mobile — a slow, subtle
+       bob/tilt loop (not scroll-triggered). Runs on the <img>, never on the
+       .stepsRiverCard itself, so it layers on top of that element's own
+       swipe/stack transform instead of fighting it. Killed globally by the
+       prefers-reduced-motion rule below. */
+    @keyframes gavAssetFloat{
+      0%, 100%{ transform:translateY(0) rotate(0deg); }
+      50%{ transform:translateY(-6px) rotate(-1.4deg); }
+    }
+    @keyframes gavAssetFloatAlt{
+      0%, 100%{ transform:translateY(0) rotate(0deg); }
+      50%{ transform:translateY(-5px) rotate(1.6deg); }
+    }
+
     .valueBand{
       background:linear-gradient(180deg, #191919, #121212);
       border-top:1px solid rgba(255,255,255,.14);
@@ -484,12 +533,15 @@
       margin-top:20px;
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
+      gap:20px;
     }
+    /* Same "candy" hard-shadow bevel as the other cards — warm amber shadow
+       instead of black so it still reads as branded on this dark band. */
     .whyCard{
-      border:1px solid rgba(255,255,255,.2);
+      border:2px solid rgba(255,255,255,.24);
       border-radius:14px;
       background:rgba(255,255,255,.06);
+      box-shadow:4px 5px 0 rgba(180,79,9,.55);
       padding:18px 14px;
       text-align:center;
     }
@@ -545,11 +597,13 @@
     }
 
     .faqWrap{display:block; margin-top:18px}
-    .faqList{display:grid; gap:8px}
+    .faqList{display:grid; gap:18px}
+    /* Same "candy" hard-shadow bevel as the step cards and buttons. */
     .faqItem{
-      border:2px solid #d9ccba;
-      border-radius:10px;
+      border:2px solid #dba25a;
+      border-radius:14px;
       background:#fffbf2;
+      box-shadow:4px 5px 0 #c9822f;
       overflow:hidden;
     }
     .faqItem summary{
@@ -592,16 +646,22 @@
     .buyStores{margin-top:12px; display:flex; gap:9px; flex-wrap:wrap}
     .storeBtn{
       display:inline-flex; align-items:center; gap:7px;
-      height:38px; padding:0 16px; border-radius:999px;
+      height:38px; padding:0 16px; border-radius:12px;
       font-size:13px; font-weight:800; letter-spacing:.02em; text-transform:uppercase;
       text-decoration:none; color:#fff;
       background:linear-gradient(180deg, #1c2b3a, #0f1a26);
-      box-shadow:0 6px 14px rgba(15,26,38,.35);
-      transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+      border:2px solid rgba(255,255,255,.14);
+      box-shadow:0 4px 0 #08131c, 0 8px 14px rgba(15,26,38,.35);
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
     }
-    .storeBtn:hover{transform:translateY(-1px); filter:brightness(1.06)}
-    .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 6px 14px rgba(246,191,51,.35)}
-    .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 6px 14px rgba(33,91,158,.35)}
+    .storeBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .storeBtn:active{transform:translateY(2px); box-shadow:0 1px 0 #08131c, 0 3px 8px rgba(15,26,38,.3)}
+    .storeBtn.amazon{background:linear-gradient(180deg, var(--orange-2), var(--orange)); border-color:rgba(255,255,255,.22); box-shadow:0 4px 0 #b34f09, 0 8px 14px rgba(234,111,17,.38)}
+    .storeBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 3px 8px rgba(234,111,17,.32)}
+    .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 4px 0 #caa02a, 0 8px 14px rgba(246,191,51,.35)}
+    .storeBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 3px 8px rgba(246,191,51,.3)}
+    .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 4px 0 #123762, 0 8px 14px rgba(33,91,158,.35)}
+    .storeBtn.cultura:active{box-shadow:0 1px 0 #123762, 0 3px 8px rgba(33,91,158,.3)}
     .storeBtn .buyLogo{width:18px; height:18px}
     .storeBtn .buyLogo.amazon{width:19px; height:19px}
     .storeBtn .buyLogo.fnac{width:33px; height:19px}
@@ -686,16 +746,19 @@
       text-decoration:none;
       background:linear-gradient(180deg, #ff9e44, #ea6f11);
       color:#fff;
-      border:1px solid #df6410;
-      border-radius:999px;
-      box-shadow:0 8px 18px rgba(234,111,17,.35);
+      border:2px solid rgba(255,255,255,.22);
+      border-radius:12px;
+      box-shadow:0 4px 0 #b34f09, 0 10px 18px rgba(234,111,17,.35);
       padding:9px 16px;
       font-weight:900;
       font-size:12px;
       white-space:nowrap;
       text-transform:uppercase;
       letter-spacing:.02em;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
     }
+    .stickyBuyBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .stickyBuyBtn:active{transform:translateY(2px); box-shadow:0 1px 0 #b34f09, 0 3px 8px rgba(234,111,17,.32)}
 
     .isCompactMobile .stepsList,
     .isCompactMobile .stepCard,
@@ -805,6 +868,14 @@
       .stepsRiver{min-height:180px}
       .stepsRiverCard{width:min(128px, 34vw); margin-left:-20px}
       .stickyBuyBar{display:flex}
+
+      /* Slight movement on the step assets, staggered per card so they
+         don't bob in unison. */
+      .stepsRiverCard img{animation:gavAssetFloat 4.6s ease-in-out infinite}
+      .stepsRiverCard:nth-child(2) img{animation-name:gavAssetFloatAlt; animation-duration:5.2s; animation-delay:.3s}
+      .stepsRiverCard:nth-child(3) img{animation-duration:4.9s; animation-delay:.6s}
+      .stepsRiverCard:nth-child(4) img{animation-name:gavAssetFloatAlt; animation-duration:5.4s; animation-delay:.15s}
+      .stepImg{animation:gavAssetFloatAlt 5.5s ease-in-out infinite}
     }
 
     @media (max-width:560px){
