@@ -3,27 +3,499 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GAV - Video</title>
+  <title>GAV - Questions sur les règles</title>
+  <meta name="description" content="Posez vos questions sur les règles du jeu GAV, l'assistant vous répond en s'appuyant sur les règles officielles." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://fiascogames.fr/gav/video/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="GAV - Questions sur les règles" />
+  <meta property="og:description" content="Posez vos questions sur les règles de GAV, l'assistant vous répond en s'appuyant sur les règles officielles." />
+  <meta property="og:url" content="https://fiascogames.fr/gav/video/" />
+
+  <link rel="icon" type="image/png" href="../../assets/GAV1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+
   <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f7f2e8;
-      color: #1b1b1b;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      padding: 24px;
-      text-align: center;
+    :root{
+      --bg:#f3ede1;
+      --bg-2:#f9f5ec;
+      --dark:#131313;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+      --max:820px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container{width:min(var(--max), calc(100% - 32px));margin:0 auto}
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:2px solid var(--line);
+      background:rgba(249,245,236,.92);
+      backdrop-filter:blur(10px);
+    }
+    .navInner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 0;
+    }
+    .navBack, .navHome{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--ink);
+      border:2px solid var(--line);
+      background:var(--white);
+      border-radius:12px;
+      padding:8px 14px;
+      font-weight:800;
+      font-size:14px;
+    }
+    .navTitle{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      letter-spacing:.04em;
+      font-size:22px;
+      color:var(--orange);
+      text-align:center;
+      flex:1;
+    }
+
+    main{padding:28px 0 56px}
+
+    h1{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      margin:0 0 8px;
+      font-size:clamp(30px, 6vw, 44px);
+      line-height:1.02;
+      color:var(--dark);
+    }
+    .lead{
+      margin:0 0 22px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.5;
+    }
+
+    /* Zone vidéo (prête à activer dès qu'une vidéo de règles existe :
+       décommenter le bloc .videoFrame dans le HTML ci-dessous). */
+    .videoFrame{
+      position:relative;
+      width:100%;
+      aspect-ratio:16/9;
+      border-radius:16px;
+      overflow:hidden;
+      border:2px solid var(--line);
+      background:#000;
+      margin-bottom:22px;
+    }
+    .videoFrame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    /* Même recette "bonbon" que .faqItem sur gav/index.html : bordure +
+       ombre portée dure plutôt qu'un flou, façon relief. */
+    .chatCard{
+      border:2px solid #dba25a;
+      border-radius:16px;
+      background:#fffbf2;
+      box-shadow:4px 5px 0 #c9822f;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    .chatMessages{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:18px;
+      max-height:52vh;
+      min-height:220px;
+      overflow-y:auto;
+    }
+
+    .msg{
+      max-width:88%;
+      padding:10px 14px;
+      border-radius:14px;
+      line-height:1.45;
+      font-size:14.5px;
+      white-space:pre-wrap;
+    }
+    .msg.user{
+      align-self:flex-end;
+      background:linear-gradient(180deg, var(--orange-2), var(--orange));
+      color:#fff;
+      border-bottom-right-radius:4px;
+    }
+    .msg.assistant{
+      align-self:flex-start;
+      background:var(--white);
+      border:1px solid var(--line);
+      color:var(--ink);
+      border-bottom-left-radius:4px;
+    }
+    .msg.error{
+      align-self:flex-start;
+      background:#fdecea;
+      border:1px solid #e6a19a;
+      color:#7a2a20;
+      border-bottom-left-radius:4px;
+    }
+    .msg.error a{color:#7a2a20; font-weight:800}
+
+    .typing{
+      align-self:flex-start;
+      display:inline-flex;
+      gap:4px;
+      padding:12px 14px;
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:14px;
+      border-bottom-left-radius:4px;
+    }
+    .typing span{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--muted);
+      animation:blink 1.2s infinite ease-in-out;
+    }
+    .typing span:nth-child(2){animation-delay:.2s}
+    .typing span:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+    .suggestions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      padding:0 18px 14px;
+    }
+    .suggestionChip{
+      border:1px solid var(--line);
+      background:var(--white);
+      color:var(--ink);
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:12.5px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease;
+    }
+    .suggestionChip:hover{background:var(--bg-2); transform:translateY(-1px)}
+
+    .chatInputRow{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      padding:14px;
+      border-top:2px solid var(--line);
+      background:var(--bg-2);
+    }
+    .chatInputRow textarea{
+      flex:1;
+      resize:none;
+      border:2px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      font-family:inherit;
+      font-size:14.5px;
+      line-height:1.4;
+      max-height:120px;
+      background:var(--white);
+      color:var(--ink);
+    }
+    .chatInputRow textarea:focus{outline:2px solid var(--orange-2); outline-offset:1px}
+
+    .btn{
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      padding:11px 18px;
+      font-weight:800;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:pointer;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+    }
+    .btnPrimary{
+      color:#fff;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      border-color:rgba(255,255,255,.22);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
+      white-space:nowrap;
+    }
+    .btnPrimary:hover{transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 5px 0 #b34f09, 0 14px 26px rgba(234,111,17,.42)}
+    .btnPrimary:active{transform:translateY(3px); box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.32)}
+    .btnPrimary:disabled{opacity:.55; cursor:not-allowed; transform:none; box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35)}
+
+    .disclaimer{
+      margin:14px 2px 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media (max-width:640px){
+      .navTitle{font-size:18px}
+      .navBack, .navHome{padding:7px 10px; font-size:13px}
+      .chatMessages{max-height:60vh}
+      .msg{max-width:94%}
     }
   </style>
 </head>
 <body>
-  <h1>Règle en préparation</h1>
+  <nav class="nav">
+    <div class="container navInner">
+      <a class="navBack" href="../">Retour</a>
+      <div class="navTitle">GAV</div>
+      <a class="navHome" href="../../">Accueil</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>Une question sur les règles ?</h1>
+      <p class="lead">Posez votre question ci-dessous : l'assistant répond en s'appuyant sur les règles officielles de GAV.</p>
+
+      <!--
+        Vidéo de règles à activer dès qu'elle existe : décommenter et
+        renseigner l'URL YouTube, puis conserver le chat en dessous.
+        <div class="videoFrame">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Vidéo des règles de GAV"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+      -->
+
+      <section class="chatCard" aria-label="Chat de questions sur les règles">
+        <div class="chatMessages" id="chatMessages" role="log" aria-live="polite"></div>
+        <div class="suggestions" id="suggestions">
+          <button type="button" class="suggestionChip">On peut jouer à combien ?</button>
+          <button type="button" class="suggestionChip">À partir de quel âge ?</button>
+          <button type="button" class="suggestionChip">Combien de temps dure une partie ?</button>
+        </div>
+        <form class="chatInputRow" id="chatForm">
+          <textarea
+            id="chatInput"
+            rows="1"
+            maxlength="500"
+            placeholder="Ex. : Que se passe-t-il si les deux réponses sont identiques à celle de la police ?"
+            aria-label="Votre question"
+            required></textarea>
+          <button type="submit" class="btn btnPrimary" id="chatSend">Envoyer</button>
+        </form>
+      </section>
+
+      <p class="disclaimer">Les réponses sont générées automatiquement à partir des règles du jeu. En cas de doute, la boîte de jeu fait toujours foi — vous pouvez aussi nous écrire à <a href="mailto:contact@fiascogames.fr">contact@fiascogames.fr</a>. Vos échanges avec l'assistant peuvent être conservés pour améliorer le service (voir notre <a href="../../politique-confidentialite.html">politique de confidentialité</a>).</p>
+    </div>
+  </main>
+
+  <script>
+    // ⚠️ TODO (Florian) : renseigner ces deux valeurs après création du
+    // projet Supabase (Dashboard → Project Settings → API). La clé "anon"
+    // est publique par conception, elle peut rester en clair ici.
+    const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+    const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/gav-chat`;
+
+    const STORAGE_KEY = "gavChatSessionId";
+    const messagesEl = document.getElementById("chatMessages");
+    const suggestionsEl = document.getElementById("suggestions");
+    const formEl = document.getElementById("chatForm");
+    const inputEl = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("chatSend");
+
+    function getConversationId() {
+      let id = localStorage.getItem(STORAGE_KEY);
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem(STORAGE_KEY, id);
+      }
+      return id;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Échappe le texte d'abord (sécurité : le message d'un visiteur ne doit
+    // jamais pouvoir injecter du HTML), puis applique un minimum de mise en
+    // forme markdown (gras, italique, liens) sur le texte échappé uniquement.
+    function formatMessageHtml(text) {
+      let safe = escapeHtml(text);
+
+      // Liens markdown [texte](url) : extraits et remplacés par un jeton
+      // (caractère de la zone d'usage privé Unicode, jamais tapé par un
+      // humain) pour ne pas être re-traités par l'auto-lien d'URLs/emails
+      // nus plus bas (sinon on obtiendrait un <a> imbriqué dans un <a>).
+      const placeholders = [];
+      safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => {
+        const token = String.fromCharCode(0xE000 + placeholders.length);
+        placeholders.push(
+          `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+        );
+        return token;
+      });
+
+      safe = safe.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      safe = safe.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+
+      // Emails nus -> mailto:
+      safe = safe.replace(
+        /([\w.+-]+@[\w-]+\.[\w.-]+)/g,
+        '<a href="mailto:$1">$1</a>'
+      );
+
+      // URLs nues -> lien cliquable (sans avaler la ponctuation de fin de
+      // phrase qui suit souvent un lien dans une réponse).
+      safe = safe.replace(
+        /(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+      );
+
+      // Restaure les liens markdown extraits plus haut.
+      safe = safe.replace(/[\uE000-\uF8FF]/g, (ch) => placeholders[ch.codePointAt(0) - 0xE000]);
+
+      return safe;
+    }
+
+    function addMessage(role, text) {
+      const el = document.createElement("div");
+      el.className = "msg " + role;
+      el.innerHTML = formatMessageHtml(text);
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return el;
+    }
+
+    function addErrorMessage(text) {
+      const el = document.createElement("div");
+      el.className = "msg error";
+      el.innerHTML = escapeHtml(text) + ' <a href="../#faq">Voir la FAQ</a>.';
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return el;
+    }
+
+    function showTyping() {
+      const el = document.createElement("div");
+      el.className = "typing";
+      el.id = "typingIndicator";
+      el.innerHTML = "<span></span><span></span><span></span>";
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function hideTyping() {
+      document.getElementById("typingIndicator")?.remove();
+    }
+
+    async function sendMessage(text) {
+      addMessage("user", text);
+      inputEl.value = "";
+      inputEl.style.height = "auto";
+      inputEl.disabled = true;
+      sendBtn.disabled = true;
+      showTyping();
+
+      try {
+        const res = await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            conversationId: getConversationId(),
+            message: text,
+          }),
+        });
+
+        hideTyping();
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          addErrorMessage(data.error || "Une erreur est survenue.");
+          return;
+        }
+
+        const data = await res.json();
+        addMessage("assistant", data.reply);
+      } catch (err) {
+        hideTyping();
+        addErrorMessage("Impossible de contacter l'assistant pour le moment.");
+      } finally {
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    }
+
+    formEl.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = inputEl.value.trim();
+      if (!text) return;
+      sendMessage(text);
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        formEl.requestSubmit();
+      }
+    });
+
+    inputEl.addEventListener("input", () => {
+      inputEl.style.height = "auto";
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+    });
+
+    suggestionsEl.addEventListener("click", (e) => {
+      const chip = e.target.closest(".suggestionChip");
+      if (!chip) return;
+      sendMessage(chip.textContent);
+      suggestionsEl.remove();
+    });
+
+    // Message d'accueil (local, non envoyé/persisté).
+    addMessage("assistant", "Bonjour 👋 Posez-moi une question sur les règles de GAV, je réponds en m'appuyant sur les règles officielles.");
+  </script>
 </body>
 </html>

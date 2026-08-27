@@ -1,2 +1,7 @@
 node_modules/
 .claude/
+
+# Supabase (secrets locaux, jamais committés — voir supabase/.gitignore
+# pour les fichiers déjà couverts par `supabase init`)
+.env
+.env.local
