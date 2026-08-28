@@ -19,6 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <script src="../../assets/analytics.js"></script>
 
   <style>
     :root{
@@ -275,9 +276,9 @@
 <body>
   <nav class="nav">
     <div class="container navInner">
-      <a class="navBack" href="../">Retour</a>
+      <a class="navBack" href="../" data-ga-id="gav_video_nav_back">Retour</a>
       <div class="navTitle">GAV</div>
-      <a class="navHome" href="../../">Accueil</a>
+      <a class="navHome" href="../../" data-ga-id="gav_video_nav_home">Accueil</a>
     </div>
   </nav>
 
@@ -303,9 +304,9 @@
       <section class="chatCard" aria-label="Chat de questions sur les règles">
         <div class="chatMessages" id="chatMessages" role="log" aria-live="polite"></div>
         <div class="suggestions" id="suggestions">
-          <button type="button" class="suggestionChip">On peut jouer à combien ?</button>
-          <button type="button" class="suggestionChip">À partir de quel âge ?</button>
-          <button type="button" class="suggestionChip">Combien de temps dure une partie ?</button>
+          <button type="button" class="suggestionChip" data-ga-id="gav_chat_suggestion_1">On peut jouer à combien ?</button>
+          <button type="button" class="suggestionChip" data-ga-id="gav_chat_suggestion_2">À partir de quel âge ?</button>
+          <button type="button" class="suggestionChip" data-ga-id="gav_chat_suggestion_3">Combien de temps dure une partie ?</button>
         </div>
         <form class="chatInputRow" id="chatForm">
           <textarea
@@ -315,7 +316,7 @@
             placeholder="Ex. : Que se passe-t-il si les deux réponses sont identiques à celle de la police ?"
             aria-label="Votre question"
             required></textarea>
-          <button type="submit" class="btn btnPrimary" id="chatSend">Envoyer</button>
+          <button type="submit" class="btn btnPrimary" id="chatSend" data-ga-id="gav_chat_send_click">Envoyer</button>
         </form>
       </section>
 
@@ -428,6 +429,12 @@
     }
 
     async function sendMessage(text) {
+      // Comptage des vrais envois (clic chip, bouton, ou touche Entrée
+      // passent tous par ici) — indépendant de assets/analytics.js pour
+      // ne jamais bloquer le chat si le script de suivi ne se charge pas.
+      if (window.gtag) {
+        gtag("event", "chat_message_sent", { cta_page: location.pathname });
+      }
       addMessage("user", text);
       inputEl.value = "";
       inputEl.style.height = "auto";

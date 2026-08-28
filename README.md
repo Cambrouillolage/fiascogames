@@ -76,3 +76,28 @@ locale (affichée par `supabase start`) pour tester sans toucher à la prod.
   visiteurs anonymes) : des plafonds par conversation et par IP limitent
   l'abus côté fonction, mais une alerte de dépense côté
   [console Anthropic](https://console.anthropic.com/) est recommandée.
+
+## Cookies et Google Analytics
+
+- `assets/analytics.js` : gtag/dataLayer + Consent Mode v2 (refusé par
+  défaut) + chargement de gtag.js (`G-K4ZG29HP07`) + suivi générique des
+  clics (`data-ga-id="..."` sur n'importe quel élément → événement
+  `cta_click`). Inclus sur **toutes** les pages suivies, y compris
+  `/gav/*`.
+- `assets/consent.js` + `assets/vendor/cookieconsent/` (vanilla-cookieconsent,
+  auto-hébergé) : le bandeau de consentement lui-même. **Volontairement
+  absent des pages `/gav/*`** (`gav/index.html`, `gav/video/index.html`,
+  `gav/feuille/index.html`) à la demande de Florian — ces pages suivent
+  quand même la fréquentation/les clics via `analytics.js`, mais restent
+  en `Consent Mode: denied` par défaut (pings anonymisés, aucun cookie
+  `_ga` posé) puisque personne n'y voit d'invite à consentir. Inclus sur
+  `accueil/`, `cambrouillolage/`, `cambrouillolage/video/`,
+  `mentions-legales.html` et `politique-confidentialite.html`.
+- Ordre d'inclusion sur les pages avec bandeau : `analytics.js` d'abord
+  (définit `gtag`/`dataLayer`), puis `cookieconsent.css`/`cookieconsent.umd.js`,
+  puis `consent.js` (utilise `CookieConsent` et `gtag`, tous deux déjà
+  définis).
+- `gav/admin/` ne charge ni l'un ni l'autre (page interne).
+- Section « Cookies et traceurs » dans `politique-confidentialite.html` —
+  texte à relire par Florian avant publication, ce n'est qu'un brouillon
+  structurel.

@@ -22,6 +22,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon.png">
   <link rel="apple-touch-icon" href="../assets/favicon.png">
+  <script src="../assets/analytics.js"></script>
+  <link rel="stylesheet" href="../assets/vendor/cookieconsent/cookieconsent.css" />
+  <script src="../assets/vendor/cookieconsent/cookieconsent.umd.js"></script>
+  <script src="../assets/consent.js"></script>
   <style>
 
     /* --- Anti-débordement horizontal (mobile / iOS) --- */
@@ -836,7 +840,7 @@
         <span class="badgeText">En stock - Livraison rapide chez vous</span>
       </span>
 
-      <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter →</a>
+      <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" data-ga-id="cambrouillolage_buy_hero">Acheter →</a>
 
     </div>
   </div>
@@ -867,9 +871,9 @@
               <span class="inStockDot" aria-hidden="true"></span>
               <span class="badgeText">En stock - Livraison rapide chez vous</span>
             </span>
-            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter maintenant</a>
-            <a class="btn" href="https://www.amazon.fr/dp/B0DVCF9N8G" target="_blank" rel="noreferrer">Acheter sur Amazon</a>
-            <a class="btn" href="/cambrouillolage/video/">Comprendre en vidéo</a>
+            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" data-ga-id="cambrouillolage_buy_middle">Acheter maintenant</a>
+            <a class="btn" href="https://www.amazon.fr/dp/B0DVCF9N8G" target="_blank" rel="noreferrer" data-ga-id="cambrouillolage_buy_amazon_middle">Acheter sur Amazon</a>
+            <a class="btn" href="/cambrouillolage/video/" data-ga-id="cambrouillolage_video_link">Comprendre en vidéo</a>
           </div>
 
           <div class="metaRow">
@@ -1111,8 +1115,8 @@
               <span class="inStockDot" aria-hidden="true"></span>
               <span class="badgeText">En stock - Livraison rapide chez vous</span>
             </span>
-            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" target="_blank" rel="noreferrer">Acheter sur le site</a>
-            <a class="btn" href="#" onclick="alert('https://www.amazon.fr/dp/B0DVCF9N8G'); return false;">Amazon</a>
+            <a class="btn btnPrimary" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" target="_blank" rel="noreferrer" data-ga-id="cambrouillolage_buy_bottom">Acheter sur le site</a>
+            <a class="btn" href="#" onclick="alert('https://www.amazon.fr/dp/B0DVCF9N8G'); return false;" data-ga-id="cambrouillolage_buy_amazon_bottom">Amazon</a>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:10px; min-width: 260px;">
@@ -1173,20 +1177,21 @@
         <a class="footerLink" href="./">Cambrouillolage</a>
         <a class="footerLink" href="../politique-confidentialite.html">Politique de confidentialité</a>
         <a class="footerLink" href="../mentions-legales.html">Mentions légales</a>
+        <a class="footerLink js-manage-cookies" href="#">Gérer les cookies</a>
       </div>
 
       <div class="footerCol">
         <div class="footerTitle">Sommaire</div>
         <a class="footerLink" href="#principe">Principe</a>
         <a class="footerLink" href="#cartes">Cartes</a>
-        <a class="footerLink" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01">Acheter</a>
+        <a class="footerLink" href="https://buy.stripe.com/8x25kF9e42431Px0Pwa7C01" data-ga-id="cambrouillolage_buy_footer">Acheter</a>
       </div>
 
       <div class="footerCol footerRight">
         <div class="footerTitle">Suivre</div>
-        <a class="footerLink" href="https://www.instagram.com/cambrouillolage_lejeu/" target="_blank" rel="noreferrer">Instagram</a>
-        <a class="footerLink" href="https://www.tiktok.com/@cambrouillolage" target="_blank" rel="noreferrer">TikTok</a>
-        <a class="footerLink" href="mailto:contact@cambrouillolage.fr">contact@cambrouillolage.fr</a>
+        <a class="footerLink" href="https://www.instagram.com/cambrouillolage_lejeu/" target="_blank" rel="noreferrer" data-ga-id="cambrouillolage_foot_instagram">Instagram</a>
+        <a class="footerLink" href="https://www.tiktok.com/@cambrouillolage" target="_blank" rel="noreferrer" data-ga-id="cambrouillolage_foot_tiktok">TikTok</a>
+        <a class="footerLink" href="mailto:contact@cambrouillolage.fr" data-ga-id="cambrouillolage_foot_contact">contact@cambrouillolage.fr</a>
       </div>
     </div>
   </footer>
@@ -1247,7 +1252,7 @@
     }
     requestAnimationFrame(updateCar);
   </script>
-  <a class="rulesFab" href="https://chatgpt.com/g/g-68f29e9d8f0c8191a78e909fbe1ca7dc-cambrouillolage" target="_blank" rel="noreferrer noopener">
+  <a class="rulesFab" href="https://chatgpt.com/g/g-68f29e9d8f0c8191a78e909fbe1ca7dc-cambrouillolage" target="_blank" rel="noreferrer noopener" data-ga-id="cambrouillolage_rules_fab">
   Une question sur les règles ?
   <span aria-hidden="true">🤖</span>
 </a>

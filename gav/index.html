@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <script src="../assets/analytics.js"></script>
   <style>
     :root{
       --bg:#f3ede1;
@@ -922,8 +923,8 @@
       </nav>
 
       <div class="navCtas">
-        <a class="btn btnGhost" href="#achat">OÙ ACHETER ?</a>
-        <a class="btn btnPrimary" href="#achat">ACHETER LE JEU</a>
+        <a class="btn btnGhost" href="#achat" data-ga-id="gav_nav_ou_acheter">OÙ ACHETER ?</a>
+        <a class="btn btnPrimary" href="#achat" data-ga-id="gav_nav_acheter">ACHETER LE JEU</a>
       </div>
     </div>
   </header>
@@ -1008,13 +1009,13 @@
       </div>
 
       <div class="buyRow" aria-label="Boutons partenaires">
-        <a class="buyBtn amazon" href="#achat" aria-label="Acheter sur Amazon">
+        <a class="buyBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_hero_buy_amazon">
           <span class="buyLogo amazon" aria-hidden="true"></span>Acheter sur Amazon
         </a>
-        <a class="buyBtn fnac" href="#achat" aria-label="Acheter sur Fnac">
+        <a class="buyBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_hero_buy_fnac">
           <span class="buyLogo fnac" aria-hidden="true"></span>Acheter sur Fnac
         </a>
-        <a class="buyBtn cultura" href="#achat" aria-label="Acheter sur Cultura">
+        <a class="buyBtn cultura" href="#achat" aria-label="Acheter sur Cultura" data-ga-id="gav_hero_buy_cultura">
           <span class="buyLogo cultura" aria-hidden="true"></span>Acheter sur Cultura
         </a>
       </div>
@@ -1097,7 +1098,7 @@
 
       <div class="faqWrap">
         <div class="faqList">
-          <details class="faqItem">
+          <details class="faqItem" data-ga-id="gav_faq_q1">
             <summary>
               <span class="q"><span class="qno">Q1</span> LE JEU EST BIEN AVEC QUI ?</span>
               <span class="chev">⌄</span>
@@ -1105,7 +1106,7 @@
             <p>Entre amis pour un apéro qui dérape, en couple pour tester votre complicité, en famille pour un fou rire général, ou entre collègues pour briser la glace comme jamais — GAV s'invite partout où on aime rire ensemble.</p>
           </details>
 
-          <details class="faqItem">
+          <details class="faqItem" data-ga-id="gav_faq_q2">
             <summary>
               <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN ?</span>
               <span class="chev">⌄</span>
@@ -1113,7 +1114,7 @@
             <p>De 3 à autant que vous voulez — notre record est de 25 joueurs autour de la même table. GAV s'adapte aussi bien à un apéro entre potes qu'à une soirée qui rassemble tout le monde.</p>
           </details>
 
-          <details class="faqItem">
+          <details class="faqItem" data-ga-id="gav_faq_q3">
             <summary>
               <span class="q"><span class="qno">Q3</span> FAUT-IL JOUER UN RÔLE ?</span>
               <span class="chev">⌄</span>
@@ -1121,7 +1122,7 @@
             <p>Aucun rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. À vous d'improviser et de rester cohérent avec votre complice, sous la pression.</p>
           </details>
 
-          <details class="faqItem">
+          <details class="faqItem" data-ga-id="gav_faq_q4">
             <summary>
               <span class="q"><span class="qno">Q4</span> À PARTIR DE QUEL ÂGE ?</span>
               <span class="chev">⌄</span>
@@ -1129,7 +1130,7 @@
             <p>Dès 10 ans. Des règles simples, aucun temps mort — toute la famille joue, et les ados adorent piéger leurs parents.</p>
           </details>
 
-          <details class="faqItem">
+          <details class="faqItem" data-ga-id="gav_faq_q5">
             <summary>
               <span class="q"><span class="qno">Q5</span> COMBIEN DE TEMPS DURE UNE PARTIE ?</span>
               <span class="chev">⌄</span>
@@ -1153,13 +1154,13 @@
         <div class="buyRight">
           <h3>DISPONIBLE MAINTENANT</h3>
           <div class="buyStores">
-            <a class="storeBtn amazon" href="#achat" aria-label="Acheter sur Amazon">
+            <a class="storeBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_band_buy_amazon">
               <span class="buyLogo amazon" aria-hidden="true"></span>amazon
             </a>
-            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac">
+            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_band_buy_fnac">
               <span class="buyLogo fnac" aria-hidden="true"></span>fnac
             </a>
-            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura">
+            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura" data-ga-id="gav_band_buy_cultura">
               <span class="buyLogo cultura" aria-hidden="true"></span>Cultura
             </a>
           </div>
@@ -1186,16 +1187,16 @@
 
         <div class="footCol">
           <h4>À PROPOS</h4>
-          <a href="../accueil/">Notre histoire</a>
-          <a href="../accueil/#values">Nos valeurs</a>
-          <a href="mailto:contact@cambrouillolage.fr">Contact</a>
+          <a href="../accueil/" data-ga-id="gav_foot_histoire">Notre histoire</a>
+          <a href="../accueil/#values" data-ga-id="gav_foot_valeurs">Nos valeurs</a>
+          <a href="mailto:contact@cambrouillolage.fr" data-ga-id="gav_foot_contact">Contact</a>
         </div>
 
         <div class="footCol">
           <h4>AIDE</h4>
           <a href="#faq">FAQ</a>
-          <a href="./feuille/">Feuilles interactives</a>
-          <a href="./video/">Video</a>
+          <a href="./feuille/" data-ga-id="gav_foot_feuille">Feuilles interactives</a>
+          <a href="./video/" data-ga-id="gav_foot_video">Video</a>
         </div>
 
         <div class="footCol">
@@ -1214,7 +1215,7 @@
 
   <div class="stickyBuyBar" id="stickyBuyBar" aria-label="Bandeau achat rapide">
     <p class="stickyBuyText">Prêt à jouer ? Commandez GAV maintenant.</p>
-    <a class="stickyBuyBtn" href="#achat">Acheter</a>
+    <a class="stickyBuyBtn" href="#achat" data-ga-id="gav_sticky_buy">Acheter</a>
   </div>
 
   <div class="buyModalBackdrop" id="buyModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="buyModalTitle">
@@ -1223,7 +1224,7 @@
       <h3 class="buyModalTitle" id="buyModalTitle">Jeu disponible <span class="accent">en septembre</span></h3>
       <p class="buyModalText">GAV n'est pas encore en vente. Laissez-nous votre e-mail pour être prévenu dès sa sortie.</p>
       <div class="buyModalActions">
-        <a class="btn btnPrimary" href="mailto:contact@fiascogames.fr?subject=Etre%20pr%C3%A9venu%20-%20GAV">Être prévenu →</a>
+        <a class="btn btnPrimary" href="mailto:contact@fiascogames.fr?subject=Etre%20pr%C3%A9venu%20-%20GAV" data-ga-id="gav_notify_me">Être prévenu →</a>
       </div>
     </div>
   </div>

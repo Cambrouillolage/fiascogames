@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feuillets digitaux</title>
   <link rel="icon" type="image/png" href="../../assets/GAV1.png" />
+  <script src="../../assets/analytics.js"></script>
   <style>
     :root{
       --ink:#111;
@@ -535,16 +536,16 @@
         <div class="muted">Choisis ton rôle</div>
       </div>
       <div class="body" style="display:flex;flex-direction:column;gap:10px">
-        <button class="btn" id="goSuspect">Suspect</button>
-        <button class="btn light" id="goInspector">Inspecteur</button>
+        <button class="btn" id="goSuspect" data-ga-id="gav_feuille_go_suspect">Suspect</button>
+        <button class="btn light" id="goInspector" data-ga-id="gav_feuille_go_inspector">Inspecteur</button>
       </div>
     </section>
 
     <div id="downloadCard" style="text-align:center;font-size:11px;line-height:1.7;color:rgba(0,0,0,.45)">
       Besoin d'un feuillet en plus ?
-      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit">Feuille Police</a>
+      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit" data-ga-id="gav_feuille_dl_police">Feuille Police</a>
       ·
-      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit">Feuille Suspect</a>
+      <a href="https://drive.google.com/uc?export=download&id=1HoloI-uaez_HOKdPwMjgw0msTyGutXKh" target="_blank" rel="noopener noreferrer" style="color:inherit" data-ga-id="gav_feuille_dl_suspect">Feuille Suspect</a>
     </div>
 
     <div id="publisherCard" style="text-align:center;font-size:11px;line-height:1.7;color:rgba(0,0,0,.45)">
@@ -558,8 +559,8 @@
           <span style="font-size:28px">👮</span>
           <h1>Carnet d'enquête</h1>
           <div class="title-actions">
-            <button class="btn inline light" id="resetFromInspector">Reset</button>
-            <button class="btn inline light" id="backFromInspector">Accueil</button>
+            <button class="btn inline light" id="resetFromInspector" data-ga-id="gav_feuille_reset">Reset</button>
+            <button class="btn inline light" id="backFromInspector" data-ga-id="gav_feuille_back">Accueil</button>
           </div>
         </div>
         <div class="insp-npreuve">
@@ -583,8 +584,8 @@
       <div class="head">
         <h1>Alibi</h1>
         <div class="title-actions">
-          <button class="btn inline light" id="resetFromSuspect">Reset</button>
-          <button class="btn inline light" id="backFromSuspect">Accueil</button>
+          <button class="btn inline light" id="resetFromSuspect" data-ga-id="gav_feuille_reset">Reset</button>
+          <button class="btn inline light" id="backFromSuspect" data-ga-id="gav_feuille_back">Accueil</button>
         </div>
       </div>
       <div class="body">

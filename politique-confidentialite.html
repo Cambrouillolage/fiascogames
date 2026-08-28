@@ -12,6 +12,10 @@
     .muted{color:rgba(255,255,255,.72)}
     .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
   </style>
+  <script src="assets/analytics.js"></script>
+  <link rel="stylesheet" href="assets/vendor/cookieconsent/cookieconsent.css" />
+  <script src="assets/vendor/cookieconsent/cookieconsent.umd.js"></script>
+  <script src="assets/consent.js"></script>
 </head>
 <body>
   <div class="container">
@@ -44,6 +48,14 @@
       <h2>Chat de règles GAV</h2>
       <p>Sur la page GAV dédiée aux questions de règles, Fiasco Games propose un assistant conversationnel (Claude, par Anthropic). Le contenu des échanges (vos questions et les réponses de l'assistant), un identifiant de session anonyme, votre adresse IP et l'horodatage sont conservés afin d'assurer le bon fonctionnement du service, d'en assurer la sécurité (lutte contre les usages abusifs) et de permettre à Fiasco Games de consulter les questions posées pour améliorer le jeu et ses règles. Aucun compte n'est requis pour utiliser cet assistant ; les échanges ne sont pas associés à votre identité sauf si vous la mentionnez vous-même dans un message. L'accès à ces échanges est réservé à Fiasco Games.</p>
 
+      <h2 id="cookies">Cookies et traceurs</h2>
+      <p>Ce site utilise des cookies. Un bandeau vous permet d'accepter ou de refuser leur dépôt lors de votre première visite ; vous pouvez modifier votre choix à tout moment via le lien « Gérer les cookies » présent en bas de chaque page.</p>
+      <ul>
+        <li><strong>Cookies nécessaires</strong> : aucun cookie strictement nécessaire n'est déposé à ce jour.</li>
+        <li><strong>Cookies de mesure d'audience (Google Analytics 4)</strong> : déposés uniquement si vous les acceptez, afin de mesurer la fréquentation du site et son usage (pages consultées, clics sur les boutons). Ces données sont envoyées à Google. Durée de conservation des cookies : 13 mois maximum. Vous pouvez retirer votre consentement à tout moment.</li>
+      </ul>
+      <p>En l'absence de consentement, aucun cookie de mesure d'audience n'est déposé ; seule une requête technique anonyme, sans identifiant, peut être envoyée à Google conformément à son mode de consentement.</p>
+
       <h2>Durée de conservation</h2>
       <p>Les données liées aux commandes sont conservées conformément aux obligations légales comptables (10 ans). Les échanges avec l'assistant de règles GAV sont conservés pour une durée raisonnable liée à l'amélioration du service ; vous pouvez en demander la suppression à tout moment (voir « Droits des utilisateurs » ci-dessous).</p>
 
@@ -55,6 +67,10 @@
         <li>Leur suppression</li>
       </ul>
       <p>Pour toute demande : [ton email]</p>
+
+      <p class="muted" style="margin-top:24px;font-size:13px">
+        <a href="#" class="js-manage-cookies" style="color:inherit">Gérer les cookies</a>
+      </p>
     </div>
   </div>
 </body>

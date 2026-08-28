@@ -26,6 +26,11 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon.png" />
   <link rel="apple-touch-icon" href="../../assets/favicon.png" />
 
+  <script src="../../assets/analytics.js"></script>
+  <link rel="stylesheet" href="../../assets/vendor/cookieconsent/cookieconsent.css" />
+  <script src="../../assets/vendor/cookieconsent/cookieconsent.umd.js"></script>
+  <script src="../../assets/consent.js"></script>
+
   <style>
     :root{
       --bg:#070909;
@@ -175,9 +180,9 @@
 <body>
   <nav class="nav">
     <div class="container navInner">
-      <a class="navBack" href="../">Retour</a>
+      <a class="navBack" href="../" data-ga-id="cambrouillolage_video_nav_back">Retour</a>
       <div class="navTitle">Cambrouillolage</div>
-      <a class="navHome" href="../../">Accueil</a>
+      <a class="navHome" href="../../" data-ga-id="cambrouillolage_video_nav_home">Accueil</a>
     </div>
   </nav>
 
@@ -192,14 +197,16 @@
             class="ctaBtn"
             href="https://chatgpt.com/g/g-68f29e9d8f0c8191a78e909fbe1ca7dc-cambrouillolage"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            data-ga-id="cambrouillolage_video_ask_ai">
             Poser une question sur les règles
           </a>
           <a
             class="ctaBtn"
             href="https://drive.google.com/file/d/1KMO8kqUxqRjcj01X9aeTAGQehl7xbx6H/view?usp=drive_link"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            data-ga-id="cambrouillolage_video_rules_pdf">
             Les règles
           </a>
         </div>
@@ -216,6 +223,10 @@
 
         <p class="summary">
           Tu peux poser tes questions sur les règles à l'IA : elle te répond en s'appuyant sur les règles de Cambrouillolage pour t'aider pendant la partie.
+        </p>
+        <p class="summary" style="opacity:.6;font-size:12px">
+          <a href="../../politique-confidentialite.html" style="color:inherit">Politique de confidentialité</a>
+          · <a href="#" class="js-manage-cookies" style="color:inherit">Gérer les cookies</a>
         </p>
       </section>
     </div>
