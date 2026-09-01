@@ -309,20 +309,9 @@
       line-height:1.6; text-transform:uppercase;
       font-family:"Bebas Neue", "Impact", sans-serif; letter-spacing:.015em;
     }
-    /* Highlight: a solid rectangle behind a key word/phrase, marker-style —
-       same "candy" hard-shadow bevel as the buttons, scaled in em so it
-       stays proportional whether the caption is 26px or 72px. */
+    /* Highlight: simple orange text, no marker-style background box. */
     .hl{
-      display:inline-block;
-      background:linear-gradient(180deg, var(--orange-2), var(--orange));
-      color:#141414;
-      margin:.1em 0;
-      padding:.04em .32em;
-      border-radius:.16em;
-      border:.05em solid rgba(255,255,255,.28);
-      box-shadow:.06em .08em 0 #b34f09;
-      white-space:nowrap;
-      text-shadow:none;
+      color:var(--orange-2);
     }
     .storyProgressTrack{display:none}
 
@@ -354,7 +343,6 @@
       font-size:clamp(30px, 6.4vw, 72px);
       text-shadow:0 2px 20px rgba(0,0,0,.55);
     }
-    html.motionOK .storyCaptionTitle .hl{text-shadow:none}
     html.motionOK .storyProgressTrack{
       display:block; position:absolute; top:14px; left:22px; right:22px; height:3px;
       border-radius:999px; background:rgba(255,255,255,.16); overflow:hidden; z-index:2;
