@@ -3,8 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GAV - Le jeu d'ambiance simple et drôle</title>
-  <meta name="description" content="GAV: le jeu d'ambiance simple et drôle où vous devez avoir le même alibi que votre complice." />
+  <title>GAV – Jeu de société d'ambiance garde à vue entre amis</title>
+  <meta name="description" content="GAV est un jeu de société d'ambiance simple et drôle : donnez le même alibi que votre complice lors de la garde à vue, sinon direction la prison !" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://fiascogames.fr/gav/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
+  <meta property="og:description" content="GAV est un jeu de société d'ambiance simple et drôle : donnez le même alibi que votre complice lors de la garde à vue, sinon direction la prison !" />
+  <meta property="og:url" content="https://fiascogames.fr/gav/" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/hero-frames/poster-mobile.jpg" />
+  <meta property="og:image:alt" content="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
+  <meta name="twitter:description" content="Donnez le même alibi que votre complice lors de la garde à vue... sinon direction la prison !" />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-frames/poster-mobile.jpg" />
+
   <link rel="icon" type="image/png" href="../assets/GAV1.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -891,6 +908,25 @@
       *,*::before,*::after{animation:none !important; transition:none !important; scroll-behavior:auto !important}
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "GAV, le jeu de société garde à vue, se joue avec qui ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Entre amis pour un apéro qui dérape, en couple pour tester votre complicité, en famille pour un fou rire général, ou entre collègues pour briser la glace comme jamais — GAV, le jeu de société garde à vue, s'invite partout où on aime rire ensemble." } },
+      { "@type": "Question", "name": "On peut jouer à combien à GAV ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "De 3 à autant que vous voulez — notre record est de 25 joueurs autour de la même table. GAV, le jeu de société garde à vue, s'adapte aussi bien à un apéro entre potes qu'à une soirée qui rassemble tout le monde." } },
+      { "@type": "Question", "name": "Faut-il jouer un rôle dans GAV ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Aucun rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. À vous d'improviser et de rester cohérent avec votre complice, sous la pression." } },
+      { "@type": "Question", "name": "À partir de quel âge peut-on jouer à GAV ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dès 10 ans. Des règles simples, aucun temps mort — toute la famille joue, et les ados adorent piéger leurs parents." } },
+      { "@type": "Question", "name": "Combien de temps dure une partie de GAV ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "10 minutes par manche. Le temps de dire « on fait qu'une partie » avant d'enchaîner cinq fois de suite." } }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="topNav">
@@ -919,7 +955,7 @@
 
   <section class="hero" id="le-jeu">
     <div class="container heroIntro">
-      <h1 class="srOnly">GAV — le jeu d'ambiance simple et drôle</h1>
+      <h1 class="srOnly">GAV — le jeu de société d'ambiance sur la garde à vue</h1>
     </div>
 
     <!--
@@ -946,7 +982,7 @@
                 <picture>
                   <source srcset="../assets/hero-frames/poster-mobile.webp" media="(max-width:760px)" type="image/webp" />
                   <source srcset="../assets/hero-frames/poster-desktop.webp" type="image/webp" />
-                  <img class="storyPoster" id="storyPoster" src="../assets/hero-frames/poster-mobile.jpg" alt="La boîte du jeu GAV dans une salle d'interrogatoire" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
+                  <img class="storyPoster" id="storyPoster" src="../assets/hero-frames/poster-mobile.jpg" alt="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
                 </picture>
                 <canvas class="storyCanvas" id="storyCanvas" aria-hidden="true"></canvas>
               </div>
@@ -992,7 +1028,7 @@
         <div class="promoText">
           <p>La police prépare ses questions</p>
           <p>Vous et votre complice inventez votre alibi.</p>
-          <p>Même réponse lors de la GAV : vous êtes libres. Sinon... <strong>direction la prison !</strong></p>
+          <p>Même réponse lors de la garde à vue (la GAV) : vous êtes libres. Sinon... <strong>direction la prison !</strong></p>
         </div>
       </div>
 
@@ -1083,28 +1119,29 @@
   <section class="section" id="faq">
     <div class="container">
       <h2 class="sectionTitle">QUESTIONS <span class="accent">FRÉQUENTES</span></h2>
+      <p>Tout ce qu'il faut savoir sur GAV, le jeu de société d'ambiance qui transforme un apéro entre amis en garde à vue improvisée.</p>
 
       <div class="faqWrap">
         <div class="faqList">
           <details class="faqItem" data-ga-id="gav_faq_q1">
             <summary>
-              <span class="q"><span class="qno">Q1</span> LE JEU EST BIEN AVEC QUI ?</span>
+              <span class="q"><span class="qno">Q1</span> GAV, LE JEU DE SOCIÉTÉ GARDE À VUE, SE JOUE AVEC QUI ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>Entre amis pour un apéro qui dérape, en couple pour tester votre complicité, en famille pour un fou rire général, ou entre collègues pour briser la glace comme jamais — GAV s'invite partout où on aime rire ensemble.</p>
+            <p>Entre amis pour un apéro qui dérape, en couple pour tester votre complicité, en famille pour un fou rire général, ou entre collègues pour briser la glace comme jamais — GAV, le jeu de société garde à vue, s'invite partout où on aime rire ensemble.</p>
           </details>
 
           <details class="faqItem" data-ga-id="gav_faq_q2">
             <summary>
-              <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN ?</span>
+              <span class="q"><span class="qno">Q2</span> ON PEUT JOUER À COMBIEN À GAV ?</span>
               <span class="chev">⌄</span>
             </summary>
-            <p>De 3 à autant que vous voulez — notre record est de 25 joueurs autour de la même table. GAV s'adapte aussi bien à un apéro entre potes qu'à une soirée qui rassemble tout le monde.</p>
+            <p>De 3 à autant que vous voulez — notre record est de 25 joueurs autour de la même table. GAV, le jeu de société garde à vue, s'adapte aussi bien à un apéro entre potes qu'à une soirée qui rassemble tout le monde.</p>
           </details>
 
           <details class="faqItem" data-ga-id="gav_faq_q3">
             <summary>
-              <span class="q"><span class="qno">Q3</span> FAUT-IL JOUER UN RÔLE ?</span>
+              <span class="q"><span class="qno">Q3</span> FAUT-IL JOUER UN RÔLE DANS GAV ?</span>
               <span class="chev">⌄</span>
             </summary>
             <p>Aucun rôle à apprendre : à chaque manche, un binôme devient la police et interroge les autres. À vous d'improviser et de rester cohérent avec votre complice, sous la pression.</p>
@@ -1112,7 +1149,7 @@
 
           <details class="faqItem" data-ga-id="gav_faq_q4">
             <summary>
-              <span class="q"><span class="qno">Q4</span> À PARTIR DE QUEL ÂGE ?</span>
+              <span class="q"><span class="qno">Q4</span> À PARTIR DE QUEL ÂGE PEUT-ON JOUER À GAV ?</span>
               <span class="chev">⌄</span>
             </summary>
             <p>Dès 10 ans. Des règles simples, aucun temps mort — toute la famille joue, et les ados adorent piéger leurs parents.</p>
@@ -1120,7 +1157,7 @@
 
           <details class="faqItem" data-ga-id="gav_faq_q5">
             <summary>
-              <span class="q"><span class="qno">Q5</span> COMBIEN DE TEMPS DURE UNE PARTIE ?</span>
+              <span class="q"><span class="qno">Q5</span> COMBIEN DE TEMPS DURE UNE PARTIE DE GAV ?</span>
               <span class="chev">⌄</span>
             </summary>
             <p>10 minutes par manche. Le temps de dire « on fait qu'une partie » avant d'enchaîner cinq fois de suite.</p>
@@ -1136,7 +1173,7 @@
         </div>
 
         <div class="buyBox">
-          <img class="scrollAsset assetRaw" src="../assets/box_GAV.png" alt="Boite GAV" loading="lazy" />
+          <img class="scrollAsset assetRaw" src="../assets/box_GAV.png" alt="Boite du jeu de société GAV, jeu d'ambiance garde à vue" loading="lazy" />
         </div>
 
         <div class="buyRight">

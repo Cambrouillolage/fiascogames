@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /gav/admin/
+
+Sitemap: https://fiascogames.fr/sitemap.xml

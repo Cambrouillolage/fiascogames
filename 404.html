@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Page introuvable – Fiasco Games</title>
+  <meta name="description" content="Cette page n'existe pas ou plus. Retrouvez GAV, Cambrouillolage et tous les jeux de société Fiasco Games depuis l'accueil." />
+  <meta name="robots" content="noindex,follow" />
+  <link rel="icon" href="assets/faviconfiasco.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <script src="assets/analytics.js"></script>
+  <style>
+    :root{
+      --bg:#f3ede1;
+      --dark:#131313;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding:24px;
+      text-align:center;
+    }
+    .card{
+      max-width:520px;
+      border:2px solid #dba25a;
+      border-radius:16px;
+      background:#fffbf2;
+      box-shadow:4px 5px 0 #c9822f;
+      padding:36px 28px;
+    }
+    .stamp{
+      display:inline-block;
+      font-family:"Bebas Neue","Impact",sans-serif;
+      letter-spacing:.04em;
+      font-size:15px;
+      color:var(--orange);
+      border:2px solid var(--orange);
+      border-radius:8px;
+      padding:4px 12px;
+      margin-bottom:16px;
+      transform:rotate(-3deg);
+    }
+    h1{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      font-size:clamp(34px, 8vw, 52px);
+      line-height:1.02;
+      margin:0 0 12px;
+      color:var(--dark);
+    }
+    p{
+      margin:0 0 24px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.5;
+    }
+    .links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+    }
+    .btn{
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      padding:11px 18px;
+      font-weight:800;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition:transform .16s ease, filter .16s ease;
+    }
+    .btnPrimary{
+      color:#fff;
+      background:linear-gradient(180deg, var(--orange-2), var(--orange));
+      border-color:rgba(255,255,255,.22);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
+    }
+    .btnPrimary:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .btnGhost{
+      color:var(--ink);
+      background:var(--white);
+      border-color:var(--line);
+    }
+    .btnGhost:hover{transform:translateY(-2px); filter:brightness(.98)}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="stamp">ERREUR 404</span>
+    <h1>Introuvable, comme un bon alibi</h1>
+    <p>Cette page n'existe pas (ou plus). Pas de panique, on vous ramène en lieu sûr.</p>
+    <div class="links">
+      <a class="btn btnPrimary" href="/accueil/">Accueil Fiasco Games</a>
+      <a class="btn btnGhost" href="/gav/">Découvrir GAV</a>
+      <a class="btn btnGhost" href="/cambrouillolage/">Découvrir Cambrouillolage</a>
+    </div>
+  </div>
+</body>
+</html>
