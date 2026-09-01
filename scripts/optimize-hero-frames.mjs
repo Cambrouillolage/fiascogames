@@ -29,8 +29,9 @@ const DESKTOP_DIR = path.join(SRC_DIR, 'desktop');
 
 const MOBILE_WIDTH = 1080;  // extra headroom above what DPR-capped phones need, less visible WebP banding
 const DESKTOP_WIDTH = 1920; // matches the new source render (1920x1080), no upscaling
-const MOBILE_QUALITY = 86;
-const DESKTOP_QUALITY = 84;
+const MOBILE_QUALITY = 88;
+const DESKTOP_QUALITY = 88;
+const SHARPEN_SIGMA = 1.0; // counters softness from upscaling, applied to the existing source frames only — no re-extraction
 const ENCODE_EFFORT = 6;
 const CONCURRENCY = 8;
 const POSTER_FRAME = 'hero-frame-011.jpg'; // matches FRAME_START in gav/index.html
@@ -60,11 +61,13 @@ async function run(){
 
       await sharp(src)
         .resize({ width: MOBILE_WIDTH })
+        .sharpen({ sigma: SHARPEN_SIGMA })
         .webp({ quality: MOBILE_QUALITY, effort: ENCODE_EFFORT })
         .toFile(path.join(MOBILE_DIR, outName));
 
       await sharp(src)
         .resize({ width: DESKTOP_WIDTH, withoutEnlargement: true })
+        .sharpen({ sigma: SHARPEN_SIGMA })
         .webp({ quality: DESKTOP_QUALITY, effort: ENCODE_EFFORT })
         .toFile(path.join(DESKTOP_DIR, outName));
 
@@ -79,13 +82,13 @@ async function run(){
 
   // Poster fallback: one frame, JPEG, for the no-JS / reduced-motion <picture>.
   const posterSrc = path.join(SRC_DIR, POSTER_FRAME);
-  await sharp(posterSrc).resize({ width: MOBILE_WIDTH }).jpeg({ quality: 72, mozjpeg: true })
+  await sharp(posterSrc).resize({ width: MOBILE_WIDTH }).sharpen({ sigma: SHARPEN_SIGMA }).jpeg({ quality: 72, mozjpeg: true })
     .toFile(path.join(SRC_DIR, 'poster-mobile.jpg'));
-  await sharp(posterSrc).resize({ width: DESKTOP_WIDTH }).jpeg({ quality: 74, mozjpeg: true })
+  await sharp(posterSrc).resize({ width: DESKTOP_WIDTH }).sharpen({ sigma: SHARPEN_SIGMA }).jpeg({ quality: 74, mozjpeg: true })
     .toFile(path.join(SRC_DIR, 'poster-desktop.jpg'));
-  await sharp(posterSrc).resize({ width: MOBILE_WIDTH }).webp({ quality: 68 })
+  await sharp(posterSrc).resize({ width: MOBILE_WIDTH }).sharpen({ sigma: SHARPEN_SIGMA }).webp({ quality: 68 })
     .toFile(path.join(SRC_DIR, 'poster-mobile.webp'));
-  await sharp(posterSrc).resize({ width: DESKTOP_WIDTH }).webp({ quality: 72 })
+  await sharp(posterSrc).resize({ width: DESKTOP_WIDTH }).sharpen({ sigma: SHARPEN_SIGMA }).webp({ quality: 72 })
     .toFile(path.join(SRC_DIR, 'poster-desktop.webp'));
 
   console.log('Done.');
