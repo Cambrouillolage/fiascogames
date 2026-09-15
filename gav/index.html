@@ -203,7 +203,7 @@
     /* Buy buttons: full-width stacked, one retailer per row (logo via CSS
        background-image so a not-yet-provided logo file just leaves an empty
        slot instead of a broken-image glyph — the label stays readable). */
-    .buyRow{margin-top:22px; display:flex; flex-direction:column; gap:12px}
+    .buyRow{margin:22px auto 0; max-width:420px; display:flex; flex-direction:column; gap:12px}
     /* Chunky "candy" buttons: a flat retailer colour plus a hard (unblurred)
        offset shadow underneath stands in for a 3D bevel — press it and the
        button drops into its own shadow, like a physical button. */
@@ -220,21 +220,22 @@
     .buyBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
     .buyBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #08131c, 0 4px 10px rgba(15,26,38,.3)}
     /* Amazon = brand orange (matches the site's own CTA orange), Fnac =
-       brand yellow, Cultura = brand blue — retailer colours, not ours to
-       change, so borrowed straight from each retailer's own palette. */
+       brand yellow — retailer colours, not ours to change, so borrowed
+       straight from each retailer's own palette. "Boutique" (revendeurs)
+       gets its own neutral teal since it isn't a retailer mark. */
     .buyBtn.amazon{background:linear-gradient(180deg, var(--orange-2), var(--orange)); border-color:rgba(255,255,255,.22); box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.38)}
     .buyBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.32)}
     .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 5px 0 #caa02a, 0 12px 22px rgba(246,191,51,.38)}
     .buyBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 4px 10px rgba(246,191,51,.32)}
-    .buyBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 5px 0 #123762, 0 12px 22px rgba(33,91,158,.38)}
-    .buyBtn.cultura:active{box-shadow:0 1px 0 #123762, 0 4px 10px rgba(33,91,158,.32)}
+    .buyBtn.boutique{background:linear-gradient(180deg, #2fb787, #1c8a63); box-shadow:0 5px 0 #145c43, 0 12px 22px rgba(28,138,99,.38)}
+    .buyBtn.boutique:active{box-shadow:0 1px 0 #145c43, 0 4px 10px rgba(28,138,99,.32)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
     /* Logos are cut out with a transparent background (no white chip) so
        each retailer's mark sits directly on the button colour — the button
        colours below are picked to keep every mark legible on its own. */
     .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon-white.png)}
     .buyLogo.fnac{width:60px; height:34px; background-image:url(../assets/fnac.png)}
-    .buyLogo.cultura{width:48px; height:32px; background-image:url(../assets/cultura.png)}
+    .buyLogo.boutique{width:auto; height:auto; background-image:none; font-size:22px; line-height:1}
 
     .quickInfoBar{
       margin-top:20px;
@@ -666,12 +667,12 @@
     .storeBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 3px 8px rgba(234,111,17,.32)}
     .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 4px 0 #caa02a, 0 8px 14px rgba(246,191,51,.35)}
     .storeBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 3px 8px rgba(246,191,51,.3)}
-    .storeBtn.cultura{background:linear-gradient(180deg, #2f74c0, #1c4a80); box-shadow:0 4px 0 #123762, 0 8px 14px rgba(33,91,158,.35)}
-    .storeBtn.cultura:active{box-shadow:0 1px 0 #123762, 0 3px 8px rgba(33,91,158,.3)}
+    .storeBtn.boutique{background:linear-gradient(180deg, #2fb787, #1c8a63); box-shadow:0 4px 0 #145c43, 0 8px 14px rgba(28,138,99,.35)}
+    .storeBtn.boutique:active{box-shadow:0 1px 0 #145c43, 0 3px 8px rgba(28,138,99,.3)}
     .storeBtn .buyLogo{width:18px; height:18px}
     .storeBtn .buyLogo.amazon{width:19px; height:19px}
     .storeBtn .buyLogo.fnac{width:33px; height:19px}
-    .storeBtn .buyLogo.cultura{width:27px; height:18px}
+    .storeBtn .buyLogo.boutique{width:auto; height:auto; font-size:16px}
     .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
 
     .buyModalBackdrop{
@@ -719,6 +720,47 @@
     .buyModalTitle .accent{color:var(--orange)}
     .buyModalText{margin:12px 0 0; color:var(--muted); font-size:15px; line-height:1.4}
     .buyModalActions{margin-top:20px}
+
+    .shopModalBackdrop{
+      position:fixed; inset:0;
+      background:rgba(15,12,8,.62);
+      display:flex; align-items:center; justify-content:center;
+      padding:20px; z-index:200;
+      opacity:0; pointer-events:none;
+      transition:opacity .2s ease;
+    }
+    .shopModalBackdrop.isOpen{opacity:1; pointer-events:auto}
+    .shopModal{
+      position:relative; width:min(440px, 100%);
+      max-height:90vh; overflow-y:auto;
+      background:var(--bg-2); border-radius:14px;
+      padding:30px 26px 26px; text-align:left;
+      box-shadow:0 24px 60px rgba(0,0,0,.4);
+      transform:translateY(10px);
+      transition:transform .2s ease;
+    }
+    .shopModalBackdrop.isOpen .shopModal{transform:translateY(0)}
+    .shopModalClose{
+      position:absolute; top:10px; right:10px;
+      width:32px; height:32px; border:none; border-radius:999px;
+      background:transparent; color:var(--muted); font-size:20px; line-height:1; cursor:pointer;
+    }
+    .shopModalClose:hover{background:var(--line)}
+    .shopModalTitle{margin:0; font-size:22px; font-weight:900; text-transform:uppercase; color:var(--ink)}
+    .shopModalText{margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.4}
+    .shopForm{margin-top:18px; display:flex; flex-direction:column; gap:14px}
+    .shopField{display:flex; flex-direction:column; gap:6px}
+    .shopField label{font-size:13px; font-weight:800; color:var(--muted)}
+    .shopField input{
+      font:inherit; padding:10px 12px; border-radius:10px;
+      border:1px solid var(--line); background:var(--white);
+      color:var(--ink);
+    }
+    .shopField input:focus{outline:2px solid var(--orange); outline-offset:1px}
+    .shopFormError{margin:0; color:#c0392b; font-size:13px; font-weight:700}
+    .shopFormActions{margin-top:4px}
+    .shopFormActions .btn{width:100%}
+    .shopFormSuccess{margin:0; color:var(--ink); font-size:15px; line-height:1.4; font-weight:700}
 
     .stickyBuyBar{
       position:fixed;
@@ -948,6 +990,7 @@
 
       <div class="navCtas">
         <a class="btn btnGhost" href="#achat" data-ga-id="gav_nav_ou_acheter">OÙ ACHETER ?</a>
+        <a class="btn btnGhost" href="#boutique" data-ga-id="gav_nav_boutique">BOUTIQUE</a>
         <a class="btn btnPrimary" href="#achat" data-ga-id="gav_nav_acheter">ACHETER LE JEU</a>
       </div>
     </div>
@@ -1039,8 +1082,8 @@
         <a class="buyBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_hero_buy_fnac">
           <span class="buyLogo fnac" aria-hidden="true"></span>Acheter sur Fnac
         </a>
-        <a class="buyBtn cultura" href="#achat" aria-label="Acheter sur Cultura" data-ga-id="gav_hero_buy_cultura">
-          <span class="buyLogo cultura" aria-hidden="true"></span>Acheter sur Cultura
+        <a class="buyBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_hero_buy_boutique">
+          <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
         </a>
       </div>
     </div>
@@ -1185,8 +1228,8 @@
             <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_band_buy_fnac">
               <span class="buyLogo fnac" aria-hidden="true"></span>fnac
             </a>
-            <a class="storeBtn cultura" href="#achat" aria-label="Acheter sur Cultura" data-ga-id="gav_band_buy_cultura">
-              <span class="buyLogo cultura" aria-hidden="true"></span>Cultura
+            <a class="storeBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_band_buy_boutique">
+              <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
             </a>
           </div>
           <div class="miniMeta">Livraison rapide · Paiement sécurisé · Service client</div>
@@ -1215,6 +1258,7 @@
           <a href="../accueil/" data-ga-id="gav_foot_histoire">Notre histoire</a>
           <a href="../accueil/#values" data-ga-id="gav_foot_valeurs">Nos valeurs</a>
           <a href="mailto:contact@cambrouillolage.fr" data-ga-id="gav_foot_contact">Contact</a>
+          <a href="#boutique" data-ga-id="gav_foot_boutique">Je suis une boutique</a>
         </div>
 
         <div class="footCol">
@@ -1227,13 +1271,14 @@
         <div class="footCol">
           <h4>LEGAL</h4>
           <a href="../mentions-legales.html">Mentions légales</a>
+          <a href="../cgv.html">CGV</a>
           <a href="../politique-confidentialite.html">Politique de confidentialité</a>
         </div>
       </div>
 
       <div class="footBottom">
         <span>© Fiasco Games 2024 - Tous droits réservés</span>
-        <span>Mentions légales · CGV · Politique de confidentialité</span>
+        <span><a href="../mentions-legales.html" style="color:inherit">Mentions légales</a> · <a href="../cgv.html" style="color:inherit">CGV</a> · <a href="../politique-confidentialite.html" style="color:inherit">Politique de confidentialité</a></span>
       </div>
     </div>
   </footer>
@@ -1251,6 +1296,41 @@
       <div class="buyModalActions">
         <a class="btn btnPrimary" href="mailto:contact@fiascogames.fr?subject=Etre%20pr%C3%A9venu%20-%20GAV" data-ga-id="gav_notify_me">Être prévenu →</a>
       </div>
+    </div>
+  </div>
+
+  <div class="shopModalBackdrop" id="shopModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="shopModalTitle">
+    <div class="shopModal">
+      <button class="shopModalClose" id="shopModalClose" type="button" aria-label="Fermer">&times;</button>
+      <h3 class="shopModalTitle" id="shopModalTitle">Vous êtes une <span class="accent">boutique</span> ?</h3>
+      <p class="shopModalText">Vous souhaitez avoir des informations ? Merci de renseigner vos informations, nous vous recontactons rapidement.</p>
+      <form class="shopForm" id="shopForm" novalidate>
+        <div class="shopField">
+          <label for="shopPrenom">Prénom</label>
+          <input id="shopPrenom" name="prenom" type="text" autocomplete="given-name" required maxlength="200" />
+        </div>
+        <div class="shopField">
+          <label for="shopNom">Nom</label>
+          <input id="shopNom" name="nom" type="text" autocomplete="family-name" required maxlength="200" />
+        </div>
+        <div class="shopField">
+          <label for="shopBoutique">Nom de la boutique</label>
+          <input id="shopBoutique" name="boutique" type="text" autocomplete="organization" required maxlength="200" />
+        </div>
+        <div class="shopField">
+          <label for="shopEmail">Email</label>
+          <input id="shopEmail" name="email" type="email" autocomplete="email" required maxlength="200" />
+        </div>
+        <div class="shopField">
+          <label for="shopTelephone">Téléphone</label>
+          <input id="shopTelephone" name="telephone" type="tel" autocomplete="tel" required maxlength="200" />
+        </div>
+        <p class="shopFormError" id="shopFormError" hidden></p>
+        <p class="shopFormSuccess" id="shopFormSuccess" hidden>Merci ! Votre demande a bien été envoyée, nous revenons vers vous rapidement.</p>
+        <div class="shopFormActions">
+          <button class="btn btnPrimary" type="submit" id="shopFormSubmit">Envoyer</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -1649,6 +1729,108 @@
       update();
     })();
 
+  </script>
+
+  <script>
+    (function(){
+      const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+      const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/shop-contact`;
+
+      const backdrop = document.getElementById('shopModalBackdrop');
+      const closeBtn = document.getElementById('shopModalClose');
+      const form = document.getElementById('shopForm');
+      const fields = form.querySelectorAll('.shopField');
+      const errorEl = document.getElementById('shopFormError');
+      const successEl = document.getElementById('shopFormSuccess');
+      const submitBtn = document.getElementById('shopFormSubmit');
+
+      function resetShopForm(){
+        fields.forEach((field)=> field.hidden = false);
+        errorEl.hidden = true;
+        successEl.hidden = true;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer';
+        submitBtn.dataset.mode = 'submit';
+      }
+      resetShopForm();
+
+      function openShopModal(){
+        if (submitBtn.dataset.mode === 'close'){
+          form.reset();
+          resetShopForm();
+        }
+        backdrop.classList.add('isOpen');
+      }
+      function closeShopModal(){
+        backdrop.classList.remove('isOpen');
+      }
+
+      document.querySelectorAll('a[href="#boutique"]').forEach((link)=>{
+        link.addEventListener('click', (event)=>{
+          event.preventDefault();
+          openShopModal();
+        });
+      });
+      closeBtn.addEventListener('click', closeShopModal);
+      backdrop.addEventListener('click', (event)=>{
+        if (event.target === backdrop) closeShopModal();
+      });
+      document.addEventListener('keydown', (event)=>{
+        if (event.key === 'Escape' && backdrop.classList.contains('isOpen')) closeShopModal();
+      });
+
+      form.addEventListener('submit', async (event)=>{
+        event.preventDefault();
+
+        if (submitBtn.dataset.mode === 'close'){
+          closeShopModal();
+          return;
+        }
+
+        errorEl.hidden = true;
+
+        const data = {
+          prenom: form.prenom.value.trim(),
+          nom: form.nom.value.trim(),
+          boutique: form.boutique.value.trim(),
+          email: form.email.value.trim(),
+          telephone: form.telephone.value.trim(),
+        };
+        if (!data.prenom || !data.nom || !data.boutique || !data.email || !data.telephone){
+          errorEl.textContent = 'Merci de renseigner tous les champs.';
+          errorEl.hidden = false;
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi...';
+        try {
+          const res = await fetch(FUNCTION_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await res.json().catch(()=>({}));
+          if (!res.ok){
+            throw new Error(result.error || 'Une erreur est survenue.');
+          }
+          fields.forEach((field)=> field.hidden = true);
+          successEl.hidden = false;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Fermer';
+          submitBtn.dataset.mode = 'close';
+        } catch (err){
+          errorEl.textContent = (err && err.message) || 'Une erreur est survenue, réessayez.';
+          errorEl.hidden = false;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Envoyer';
+        }
+      });
+    })();
   </script>
 </body>
 </html>
