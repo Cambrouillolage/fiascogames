@@ -77,6 +77,53 @@ locale (affichée par `supabase start`) pour tester sans toucher à la prod.
   l'abus côté fonction, mais une alerte de dépense côté
   [console Anthropic](https://console.anthropic.com/) est recommandée.
 
+## Formulaire boutiques (`shop-contact`)
+
+Le bouton "Boutique" (header/footer de `accueil/index.html` et `gav/index.html`)
+et les boutons "Je suis une boutique" de `gav/index.html` (remplaçant les
+anciens boutons "Cultura") ouvrent une modale avec un formulaire (nom,
+prénom, boutique, email, téléphone). À l'envoi, une Edge Function Supabase
+enregistre la demande et envoie deux emails via [Resend](https://resend.com) :
+une confirmation à la boutique (depuis `galane@fiascogames.fr`) et une
+notification interne à `galane@fiascogames.fr` et `florian@fiascogames.fr`.
+
+Réutilise le même projet Supabase que le chat GAV (mêmes
+`SUPABASE_URL`/`SUPABASE_ANON_KEY` déjà en clair dans le HTML).
+
+### Mise en place (une fois)
+
+1. Appliquer le schéma : `npx supabase db push` (voir
+   `supabase/migrations/0002_shop_contact.sql`).
+2. Créer un compte [Resend](https://resend.com) et **vérifier le domaine
+   `fiascogames.fr`** (ajout d'enregistrements DNS SPF/DKIM chez le
+   registrar du domaine) — indispensable pour pouvoir envoyer depuis
+   `galane@fiascogames.fr`, sinon les emails seront rejetés ou finiront en
+   spam.
+3. Définir le secret de la fonction :
+   `npx supabase secrets set RESEND_API_KEY=re_...`
+4. Déployer la fonction : `npx supabase functions deploy shop-contact`.
+
+### Développement local
+
+```bash
+npx supabase start                                            # Postgres/Auth/Studio/Edge Runtime (Docker)
+npx supabase functions serve shop-contact --env-file supabase/.env.local  # vraie clé Resend, envoi réel
+python3 -m http.server                                         # sert le site statique
+```
+
+### Sécurité
+
+- Row Level Security interdit toute lecture/écriture directe de
+  `shop_requests` par `anon`/`authenticated` — seule la fonction (clé
+  `service_role`) y écrit. Pas d'interface d'admin dédiée pour l'instant :
+  consultation via le Dashboard Supabase (Table Editor).
+- L'endpoint est public et non authentifié (nécessaire pour des visiteurs
+  anonymes) : un plafond par IP limite l'abus côté fonction.
+- Un échec d'envoi d'email n'empêche pas l'enregistrement de la demande en
+  base (l'inverse serait pire : perdre un lead à cause d'un souci
+  d'emailing) — surveiller les logs de la fonction en cas de doute sur la
+  délivrabilité.
+
 ## Cookies et Google Analytics
 
 - `assets/analytics.js` : gtag/dataLayer + Consent Mode v2 (refusé par
