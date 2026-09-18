@@ -27,6 +27,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <script src="../assets/analytics.js"></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-9-ORdU_3KygT_X-zE01g5.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
   <style>
     :root{
       --bg:#f3ede1;
@@ -526,6 +532,60 @@
     @keyframes gavAssetFloatAlt{
       0%, 100%{ transform:translateY(0) rotate(0deg); }
       50%{ transform:translateY(-5px) rotate(1.6deg); }
+    }
+
+    /* Photo carousel: same "cadre" as .stepCard (bordure orange, coins
+       arrondis, ombre dure décalée) mais appliqué à une seule photo par
+       diapositive. Desktop : flèches + points, pilotés en JS via scrollBy/
+       scrollTo. Mobile : les flèches sont masquées, le scroll tactile natif
+       (scroll-snap) suffit — un seul balisage sert les deux cas. */
+    .photoCarousel{position:relative; margin:34px auto 0; max-width:480px}
+    .photoTrack{
+      display:flex;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      scroll-behavior:smooth;
+      gap:14px;
+      padding:4px 4px 18px;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .photoTrack::-webkit-scrollbar{display:none}
+    .photoCard{
+      flex:0 0 100%;
+      scroll-snap-align:center;
+      margin:0;
+      border:3px solid #dba25a;
+      border-radius:24px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
+      padding:14px;
+    }
+    .photoFrame{
+      border-radius:14px;
+      overflow:hidden;
+      aspect-ratio:1/1;
+      background:rgba(0,0,0,.06);
+    }
+    .photoFrame img{width:100%; height:100%; object-fit:cover; display:block}
+    .photoNav{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:44px; height:44px; border-radius:50%;
+      border:2px solid #dba25a; background:#fdf7ea; color:#a8420c;
+      font-size:22px; font-weight:900; line-height:1; cursor:pointer;
+      display:grid; place-items:center;
+      box-shadow:0 6px 14px rgba(36,22,8,.25);
+      z-index:2;
+    }
+    .photoNav:hover{filter:brightness(1.05)}
+    .photoNav.prev{left:6px}
+    .photoNav.next{right:6px}
+    .photoDots{display:flex; justify-content:center; gap:8px; margin-top:16px}
+    .photoDot{width:9px; height:9px; border-radius:50%; background:#dba25a; opacity:.35; border:none; padding:0; cursor:pointer}
+    .photoDot.isActive{opacity:1}
+    @media (max-width:820px){
+      .photoNav{display:none}
+      .photoCard{flex-basis:86%; padding:10px}
     }
 
     .valueBand{
@@ -1131,6 +1191,35 @@
           <p class="stepText">Si le binôme a la même réponse, alors il marque des points, mais attention de ne pas répondre comme la police pour ne pas en perdre ! Qui arrivera à éviter la prison ?</p>
           <img class="stepImg assetRaw" src="../assets/notepad_suspect.png" alt="Bloc note suspect" loading="lazy" />
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="photos">
+    <div class="container">
+      <h2 class="sectionTitle">EN <span class="accent">IMAGES</span></h2>
+
+      <div class="photoCarousel">
+        <div class="photoTrack" id="photoTrack">
+          <article class="photoCard">
+            <div class="photoFrame"><img src="../assets/carousel-photos/photo-1.jpg" alt="Photo du jeu GAV 1" loading="lazy" /></div>
+          </article>
+          <article class="photoCard">
+            <div class="photoFrame"><img src="../assets/carousel-photos/photo-2.jpg" alt="Photo du jeu GAV 2" loading="lazy" /></div>
+          </article>
+          <article class="photoCard">
+            <div class="photoFrame"><img src="../assets/carousel-photos/photo-3.jpg" alt="Photo du jeu GAV 3" loading="lazy" /></div>
+          </article>
+          <article class="photoCard">
+            <div class="photoFrame"><img src="../assets/carousel-photos/photo-4.jpg" alt="Photo du jeu GAV 4" loading="lazy" /></div>
+          </article>
+          <article class="photoCard">
+            <div class="photoFrame"><img src="../assets/carousel-photos/photo-5.jpg" alt="Photo du jeu GAV 5" loading="lazy" /></div>
+          </article>
+        </div>
+        <button class="photoNav prev" id="photoPrev" type="button" aria-label="Photo précédente">‹</button>
+        <button class="photoNav next" id="photoNext" type="button" aria-label="Photo suivante">›</button>
+        <div class="photoDots" id="photoDots"></div>
       </div>
     </div>
   </section>
@@ -1830,6 +1919,67 @@
           submitBtn.textContent = 'Envoyer';
         }
       });
+    })();
+  </script>
+
+  <script>
+    (function(){
+      const track = document.getElementById('photoTrack');
+      if (!track) return;
+      const prevBtn = document.getElementById('photoPrev');
+      const nextBtn = document.getElementById('photoNext');
+      const dotsWrap = document.getElementById('photoDots');
+      const cards = Array.from(track.children);
+
+      cards.forEach((_, i)=>{
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'photoDot';
+        dot.setAttribute('aria-label', `Aller à la photo ${i + 1}`);
+        dot.addEventListener('click', ()=>{
+          track.scrollTo({ left: cards[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+        });
+        dotsWrap.appendChild(dot);
+      });
+      const dots = Array.from(dotsWrap.children);
+
+      function updateActiveDot(){
+        const trackLeft = track.getBoundingClientRect().left;
+        let closest = 0;
+        let closestDist = Infinity;
+        cards.forEach((card, i)=>{
+          const dist = Math.abs(card.getBoundingClientRect().left - trackLeft);
+          if (dist < closestDist){ closestDist = dist; closest = i; }
+        });
+        dots.forEach((dot, i)=> dot.classList.toggle('isActive', i === closest));
+      }
+
+      let scrollTimer;
+      track.addEventListener('scroll', ()=>{
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(updateActiveDot, 80);
+      });
+
+      if (prevBtn) prevBtn.addEventListener('click', ()=>{
+        track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
+      });
+      if (nextBtn) nextBtn.addEventListener('click', ()=>{
+        track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+      });
+
+      updateActiveDot();
+
+      // Petit indice visuel au chargement (mobile uniquement) : un léger
+      // aller-retour du scroll pour signaler qu'on peut swiper vers les
+      // photos suivantes, sans attendre une interaction de l'utilisateur.
+      if (window.matchMedia('(max-width:820px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        setTimeout(()=>{
+          track.scrollBy({ left: 36, behavior: 'smooth' });
+          setTimeout(()=>{
+            track.scrollBy({ left: -36, behavior: 'smooth' });
+          }, 450);
+        }, 700);
+      }
     })();
   </script>
 </body>
