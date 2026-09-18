@@ -43,11 +43,19 @@ gtag('consent', 'default', {
 })();
 
 function trackCta(el) {
-  gtag('event', 'cta_click', {
+  var payload = {
     cta_id: el.dataset.gaId,
     cta_label: el.dataset.gaLabel || el.textContent.trim().slice(0, 100),
     cta_page: location.pathname,
-  });
+  };
+  gtag('event', 'cta_click', payload);
+  // Plausible (cookieless, sans bandeau de consentement) : présent
+  // uniquement sur les pages qui chargent son script (voir /gav/*, qui
+  // n'affichent pas le bandeau de cookies). Ailleurs, window.plausible
+  // n'existe pas et cette ligne ne fait rien.
+  if (window.plausible) {
+    plausible('cta_click', { props: payload });
+  }
 }
 
 document.addEventListener('click', function (e) {
