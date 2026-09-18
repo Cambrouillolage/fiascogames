@@ -27,6 +27,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <script src="../../assets/analytics.js"></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-9-ORdU_3KygT_X-zE01g5.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
 
   <style>
     :root{
@@ -294,19 +300,15 @@
       <h1>Une question sur les règles ?</h1>
       <p class="lead">Posez votre question ci-dessous : l'assistant répond en s'appuyant sur les règles officielles de GAV.</p>
 
-      <!--
-        Vidéo de règles à activer dès qu'elle existe : décommenter et
-        renseigner l'URL YouTube, puis conserver le chat en dessous.
-        <div class="videoFrame">
-          <iframe
-            src="https://www.youtube.com/embed/VIDEO_ID"
-            title="Vidéo des règles de GAV"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-          </iframe>
-        </div>
-      -->
+      <div class="videoFrame">
+        <iframe
+          src="https://www.youtube.com/embed/C8bykZITgSw"
+          title="Vidéo des règles de GAV"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </div>
 
       <section class="chatCard" aria-label="Chat de questions sur les règles">
         <div class="chatMessages" id="chatMessages" role="log" aria-live="polite"></div>
