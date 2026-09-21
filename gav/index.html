@@ -225,14 +225,15 @@
     }
     .buyBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
     .buyBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #08131c, 0 4px 10px rgba(15,26,38,.3)}
-    /* Amazon = brand orange (matches the site's own CTA orange), Fnac =
-       brand yellow — retailer colours, not ours to change, so borrowed
-       straight from each retailer's own palette. "Boutique" (revendeurs)
-       gets its own neutral teal since it isn't a retailer mark. */
+    /* Amazon = brand orange (matches the site's own CTA orange) — retailer
+       colour, not ours to change. Philibert n'a pas de logo fourni ici,
+       donc couleur distincte + icône emoji plutôt qu'un vrai logo (à
+       remplacer par assets/philibert.png si fourni un jour). "Boutique"
+       (revendeurs) garde son teal neutre, pas une marque tierce. */
     .buyBtn.amazon{background:linear-gradient(180deg, var(--orange-2), var(--orange)); border-color:rgba(255,255,255,.22); box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.38)}
     .buyBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.32)}
-    .buyBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 5px 0 #caa02a, 0 12px 22px rgba(246,191,51,.38)}
-    .buyBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 4px 10px rgba(246,191,51,.32)}
+    .buyBtn.philibert{background:linear-gradient(180deg, #e2483b, #b8271b); box-shadow:0 5px 0 #7c1810, 0 12px 22px rgba(184,39,27,.38)}
+    .buyBtn.philibert:active{box-shadow:0 1px 0 #7c1810, 0 4px 10px rgba(184,39,27,.32)}
     .buyBtn.boutique{background:linear-gradient(180deg, #2fb787, #1c8a63); box-shadow:0 5px 0 #145c43, 0 12px 22px rgba(28,138,99,.38)}
     .buyBtn.boutique:active{box-shadow:0 1px 0 #145c43, 0 4px 10px rgba(28,138,99,.32)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
@@ -240,7 +241,7 @@
        each retailer's mark sits directly on the button colour — the button
        colours below are picked to keep every mark legible on its own. */
     .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon-white.png)}
-    .buyLogo.fnac{width:60px; height:34px; background-image:url(../assets/fnac.png)}
+    .buyLogo.philibert{width:auto; height:auto; background-image:none; font-size:22px; line-height:1}
     .buyLogo.boutique{width:auto; height:auto; background-image:none; font-size:22px; line-height:1}
 
     .quickInfoBar{
@@ -725,13 +726,13 @@
     .storeBtn:active{transform:translateY(2px); box-shadow:0 1px 0 #08131c, 0 3px 8px rgba(15,26,38,.3)}
     .storeBtn.amazon{background:linear-gradient(180deg, var(--orange-2), var(--orange)); border-color:rgba(255,255,255,.22); box-shadow:0 4px 0 #b34f09, 0 8px 14px rgba(234,111,17,.38)}
     .storeBtn.amazon:active{box-shadow:0 1px 0 #b34f09, 0 3px 8px rgba(234,111,17,.32)}
-    .storeBtn.fnac{background:linear-gradient(180deg, #ffd35c, #f6bf33); color:#171717; box-shadow:0 4px 0 #caa02a, 0 8px 14px rgba(246,191,51,.35)}
-    .storeBtn.fnac:active{box-shadow:0 1px 0 #caa02a, 0 3px 8px rgba(246,191,51,.3)}
+    .storeBtn.philibert{background:linear-gradient(180deg, #e2483b, #b8271b); box-shadow:0 4px 0 #7c1810, 0 8px 14px rgba(184,39,27,.35)}
+    .storeBtn.philibert:active{box-shadow:0 1px 0 #7c1810, 0 3px 8px rgba(184,39,27,.3)}
     .storeBtn.boutique{background:linear-gradient(180deg, #2fb787, #1c8a63); box-shadow:0 4px 0 #145c43, 0 8px 14px rgba(28,138,99,.35)}
     .storeBtn.boutique:active{box-shadow:0 1px 0 #145c43, 0 3px 8px rgba(28,138,99,.3)}
     .storeBtn .buyLogo{width:18px; height:18px}
     .storeBtn .buyLogo.amazon{width:19px; height:19px}
-    .storeBtn .buyLogo.fnac{width:33px; height:19px}
+    .storeBtn .buyLogo.philibert{width:auto; height:auto; font-size:16px}
     .storeBtn .buyLogo.boutique{width:auto; height:auto; font-size:16px}
     .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
 
@@ -1139,8 +1140,8 @@
         <a class="buyBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_hero_buy_amazon">
           <span class="buyLogo amazon" aria-hidden="true"></span>Acheter sur Amazon
         </a>
-        <a class="buyBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_hero_buy_fnac">
-          <span class="buyLogo fnac" aria-hidden="true"></span>Acheter sur Fnac
+        <a class="buyBtn philibert" href="https://www.philibertnet.com/fr/tout-le-catalogue/182733-gav-garde-a-vue-3770043150013.html" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Philibert" data-ga-id="gav_hero_buy_philibert">
+          <span class="buyLogo philibert" aria-hidden="true">🎲</span>Acheter sur Philibert
         </a>
         <a class="buyBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_hero_buy_boutique">
           <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
@@ -1314,8 +1315,8 @@
             <a class="storeBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_band_buy_amazon">
               <span class="buyLogo amazon" aria-hidden="true"></span>amazon
             </a>
-            <a class="storeBtn fnac" href="#achat" aria-label="Acheter sur Fnac" data-ga-id="gav_band_buy_fnac">
-              <span class="buyLogo fnac" aria-hidden="true"></span>fnac
+            <a class="storeBtn philibert" href="https://www.philibertnet.com/fr/tout-le-catalogue/182733-gav-garde-a-vue-3770043150013.html" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Philibert" data-ga-id="gav_band_buy_philibert">
+              <span class="buyLogo philibert" aria-hidden="true">🎲</span>philibert
             </a>
             <a class="storeBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_band_buy_boutique">
               <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
