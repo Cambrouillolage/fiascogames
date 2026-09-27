@@ -394,6 +394,26 @@
     /* "Comment jouer" : plus d'effet de scroll ici, seulement le hero
        vidéo au-dessus en garde un. Les 3 étapes s'affichent simplement
        l'une après l'autre dans le flux normal de la page. */
+    /* Vidéo de règles, format portrait (9:16, façon Insta), même cadre
+       "bonbon" que les cartes .stepCard juste en dessous. */
+    .rulesVideoWrap{
+      margin:30px auto 0;
+      max-width:300px;
+      border:3px solid #dba25a;
+      border-radius:24px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
+      padding:10px;
+    }
+    .rulesVideo{
+      display:block;
+      width:100%;
+      aspect-ratio:9/16;
+      border-radius:16px;
+      background:#000;
+      border:0;
+    }
+
     .stepsList{margin-top:34px; width:100%; max-width:100%; display:flex; flex-direction:column; gap:34px}
     /* Chunky bordered "card" with a numbered badge popped over its top-left
        corner: the badge sits half outside the card (negative top), and a
@@ -1154,6 +1174,17 @@
   <section class="section" id="comment-jouer">
     <div class="container">
       <h2 class="sectionTitle">COMMENT <span class="accent">JOUER</span> ?</h2>
+
+      <div class="rulesVideoWrap">
+        <iframe
+          class="rulesVideo"
+          src="https://www.youtube.com/embed/q57rMtHMvis"
+          title="Vidéo des règles de GAV"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </div>
 
       <div class="stepsList">
         <article class="stepCard isPrimary">
