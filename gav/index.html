@@ -26,6 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="../assets/analytics.js"></script>
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-9-ORdU_3KygT_X-zE01g5.js"></script>
@@ -685,6 +686,57 @@
       transform:translateY(0) scale(1);
     }
 
+    /* Carte "Trouver une boutique" : même habillage "cadre bonbon" que le
+       reste du site (bordure + ombre dure), Leaflet pour la carte (déjà
+       utilisé sur accueil/index.html, pas de clé API nécessaire). */
+    .shopsLead{margin:10px 0 0; text-align:center; color:var(--muted); font-size:16px; font-weight:600}
+    .shopsSearchRow{
+      margin:24px auto 0; max-width:560px;
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+    }
+    .shopsSearchInput{
+      flex:1 1 260px;
+      font:inherit; font-size:15px;
+      padding:12px 16px;
+      border-radius:12px;
+      border:2px solid var(--line);
+      background:var(--white);
+      color:var(--ink);
+    }
+    .shopsSearchInput:focus{outline:2px solid var(--orange); outline-offset:1px}
+    .shopsMapFrame{
+      margin:22px auto 0; max-width:720px;
+      border:3px solid #dba25a;
+      border-radius:24px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
+      padding:10px;
+    }
+    .shopsMap{width:100%; height:360px; border-radius:16px; background:#e9e2d2}
+    .shopsList{
+      margin:22px auto 0; max-width:720px;
+      display:grid; gap:14px;
+    }
+    .shopCard{
+      display:flex; gap:14px; align-items:center;
+      border:2px solid #dba25a;
+      border-radius:14px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:4px 5px 0 #c9822f;
+      padding:12px 16px;
+      text-align:left;
+    }
+    .shopCardPhoto{
+      flex:0 0 auto; width:56px; height:56px; border-radius:10px;
+      object-fit:cover; background:#e9e2d2;
+    }
+    .shopCardBody{min-width:0}
+    .shopCardName{margin:0; font-weight:900; color:#a8420c; font-size:16px}
+    .shopCardAddress{margin:2px 0 0; color:var(--muted); font-size:13px; font-weight:600}
+    .shopCardLink{margin:4px 0 0; display:inline-block; font-size:13px; font-weight:800; color:var(--orange); text-decoration:none}
+    .shopCardLink:hover{text-decoration:underline}
+    .shopsEmpty{margin:22px auto 0; max-width:560px; text-align:center; color:var(--muted); font-weight:600}
+
     .faqWrap{display:block; margin-top:18px}
     .faqList{display:grid; gap:18px}
     /* Same "candy" hard-shadow bevel as the step cards and buttons. */
@@ -1158,14 +1210,11 @@
       </div>
 
       <div class="buyRow" aria-label="Boutons partenaires">
-        <a class="buyBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_hero_buy_amazon">
+        <a class="buyBtn amazon" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Amazon" data-ga-id="gav_hero_buy_amazon">
           <span class="buyLogo amazon" aria-hidden="true"></span>Acheter sur Amazon
         </a>
         <a class="buyBtn philibert" href="https://www.philibertnet.com/fr/tout-le-catalogue/182733-gav-garde-a-vue-3770043150013.html" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Philibert" data-ga-id="gav_hero_buy_philibert">
           <span class="buyLogo philibert" aria-hidden="true"></span>Acheter sur Philibert
-        </a>
-        <a class="buyBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_hero_buy_boutique">
-          <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
         </a>
       </div>
     </div>
@@ -1281,6 +1330,25 @@
     </div>
   </section>
 
+  <section class="section" id="boutiques">
+    <div class="container">
+      <h2 class="sectionTitle">TROUVEZ UNE <span class="accent">BOUTIQUE</span> PRÈS DE CHEZ VOUS</h2>
+      <p class="shopsLead">Aide-nous à mettre GAV dans toutes les boutiques de France : parle de nous et demande à ton ludothécaire de prendre ce jeu !</p>
+
+      <div class="shopsSearchRow">
+        <input type="text" id="shopsSearchInput" class="shopsSearchInput" placeholder="Code postal ou ville (ex: 75011 ou Lyon)" autocomplete="off" />
+        <a class="btn btnPrimary" href="#boutique" data-ga-id="gav_shops_cta_boutique">Je suis une boutique</a>
+      </div>
+
+      <div class="shopsMapFrame">
+        <div id="shopsMap" class="shopsMap"></div>
+      </div>
+
+      <div id="shopsList" class="shopsList"></div>
+      <p id="shopsEmpty" class="shopsEmpty" hidden>Aucune boutique ne correspond à cette recherche pour le moment.</p>
+    </div>
+  </section>
+
   <section class="section" id="faq">
     <div class="container">
       <h2 class="sectionTitle">QUESTIONS <span class="accent">FRÉQUENTES</span></h2>
@@ -1344,14 +1412,11 @@
         <div class="buyRight">
           <h3>DISPONIBLE MAINTENANT</h3>
           <div class="buyStores">
-            <a class="storeBtn amazon" href="#achat" aria-label="Acheter sur Amazon" data-ga-id="gav_band_buy_amazon">
+            <a class="storeBtn amazon" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Amazon" data-ga-id="gav_band_buy_amazon">
               <span class="buyLogo amazon" aria-hidden="true"></span>amazon
             </a>
             <a class="storeBtn philibert" href="https://www.philibertnet.com/fr/tout-le-catalogue/182733-gav-garde-a-vue-3770043150013.html" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Philibert" data-ga-id="gav_band_buy_philibert">
               <span class="buyLogo philibert" aria-hidden="true"></span>philibert
-            </a>
-            <a class="storeBtn boutique" href="#boutique" aria-label="Je suis une boutique" data-ga-id="gav_band_buy_boutique">
-              <span class="buyLogo boutique" aria-hidden="true">🏬</span>Je suis une boutique
             </a>
           </div>
           <div class="miniMeta">Livraison rapide · Paiement sécurisé · Service client</div>
@@ -2013,6 +2078,94 @@
           }, 450);
         }, 700);
       }
+    })();
+  </script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    (function(){
+      const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+
+      const mapEl = document.getElementById('shopsMap');
+      const listEl = document.getElementById('shopsList');
+      const emptyEl = document.getElementById('shopsEmpty');
+      const searchInput = document.getElementById('shopsSearchInput');
+      if (!mapEl) return;
+
+      const map = L.map(mapEl).setView([46.6, 2.3], 5.4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      let allShops = [];
+      let markers = [];
+
+      function clearMarkers(){
+        markers.forEach((m)=> map.removeLayer(m));
+        markers = [];
+      }
+
+      function renderShops(shops){
+        clearMarkers();
+        listEl.innerHTML = '';
+        emptyEl.hidden = shops.length > 0;
+
+        shops.forEach((shop)=>{
+          if (typeof shop.latitude === 'number' && typeof shop.longitude === 'number'){
+            const marker = L.marker([shop.latitude, shop.longitude]).addTo(map);
+            const popupParts = [`<strong>${shop.name}</strong>`];
+            if (shop.address) popupParts.push(shop.address);
+            if (shop.website_url) popupParts.push(`<a href="${shop.website_url}" target="_blank" rel="noopener noreferrer">Voir le site</a>`);
+            marker.bindPopup(popupParts.join('<br>'));
+            markers.push(marker);
+          }
+
+          const card = document.createElement('article');
+          card.className = 'shopCard';
+          card.innerHTML = `
+            ${shop.photo_url ? `<img class="shopCardPhoto" src="${shop.photo_url}" alt="${shop.name}" loading="lazy" />` : ''}
+            <div class="shopCardBody">
+              <p class="shopCardName">${shop.name}</p>
+              <p class="shopCardAddress">${[shop.address, shop.postal_code, shop.city].filter(Boolean).join(', ')}</p>
+              ${shop.website_url ? `<a class="shopCardLink" href="${shop.website_url}" target="_blank" rel="noopener noreferrer">Voir le site →</a>` : ''}
+            </div>
+          `;
+          listEl.appendChild(card);
+        });
+      }
+
+      function applySearch(){
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query){
+          renderShops(allShops);
+          return;
+        }
+        const filtered = allShops.filter((shop)=>
+          (shop.postal_code && shop.postal_code.toLowerCase().indexOf(query) !== -1) ||
+          (shop.city && shop.city.toLowerCase().indexOf(query) !== -1)
+        );
+        renderShops(filtered);
+      }
+
+      searchInput.addEventListener('input', applySearch);
+
+      fetch(`${SUPABASE_URL}/rest/v1/shop_directory?select=*&is_active=eq.true&order=city.asc`, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      })
+        .then((res)=> res.ok ? res.json() : [])
+        .then((shops)=>{
+          allShops = Array.isArray(shops) ? shops : [];
+          renderShops(allShops);
+        })
+        .catch(()=>{
+          emptyEl.textContent = "Impossible de charger les boutiques pour le moment.";
+          emptyEl.hidden = false;
+        });
     })();
   </script>
 </body>
