@@ -712,7 +712,7 @@
       box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
       padding:10px;
     }
-    .shopsMap{width:100%; height:360px; border-radius:16px; background:#e9e2d2}
+    .shopsMap{width:100%; height:360px; border-radius:16px; background:#e9e2d2; overflow:hidden; position:relative; z-index:0}
     .shopsList{
       margin:22px auto 0; max-width:720px;
       display:grid; gap:14px;
@@ -2018,6 +2018,13 @@
         attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 18,
       }).addTo(map);
+
+      // Leaflet calcule parfois mal la taille du conteneur à l'initialisation
+      // (polices/mise en page pas encore stabilisées), ce qui donne un zoom
+      // et des marqueurs mal placés. On force un recalcul une fois la page
+      // posée, et encore une fois si l'utilisateur redimensionne la fenêtre.
+      setTimeout(()=> map.invalidateSize(), 200);
+      window.addEventListener('resize', ()=> map.invalidateSize());
 
       let allShops = [];
       let markers = [];
