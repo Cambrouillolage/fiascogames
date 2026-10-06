@@ -809,52 +809,6 @@
     .storeBtn .buyLogo.boutique{width:auto; height:auto; font-size:16px}
     .miniMeta{margin-top:8px; font-size:13px; color:#d9ccbf; font-weight:700}
 
-    .buyModalBackdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(15,12,8,.62);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      z-index:1000;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .2s ease;
-    }
-    .buyModalBackdrop.isOpen{opacity:1; pointer-events:auto}
-    .buyModal{
-      position:relative;
-      width:min(420px, 100%);
-      background:var(--bg-2);
-      border-radius:14px;
-      padding:30px 26px 26px;
-      text-align:center;
-      box-shadow:0 24px 60px rgba(0,0,0,.4);
-      transform:translateY(10px);
-      transition:transform .2s ease;
-    }
-    .buyModalBackdrop.isOpen .buyModal{transform:translateY(0)}
-    .buyModalClose{
-      position:absolute;
-      top:10px;
-      right:10px;
-      width:32px;
-      height:32px;
-      border:none;
-      border-radius:999px;
-      background:transparent;
-      color:var(--muted);
-      font-size:20px;
-      line-height:1;
-      cursor:pointer;
-    }
-    .buyModalClose:hover{background:var(--line)}
-    .buyModalTitle{margin:0; font-size:24px; font-weight:900; text-transform:uppercase; color:var(--ink)}
-    .buyModalTitle .accent{color:var(--orange)}
-    .buyModalText{margin:12px 0 0; color:var(--muted); font-size:15px; line-height:1.4}
-    .buyModalActions{margin-top:20px}
-
     .shopModalBackdrop{
       position:fixed; inset:0;
       background:rgba(15,12,8,.62);
@@ -1123,9 +1077,8 @@
       </nav>
 
       <div class="navCtas">
-        <a class="btn btnGhost" href="#achat" data-ga-id="gav_nav_ou_acheter">OÙ ACHETER ?</a>
         <a class="btn btnGhost" href="#boutique" data-ga-id="gav_nav_boutique">BOUTIQUE</a>
-        <a class="btn btnPrimary" href="#achat" data-ga-id="gav_nav_acheter">ACHETER LE JEU</a>
+        <a class="btn btnPrimary" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" data-ga-id="gav_nav_acheter">ACHETER LE JEU</a>
       </div>
     </div>
   </header>
@@ -1472,18 +1425,7 @@
 
   <div class="stickyBuyBar" id="stickyBuyBar" aria-label="Bandeau achat rapide">
     <p class="stickyBuyText">Prêt à jouer ? Commandez GAV maintenant.</p>
-    <a class="stickyBuyBtn" href="#achat" data-ga-id="gav_sticky_buy">Acheter</a>
-  </div>
-
-  <div class="buyModalBackdrop" id="buyModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="buyModalTitle">
-    <div class="buyModal">
-      <button class="buyModalClose" id="buyModalClose" aria-label="Fermer">&times;</button>
-      <h3 class="buyModalTitle" id="buyModalTitle">Jeu disponible <span class="accent">en septembre</span></h3>
-      <p class="buyModalText">GAV n'est pas encore en vente. Laissez-nous votre e-mail pour être prévenu dès sa sortie.</p>
-      <div class="buyModalActions">
-        <a class="btn btnPrimary" href="mailto:contact@fiascogames.fr?subject=Etre%20pr%C3%A9venu%20-%20GAV" data-ga-id="gav_notify_me">Être prévenu →</a>
-      </div>
-    </div>
+    <a class="stickyBuyBtn" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" data-ga-id="gav_sticky_buy">Acheter</a>
   </div>
 
   <div class="shopModalBackdrop" id="shopModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="shopModalTitle">
@@ -1527,28 +1469,6 @@
     const linkItems = navLinks.querySelectorAll('a');
     const stickyBuyBar = document.getElementById('stickyBuyBar');
 
-    const buyModalBackdrop = document.getElementById('buyModalBackdrop');
-    const buyModalClose = document.getElementById('buyModalClose');
-
-    function openBuyModal(){
-      buyModalBackdrop.classList.add('isOpen');
-    }
-    function closeBuyModal(){
-      buyModalBackdrop.classList.remove('isOpen');
-    }
-    document.querySelectorAll('a[href="#achat"]').forEach((link)=>{
-      link.addEventListener('click', (event)=>{
-        event.preventDefault();
-        openBuyModal();
-      });
-    });
-    buyModalClose.addEventListener('click', closeBuyModal);
-    buyModalBackdrop.addEventListener('click', (event)=>{
-      if (event.target === buyModalBackdrop) closeBuyModal();
-    });
-    document.addEventListener('keydown', (event)=>{
-      if (event.key === 'Escape') closeBuyModal();
-    });
     const stepsRiver = document.querySelector('.stepsRiver');
     const stepsRiverCards = stepsRiver ? Array.from(stepsRiver.querySelectorAll('.stepsRiverCard')) : [];
     let cardStackOrder = stepsRiverCards.map((_, i)=> i);
