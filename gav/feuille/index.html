@@ -243,6 +243,8 @@
     }
     #suspect .row-answer{
       padding: 6px 10px;
+      padding-right: 32px;
+      position: relative;
       display: flex;
       align-items: center;
     }
@@ -251,12 +253,35 @@
       background: transparent !important;
       resize: none;
       min-height: 44px;
+      min-width: 0;
+      overflow-y: hidden;
+      overflow-wrap: break-word;
       outline: none !important;
       width: 100%;
       padding: 2px 0;
       font-weight: 500;
       font-size: 15px;
     }
+    .row-clear{
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,.12);
+      color: rgba(0,0,0,.65);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .row-clear:hover{ background: #b91c1c; color: #fff; }
     #suspect .row-super{
       display: flex;
       justify-content: center;
@@ -437,6 +462,8 @@
     }
     #inspector .row-question{
       padding: 6px 10px;
+      padding-right: 32px;
+      position: relative;
       display: flex;
       align-items: center;
     }
@@ -445,6 +472,9 @@
       background: transparent !important;
       resize: none;
       min-height: 44px;
+      min-width: 0;
+      overflow-y: hidden;
+      overflow-wrap: break-word;
       outline: none !important;
       width: 100%;
       padding: 2px 0;
@@ -517,6 +547,7 @@
       }
       #inspector .row-question{
         padding: 6px 8px;
+        padding-right: 30px;
       }
       #inspector .row-question textarea{
         min-height: 40px;
@@ -583,7 +614,7 @@
           <span style="font-size:28px">👮</span>
           <h1>Carnet d'enquête</h1>
           <div class="title-actions">
-            <button class="btn inline light" id="resetFromInspector" data-ga-id="gav_feuille_reset">Reset</button>
+            <button class="btn inline danger" id="resetFromInspector" data-ga-id="gav_feuille_reset">Réinitialiser</button>
             <button class="btn inline light" id="backFromInspector" data-ga-id="gav_feuille_back">Accueil</button>
           </div>
         </div>
@@ -608,7 +639,7 @@
       <div class="head">
         <h1>Alibi</h1>
         <div class="title-actions">
-          <button class="btn inline light" id="resetFromSuspect" data-ga-id="gav_feuille_reset">Reset</button>
+          <button class="btn inline danger" id="resetFromSuspect" data-ga-id="gav_feuille_reset">Réinitialiser</button>
           <button class="btn inline light" id="backFromSuspect" data-ga-id="gav_feuille_back">Accueil</button>
         </div>
       </div>
@@ -709,6 +740,7 @@
 
     const suspectTotalEl = document.getElementById("suspectTotal");
     const partnerTotalEl = document.getElementById("partnerTotal");
+    const npreuveEl = document.getElementById("npreuve");
     const finalTotalEl = document.getElementById("finalTotal");
     const verdictSceneEl = document.getElementById("verdictScene");
     const verdictTitleEl = document.getElementById("verdictTitle");
@@ -729,7 +761,8 @@
         super:false,
         pts:0
       })),
-      partnerTotal: ""
+      partnerTotal: "",
+      npreuve: ""
     };
 
     function show(which){
@@ -739,6 +772,15 @@
       downloadCard.style.display = which==="home" ? "" : "none";
       publisherCard.style.display = which==="home" ? "" : "none";
       state.role = which;
+      save();
+    }
+
+    // Agrandit automatiquement une textarea selon son contenu, pour qu'on
+    // voie toujours tout le texte écrit (question ou réponse), même long,
+    // sur mobile comme sur ordi.
+    function autoGrow(ta){
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + "px";
     }
 
     function makeSquare(checked, onToggle){
@@ -771,12 +813,32 @@
         qWrap.className = "row-question";
         const taQ = document.createElement("textarea");
         taQ.placeholder = "Inscris ta question";
+        taQ.rows = 1;
         taQ.value = q.text;
         taQ.addEventListener("input", ()=>{
           state.questions[idx].text = taQ.value;
+          autoGrow(taQ);
           syncQuestionsToSuspect();
+          save();
         });
         qWrap.appendChild(taQ);
+        requestAnimationFrame(()=> autoGrow(taQ));
+
+        // Croix : efface toute la ligne (question + analyse + pièce) d'un coup
+        const clearQ = document.createElement("button");
+        clearQ.type = "button";
+        clearQ.className = "row-clear";
+        clearQ.setAttribute("aria-label", "Effacer la ligne");
+        clearQ.textContent = "✕";
+        clearQ.addEventListener("click", ()=>{
+          state.questions[idx].text = "";
+          state.questions[idx].analyse = false;
+          state.questions[idx].piece = "";
+          renderInspector();
+          syncQuestionsToSuspect();
+          save();
+        });
+        qWrap.appendChild(clearQ);
 
         // Analyse checkbox
         const analyseWrap = document.createElement("div");
@@ -784,6 +846,7 @@
         analyseWrap.appendChild(makeSquare(q.analyse, (v)=>{
           state.questions[idx].analyse = v;
           renderInspector();
+          save();
         }));
 
         // Pièce à conviction
@@ -793,7 +856,7 @@
         inpPiece.type = "text";
         inpPiece.placeholder = "";
         inpPiece.value = q.piece;
-        inpPiece.addEventListener("input", ()=>{ state.questions[idx].piece = inpPiece.value; });
+        inpPiece.addEventListener("input", ()=>{ state.questions[idx].piece = inpPiece.value; save(); });
         pieceWrap.appendChild(inpPiece);
 
         row.appendChild(numEl);
@@ -828,9 +891,30 @@
         answerWrap.className = "row-answer";
         const taA = document.createElement("textarea");
         taA.placeholder = "Inscris ta réponse";
+        taA.rows = 1;
         taA.value = s.answer;
-        taA.addEventListener("input", ()=>{ state.suspect[idx].answer = taA.value; });
+        taA.addEventListener("input", ()=>{
+          state.suspect[idx].answer = taA.value;
+          autoGrow(taA);
+          save();
+        });
         answerWrap.appendChild(taA);
+        requestAnimationFrame(()=> autoGrow(taA));
+
+        // Croix : efface toute la ligne (réponse + super alibi + points) d'un coup
+        const clearA = document.createElement("button");
+        clearA.type = "button";
+        clearA.className = "row-clear";
+        clearA.setAttribute("aria-label", "Effacer la ligne");
+        clearA.textContent = "✕";
+        clearA.addEventListener("click", ()=>{
+          state.suspect[idx].answer = "";
+          state.suspect[idx].super = false;
+          state.suspect[idx].pts = 1;
+          renderSuspect();
+          save();
+        });
+        answerWrap.appendChild(clearA);
 
         // Super Alibi checkbox
         const superWrap = document.createElement("div");
@@ -842,6 +926,7 @@
             state.suspect[idx].pts = allowed[0];
           }
           renderSuspect();
+          save();
         });
         superWrap.appendChild(superCheck);
 
@@ -863,6 +948,7 @@
         pts.addEventListener("change", ()=>{
           state.suspect[idx].pts = Number(pts.value);
           updateTotals();
+          save();
         });
         ptsWrap.appendChild(pts);
 
@@ -919,6 +1005,21 @@
       }
     }
 
+    // Sauvegarde tout l'état (questions, réponses, n° de preuve, score du
+    // binôme, écran courant) dans le localStorage à chaque modification,
+    // pour ne rien perdre si la page se ferme par accident.
+    function save(){
+      try{
+        localStorage.setItem(LS_KEY, JSON.stringify({
+          role: state.role,
+          questions: state.questions,
+          suspect: state.suspect,
+          partnerTotal: state.partnerTotal,
+          npreuve: state.npreuve
+        }));
+      }catch{}
+    }
+
     function load(){
       const raw = localStorage.getItem(LS_KEY);
       if(!raw) return;
@@ -927,9 +1028,11 @@
         if(data?.questions?.length===8) state.questions = data.questions;
         if(data?.suspect?.length===8) state.suspect = data.suspect;
         if(typeof data?.partnerTotal === "string") state.partnerTotal = data.partnerTotal;
+        if(typeof data?.npreuve === "string") state.npreuve = data.npreuve;
         if(["home","inspector","suspect"].includes(data?.role)) state.role = data.role;
       }catch{}
       partnerTotalEl.value = state.partnerTotal || "";
+      npreuveEl.value = state.npreuve || "";
     }
 
     function reset(){
@@ -947,7 +1050,15 @@
     document.getElementById("resetFromInspector").addEventListener("click", reset);
     document.getElementById("resetFromSuspect").addEventListener("click", reset);
 
-    partnerTotalEl.addEventListener("input", updateTotals);
+    partnerTotalEl.addEventListener("input", ()=>{
+      state.partnerTotal = partnerTotalEl.value;
+      updateTotals();
+      save();
+    });
+    npreuveEl.addEventListener("input", ()=>{
+      state.npreuve = npreuveEl.value;
+      save();
+    });
 
     // Init
     load();
