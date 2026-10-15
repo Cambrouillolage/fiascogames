@@ -14,13 +14,13 @@
   <meta property="og:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
   <meta property="og:description" content="GAV est un jeu de société d'ambiance simple et drôle : donnez le même alibi que votre complice lors de la garde à vue, sinon direction la prison !" />
   <meta property="og:url" content="https://fiascogames.fr/gav/" />
-  <meta property="og:image" content="https://fiascogames.fr/assets/hero-frames/poster-mobile.jpg" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
   <meta property="og:image:alt" content="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
   <meta name="twitter:description" content="Donnez le même alibi que votre complice lors de la garde à vue... sinon direction la prison !" />
-  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-frames/poster-mobile.jpg" />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
 
   <link rel="icon" type="image/png" href="../assets/GAV1.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -272,13 +272,12 @@
     .quickInfoItem:last-child{border-right:none}
     .quickInfoIcon{font-size:20px; line-height:1}
 
-    /* ===== Scroll-driven hero frame story (canvas scrubbing) ===== */
+    /* ===== Hero video (autoplay, en boucle) ===== */
     .heroCta{margin-top:26px}
 
-    .storyWrap{position:relative; margin-top:0; height:auto}
+    .storyWrap{position:relative}
     .storySticky{
       position:relative;
-      height:auto;
       border-radius:18px;
       overflow:hidden;
       border:2px solid rgba(255,255,255,.08);
@@ -286,24 +285,8 @@
     }
     .storyStage{position:relative; width:100%; min-height:420px; aspect-ratio:16/9}
 
-    /* storyVisual = continuous scroll-driven zoom, a slow push-in across the
-       whole sequence. storyPulse = a short punch-in on every chapter
-       change, nested inside so both transforms compose without fighting
-       each other. Plain block-level by default (fallback = normal document
-       flow); only promoted to an absolute, clipped, transformable layer
-       once JS confirms motion is OK. */
-    html.motionOK .storyVisual{
-      position:absolute; inset:0; overflow:hidden;
-      transform:scale(var(--zoom, 1)); transform-origin:50% 50%;
-    }
-    html.motionOK .storyPulse{
-      position:absolute; inset:0;
-      transition:transform .35s cubic-bezier(.2,.8,.2,1);
-    }
-    html.motionOK .storyPulse.isPulsing{transform:scale(1.045)}
-
-    /* Dark brand backdrop behind the frame media (visible for an instant on
-       resize/before the first frame paints). */
+    /* Dark brand backdrop behind the video (visible for an instant before
+       the poster/video paints). */
     .storyBgLayer{position:absolute; inset:0}
     .storyBgDark{
       background:
@@ -312,14 +295,12 @@
         linear-gradient(180deg, #181818, #101010);
     }
 
-    /* Frame media: a plain <img> poster (frame 1) is always in the DOM — the
-       no-JS / prefers-reduced-motion fallback, and what's visible under the
-       canvas the instant before any frame has decoded. Once motion is OK,
-       <canvas> is layered on top and repainted with drawImage() as the user
-       scrolls; nothing here fetches or decodes a <video>. */
+    /* La vidéo est toujours en place (poster = sa 1ère image) : sans JS ou
+       avec prefers-reduced-motion, elle reste sur cette image fixe (pas de
+       lecture déclenchée) — c'est le fallback accessible, pas un <img> à
+       part. */
     .storyMedia{position:relative; width:100%; aspect-ratio:16/9}
-    .storyPoster{display:block; width:100%; height:100%; object-fit:cover}
-    .storyCanvas{display:none}
+    .storyVideo{display:block; width:100%; height:100%; object-fit:cover}
 
     /* Scrim: keeps the caption legible no matter what's behind it in the
        frame (bright ceiling light, pale concrete, the box itself). */
@@ -342,7 +323,7 @@
     }
     .storyProgressTrack{display:none}
 
-    /* ===== motionOK: JS-enabled pinned scroll story (enhancement) ===== */
+    /* ===== motionOK: scroll-scrubbing (le défilement pilote la vidéo) ===== */
     html.motionOK .storyWrap{height:280vh}
     html.motionOK .storySticky{
       position:sticky; top:var(--navH); height:calc(100vh - var(--navH));
@@ -350,10 +331,6 @@
     }
     html.motionOK .storyStage{height:100%; min-height:0; aspect-ratio:auto}
     html.motionOK .storyMedia{position:absolute; inset:0; width:100%; height:100%; aspect-ratio:auto}
-    html.motionOK .storyPoster{position:absolute; inset:0}
-    html.motionOK .storyCanvas{
-      display:block; position:absolute; inset:0; width:100%; height:100%;
-    }
 
     html.motionOK .storyCaptions{
       position:absolute; left:0; right:0; bottom:clamp(70px, 16vh, 150px);
@@ -1089,37 +1066,34 @@
     </div>
 
     <!--
-      Histoire au scroll : sans JS ou avec "prefers-reduced-motion", ce bloc s'affiche
-      simplement à plat (photo fixe de la boîte + les 3 accroches empilées, lisible
-      normalement, sans scrub). Avec JS (classe html.motionOK), il devient une scène
-      épinglée : le scroll (0→1) pilote directement quelle frame de la séquence photo
-      (assets/hero-frames, 169 images) est dessinée sur un <canvas> (drawImage — pas de
-      <video>, donc pas de latence de seek sur mobile). Trois temps forts pilotent le
-      texte : frame 011 (départ), frame 069 (l'alibi), frame 169 (fin de séquence).
-      Une fois la séquence terminée, le scroll continue normalement vers la suite de la
-      page (infos rapides, puis la section "Comment jouer").
+      Hero vidéo : sans JS ou avec "prefers-reduced-motion", la vidéo reste sur sa
+      1ère image (poster) et les 3 accroches s'affichent empilées, lisibles d'un
+      coup. Avec JS (classe html.motionOK), ça devient une scène épinglée : le
+      scroll (0→1) pilote directement video.currentTime (voir initHeroVideo),
+      comme l'ancienne séquence de 169 frames pilotait quelle image dessiner sur
+      le <canvas> — même principe, une vraie balise <video> à la place.
     -->
     <div class="storyWrap" id="storyWrap">
       <div class="storySticky">
         <div class="storyStage">
           <div class="storyProgressTrack" aria-hidden="true"><span class="storyProgressFill" id="storyProgressFill"></span></div>
 
-          <div class="storyVisual" id="storyVisual">
-            <div class="storyPulse" id="storyPulse">
-              <div class="storyBgLayer storyBgDark" aria-hidden="true"></div>
+          <div class="storyBgLayer storyBgDark" aria-hidden="true"></div>
 
-              <div class="storyMedia" id="storyMedia">
-                <picture>
-                  <source srcset="../assets/hero-frames/poster-mobile.webp" media="(max-width:760px)" type="image/webp" />
-                  <source srcset="../assets/hero-frames/poster-desktop.webp" type="image/webp" />
-                  <img class="storyPoster" id="storyPoster" src="../assets/hero-frames/poster-mobile.jpg" alt="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
-                </picture>
-                <canvas class="storyCanvas" id="storyCanvas" aria-hidden="true"></canvas>
-              </div>
-
-              <div class="storyScrim" aria-hidden="true"></div>
-            </div>
+          <div class="storyMedia" id="storyMedia">
+            <video
+              class="storyVideo"
+              id="storyVideo"
+              poster="../assets/hero-poster.jpg"
+              muted
+              playsinline
+              preload="auto"
+              aria-label="La boîte du jeu de société GAV en rotation sur une table, dans une salle d'interrogatoire">
+              <source src="../assets/boite_jeu_interrogatoire_360_1080p.mp4" type="video/mp4" />
+            </video>
           </div>
+
+          <div class="storyScrim" aria-hidden="true"></div>
 
           <div class="storyCaptions" id="storyCaptions">
             <!-- Un bloc par chapitre ; le 1er est actif par défaut (fallback statique). -->
@@ -1629,211 +1603,156 @@
     }
 
     /* =========================================================
-       Hero story: a 169-frame photo sequence (the box floating/turning
-       through the interrogation room) scrubbed frame-by-frame on a
-       <canvas> as the user scrolls through #storyWrap, with 3 captions
-       synced to specific frames. Progressive enhancement only: without
-       JS, or with prefers-reduced-motion, the section already renders as
-       a flat, fully readable static block (poster image + all 3 captions
-       stacked — see the non ".motionOK" CSS) — nothing below is required
-       for the page to make sense, and no frame is fetched in that case.
+       Hero video : scroll-scrubbing — le défilement pilote directement
+       video.currentTime (0 → durée), comme l'ancienne séquence de 169
+       frames pilotait quelle image dessiner sur le <canvas>. La vidéo ne
+       joue jamais toute seule (pas de .play(), pas d'autoplay) : elle
+       n'avance que parce qu'on lui fixe currentTime.
+       Attention : c'est exactement le compromis que l'ancien code évitait
+       exprès en n'utilisant pas de <video> ("pas de latence de seek sur
+       mobile") — accepté ici à la demande explicite, mais à surveiller en
+       test réel sur téléphone (le seek vers un instant hors keyframe peut
+       saccader selon l'encodage). Progressive enhancement only : sans JS,
+       ou avec prefers-reduced-motion, la vidéo reste sur sa 1ère image
+       (poster) et les 3 captions restent affichées empilées (CSS non
+       ".motionOK").
+
+       Deux effets ajoutés par-dessus le scrub brut :
+       - Inertie : on ne fixe pas currentTime directement sur la position de
+         scroll brute, mais sur une valeur "lissée" qui la rattrape
+         progressivement (lerp à chaque frame). Résultat : quand on relâche
+         le scroll, l'image continue de glisser légèrement avant de se
+         stabiliser, au lieu de s'arrêter net.
+       - Teaser au chargement : une petite avance (~10 frames vidéo) jouée
+         automatiquement à l'arrivée sur la page puis annulée, pour montrer
+         que la scène réagit au scroll avant même que l'utilisateur scrolle.
        ========================================================= */
-    (function initHeroStory(){
+    (function initHeroVideo(){
       const storyWrap = document.getElementById('storyWrap');
-      const canvas = document.getElementById('storyCanvas');
-      if (!storyWrap || !canvas || !canvas.getContext) return;
+      const video = document.getElementById('storyVideo');
+      if (!storyWrap || !video) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      const ctx = canvas.getContext('2d');
-      // Browsers default to a low-quality resample for drawImage upscaling —
-      // explicit 'high' keeps every frame crisp instead of soft by default.
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
+      document.documentElement.classList.add('motionOK');
+
       const captions = Array.from(storyWrap.querySelectorAll('.storyCaption'));
       const progressFill = document.getElementById('storyProgressFill');
-      const storyVisual = document.getElementById('storyVisual');
-      const storyPulse = document.getElementById('storyPulse');
-
-      /* ---------- Frame sequence loader ----------
-         169 frames, two pre-sized WebP sets (see scripts/optimize-hero-frames.mjs).
-         The set is picked once at init from the current viewport — mobile-first:
-         we never fetch the ~1600px desktop set on a phone. Frames load through a
-         small concurrency-limited queue so the whole sequence never competes with
-         first paint: 3 "story beat" frames (1, 69, 169) are fetched immediately
-         at priority, the other 166 fill in the background once the section is
-         within reach, via requestIdleCallback so it stays off the critical path. */
-      const FRAME_COUNT = 169;
-      const FRAME_START = 11; // skip the first 10 frames — the sequence starts a beat in
-      const isMobileViewport = window.matchMedia('(max-width:760px)').matches;
-      const basePath = isMobileViewport ? '../assets/hero-frames/mobile/' : '../assets/hero-frames/desktop/';
-      const frameUrl = (n)=> `${basePath}hero-frame-${String(n).padStart(3, '0')}.webp`;
-
-      const frameImages = new Array(FRAME_COUNT + 1);
-      const loaded = new Set();
-      const queued = new Set();
-      let loadQueue = [];
-      let inFlight = 0;
-      let lastRequestedFrame = 0;
-      const MAX_CONCURRENT = 6;
-
-      function pump(){
-        while (inFlight < MAX_CONCURRENT && loadQueue.length){
-          const n = loadQueue.shift();
-          queued.delete(n);
-          if (loaded.has(n)) continue;
-          inFlight += 1;
-          const img = new Image();
-          img.decoding = 'async';
-          img.onload = ()=>{
-            frameImages[n] = img;
-            loaded.add(n);
-            inFlight -= 1;
-            if (n === lastRequestedFrame) drawFrame(n);
-            pump();
-          };
-          img.onerror = ()=>{ inFlight -= 1; pump(); };
-          img.src = frameUrl(n);
-        }
-      }
-      function loadFrame(n, priority){
-        if (loaded.has(n) || queued.has(n)) {
-          if (priority && queued.has(n)){
-            loadQueue = loadQueue.filter((x)=> x !== n);
-            loadQueue.unshift(n);
-          }
-          return;
-        }
-        queued.add(n);
-        if (priority) loadQueue.unshift(n); else loadQueue.push(n);
-        pump();
-      }
-      function nearestLoadedFrame(n){
-        if (loaded.has(n)) return n;
-        for (let d = 1; d < FRAME_COUNT; d++){
-          if (loaded.has(n - d)) return n - d;
-          if (loaded.has(n + d)) return n + d;
-        }
-        return null;
-      }
-
-      // The 3 story beats load first and at priority, whatever the scroll
-      // position, so they're crisp even if the user scrolls fast before the
-      // background queue catches up.
-      [FRAME_START, 69, FRAME_COUNT].forEach((n)=> loadFrame(n, true));
-
-      // Fill in every other frame once the story is close to the viewport,
-      // off the main thread's critical path.
-      const idle = window.requestIdleCallback || ((fn)=> window.setTimeout(fn, 200));
-      function queueRemaining(){
-        idle(()=>{
-          for (let n = FRAME_START; n <= FRAME_COUNT; n++){
-            if (!loaded.has(n) && !queued.has(n)) loadFrame(n, false);
-          }
-        });
-      }
-      if ('IntersectionObserver' in window){
-        const io = new IntersectionObserver((entries)=>{
-          if (entries.some((e)=> e.isIntersecting)){
-            queueRemaining();
-            io.disconnect();
-          }
-        }, { rootMargin: '800px 0px' });
-        io.observe(storyWrap);
-      } else {
-        queueRemaining();
-      }
-
-      /* ---------- Canvas sizing + drawing ---------- */
-      let currentDrawnFrame = 0;
-      function resizeCanvas(){
-        const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.max(1, Math.round(rect.width * dpr));
-        canvas.height = Math.max(1, Math.round(rect.height * dpr));
-        currentDrawnFrame = 0; // force a redraw at the new size
-        drawFrame(lastRequestedFrame || 1);
-      }
-      function drawFrame(n){
-        const source = loaded.has(n) ? frameImages[n] : frameImages[nearestLoadedFrame(n)];
-        if (!source || n === currentDrawnFrame) return;
-        currentDrawnFrame = n;
-        const cw = canvas.width, ch = canvas.height;
-        const iw = source.naturalWidth, ih = source.naturalHeight;
-        if (!cw || !ch || !iw || !ih) return;
-        const scale = Math.max(cw / iw, ch / ih);
-        const dw = iw * scale, dh = ih * scale;
-        ctx.drawImage(source, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-      }
-
-      document.documentElement.classList.add('motionOK');
-      resizeCanvas();
-
-      // End-of-range for each caption/chapter, in overall scroll progress (0-1).
-      // Chapter 0→1 lands exactly on frame 69 ("l'alibi"); chapter 2 ("la
-      // police") starts with enough scroll room left to read it before the
-      // sequence lands on its very last frame (169) and the sticky stage
-      // releases into the rest of the page.
-      const frameProgress = (n)=> (n - FRAME_START) / (FRAME_COUNT - FRAME_START);
-      const CHAPTER_ENDS = [frameProgress(69), 0.80, 1.001];
-
       const clamp01 = (v)=> Math.max(0, Math.min(1, v));
-      const easeOutCubic = (t)=> 1 - Math.pow(1 - t, 3);
+
+      let duration = 0;
+      function onLoadedMetadata(){
+        duration = video.duration || 0;
+        maybePlayIntroNudge();
+      }
+      video.addEventListener('loadedmetadata', onLoadedMetadata);
+      if (video.readyState >= 1) onLoadedMetadata();
+
+      /* ---------- Rendu (vidéo + légendes + barre) pour une progression 0-1 ---------- */
       let activeChapter = -1;
-
-      function update(){
-        const rect = storyWrap.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const progress = total > 0 ? clamp01(-rect.top / total) : (rect.top <= 0 ? 1 : 0);
-
-        // --- Scroll progress maps directly to a frame index: this is the
-        // whole "video" for this section, no seek latency, no dropped frames. ---
-        const targetFrame = Math.min(FRAME_COUNT, Math.max(FRAME_START, Math.round(FRAME_START + progress * (FRAME_COUNT - FRAME_START))));
-        if (targetFrame !== lastRequestedFrame){
-          lastRequestedFrame = targetFrame;
-          if (!loaded.has(targetFrame)) loadFrame(targetFrame, true);
-          drawFrame(targetFrame);
+      let lastSeekTime = -1;
+      let lastSeekWallTime = 0;
+      // Un "seek" vidéo vers un instant hors image-clé force le navigateur à
+      // redécoder depuis l'image-clé précédente à chaque fois — coûteux en
+      // CPU si on le fait à 60/s. On plafonne donc le nombre de seeks réels
+      // par seconde (captions/barre de progression restent fluides, non
+      // concernées par ce plafond). Premier réglage à ajuster au ressenti :
+      // plus haut = plus réactif mais plus de risque de lag, plus bas =
+      // plus fluide mais la vidéo "rattrape" le scroll par à-coups.
+      const MIN_SEEK_INTERVAL_MS = 90;
+      function applyProgress(progress){
+        if (duration){
+          const targetTime = progress * duration;
+          const now = performance.now();
+          const farEnough = Math.abs(targetTime - lastSeekTime) > (1 / 20);
+          const longEnoughSince = now - lastSeekWallTime > MIN_SEEK_INTERVAL_MS;
+          if (farEnough && longEnoughSince){
+            lastSeekTime = targetTime;
+            lastSeekWallTime = now;
+            video.currentTime = targetTime;
+          }
         }
-
-        // --- Zoom: slow, continuous push-in through the whole sequence.
-        // Kept subtle on purpose — this transform is a CSS compositor
-        // upscale applied on top of the canvas, so a bigger value (this was
-        // 0.12) visibly softens the frame, especially on high-DPR phones. ---
-        if (storyVisual){
-          const zoom = 1 + 0.03 * easeOutCubic(progress);
-          storyVisual.style.setProperty('--zoom', zoom.toFixed(4));
-        }
-
-        // --- Caption swap (+ a short zoom "punch" on every chapter change) ---
-        let idx = CHAPTER_ENDS.findIndex((end)=> progress < end);
-        if (idx === -1) idx = CHAPTER_ENDS.length - 1;
+        const idx = Math.min(captions.length - 1, Math.floor(progress * captions.length));
         if (idx !== activeChapter){
           activeChapter = idx;
           captions.forEach((cap)=> cap.classList.toggle('isActive', Number(cap.dataset.chapter) === idx));
-          if (storyPulse){
-            storyPulse.classList.add('isPulsing');
-            window.clearTimeout(storyPulse._pulseTimer);
-            storyPulse._pulseTimer = window.setTimeout(()=> storyPulse.classList.remove('isPulsing'), 350);
-          }
         }
-
         if (progressFill) progressFill.style.width = `${(progress * 100).toFixed(1)}%`;
       }
 
-      let ticking = false;
-      function onScroll(){
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(()=>{ update(); ticking = false; });
+      function rawScrollProgress(){
+        const rect = storyWrap.getBoundingClientRect();
+        const total = rect.height - window.innerHeight;
+        return total > 0 ? clamp01(-rect.top / total) : (rect.top <= 0 ? 1 : 0);
       }
-      let resizeTicking = false;
-      function onResize(){
-        if (resizeTicking) return;
-        resizeTicking = true;
-        requestAnimationFrame(()=>{ resizeCanvas(); update(); resizeTicking = false; });
+
+      /* ---------- Inertie : displayProgress rattrape targetProgress ---------- */
+      // Premier réglage à ajuster au ressenti : plus proche de 1 = rattrage
+      // quasi instantané (peu d'inertie), plus proche de 0 = glisse plus
+      // longtemps après le relâchement du scroll.
+      const SMOOTHING = 0.15;
+      const SETTLE_EPSILON = 0.0005;
+      let targetProgress = 0;
+      let displayProgress = 0;
+      let smoothLoopRunning = false;
+      let introNudgeActive = false;
+
+      function smoothTick(){
+        if (!smoothLoopRunning) return;
+        targetProgress = rawScrollProgress();
+        const delta = targetProgress - displayProgress;
+        if (Math.abs(delta) < SETTLE_EPSILON){
+          displayProgress = targetProgress;
+          applyProgress(displayProgress);
+          smoothLoopRunning = false; // au repos jusqu'au prochain scroll
+          return;
+        }
+        displayProgress += delta * SMOOTHING;
+        applyProgress(displayProgress);
+        requestAnimationFrame(smoothTick);
       }
-      window.addEventListener('scroll', onScroll, { passive:true });
-      window.addEventListener('resize', onResize);
-      update();
+      function kickSmoothLoop(){
+        introNudgeActive = false; // un vrai scroll annule le teaser en cours
+        if (!smoothLoopRunning){
+          smoothLoopRunning = true;
+          requestAnimationFrame(smoothTick);
+        }
+      }
+      window.addEventListener('scroll', kickSmoothLoop, { passive:true });
+      window.addEventListener('resize', kickSmoothLoop);
+
+      /* ---------- Teaser au chargement : avance puis retour, une seule fois ---------- */
+      function maybePlayIntroNudge(){
+        if (!duration) return;
+        if (window.scrollY > 4) return; // déjà scrollé avant que la vidéo soit prête : pas de teaser
+        introNudgeActive = true;
+        const peekSeconds = Math.min(duration * 0.5, 10 / 30); // ~10 frames à 30fps
+        const outMs = 480, backMs = 560;
+        const easeOutCubic = (t)=> 1 - Math.pow(1 - t, 3);
+        const easeInOutCubic = (t)=> t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const start = performance.now();
+
+        function step(now){
+          if (!introNudgeActive) return; // annulé par un vrai scroll
+          const elapsed = now - start;
+          let progress;
+          if (elapsed <= outMs){
+            progress = (peekSeconds / duration) * easeOutCubic(elapsed / outMs);
+          } else if (elapsed <= outMs + backMs){
+            progress = (peekSeconds / duration) * (1 - easeInOutCubic((elapsed - outMs) / backMs));
+          } else {
+            introNudgeActive = false;
+            displayProgress = 0;
+            targetProgress = 0;
+            applyProgress(0);
+            return;
+          }
+          applyProgress(progress);
+          requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      applyProgress(0);
     })();
 
   </script>
