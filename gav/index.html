@@ -362,6 +362,39 @@
       background:linear-gradient(90deg, var(--orange-2), var(--orange));
     }
 
+    /* Indicateur "scrolle, ne swipe pas" : caché par défaut (pas de sens
+       sans le scroll-scrubbing), affiché seulement en motionOK, et masqué
+       une fois l'animation jouée en entier au moins une fois via JS
+       (classe .isHidden). Pastille semi-transparente derrière le texte :
+       le contenu de la frame change de luminosité en continu (fond clair
+       ou sombre selon l'angle de la boîte), le simple text-shadow ne
+       suffirait pas à garantir un bon contraste partout, surtout au
+       soleil sur mobile. */
+    .storyScrollHint{display:none}
+    html.motionOK .storyScrollHint{
+      display:flex; flex-direction:column; align-items:center; gap:2px;
+      position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+      padding:7px 16px 9px;
+      background:rgba(0,0,0,.4);
+      border-radius:999px;
+      color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.6);
+      pointer-events:none; z-index:3;
+      transition:opacity .4s ease;
+    }
+    html.motionOK .storyScrollHint.isHidden{opacity:0}
+    .storyScrollHintLabel{
+      font-family:"Bebas Neue", "Impact", sans-serif; font-size:13px;
+      letter-spacing:.14em; text-transform:uppercase;
+    }
+    .storyScrollHintArrow{
+      font-size:20px; line-height:1;
+      animation:storyScrollHintBounce 1.6s ease-in-out infinite;
+    }
+    @keyframes storyScrollHintBounce{
+      0%, 100%{ transform:translateY(0); }
+      50%{ transform:translateY(7px); }
+    }
+
     .section{padding:36px 0}
     #comment-jouer{position:relative; background:var(--bg)}
     .sectionTitle{
@@ -1107,6 +1140,15 @@
               <p class="storyCaptionTitle">En évitant les pièges de la <span class="hl">police</span></p>
             </div>
           </div>
+
+          <!-- Indicateur "scrolle, ne swipe pas" : des visiteurs essaient de
+               swiper la boîte comme un carrousel d'images alors que c'est le
+               scroll de la page qui la fait tourner. Disparaît dès le 1er
+               vrai scroll (voir initHeroStory). -->
+          <div class="storyScrollHint" id="storyScrollHint" aria-hidden="true">
+            <span class="storyScrollHintArrow">↓</span>
+            <span class="storyScrollHintLabel">Scroll</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1642,6 +1684,7 @@
 
       const captions = Array.from(storyWrap.querySelectorAll('.storyCaption'));
       const progressFill = document.getElementById('storyProgressFill');
+      const scrollHint = document.getElementById('storyScrollHint');
       const clamp01 = (v)=> Math.max(0, Math.min(1, v));
 
       /* ---------- Frame sequence loader ----------
@@ -1749,6 +1792,7 @@
 
       /* ---------- Rendu (frame + légendes + barre) pour une progression 0-1 ---------- */
       let activeChapter = -1;
+      let hasPlayedThroughOnce = false;
       function applyProgress(progress){
         const targetFrame = Math.min(FRAME_COUNT, Math.max(1, Math.round(1 + progress * (FRAME_COUNT - 1))));
         if (targetFrame !== lastRequestedFrame){
@@ -1762,6 +1806,15 @@
           captions.forEach((cap)=> cap.classList.toggle('isActive', Number(cap.dataset.chapter) === idx));
         }
         if (progressFill) progressFill.style.width = `${(progress * 100).toFixed(1)}%`;
+
+        // L'indicateur "scroll" reste affiché tant que la séquence n'a pas
+        // été vue en entier au moins une fois (pas juste au 1er pixel
+        // scrollé) — le teaser au chargement ne va qu'à ~11% et ne compte
+        // donc pas.
+        if (!hasPlayedThroughOnce && progress >= 0.98 && scrollHint){
+          hasPlayedThroughOnce = true;
+          scrollHint.classList.add('isHidden');
+        }
       }
 
       function rawScrollProgress(){
@@ -1834,6 +1887,14 @@
           requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
+      }
+
+      // Si on arrive déjà scrollé plus bas que le hero (lien profond,
+      // retour en arrière), pas la peine de montrer l'indicateur — la masquer
+      // tout de suite et sauter le critère "jouée en entier" (voir applyProgress).
+      if (scrollHint && window.scrollY > 4){
+        scrollHint.classList.add('isHidden');
+        hasPlayedThroughOnce = true;
       }
 
       applyProgress(0);
