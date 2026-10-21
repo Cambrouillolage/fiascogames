@@ -2160,5 +2160,35 @@
         });
     })();
   </script>
+
+  <script>
+    // Suivi des clics sur les CTA d'achat (Amazon/Philibert, hero + bande +
+    // bouton collant + nav) : Plausible ne trace QUE les pages vues par
+    // défaut, pas les clics sur un <a> — rien ne remontait côté Plausible
+    // tant qu'on ne déclenchait pas nous-mêmes un événement personnalisé à
+    // chaque clic. Un seul événement ("Clic Achat") avec des props
+    // retailer/emplacement, plutôt qu'un événement par bouton : un seul
+    // objectif à créer dans Plausible (Réglages du site > Objectifs),
+    // ensuite filtrable/ventilable par prop dans le tableau de bord.
+    (function () {
+      if (typeof window.plausible !== 'function') return;
+
+      document.querySelectorAll('.buyBtn, .storeBtn, .stickyBuyBtn').forEach((el) => {
+        const retailer = el.classList.contains('philibert') ? 'philibert' : 'amazon';
+        el.addEventListener('click', () => {
+          window.plausible('Clic Achat', {
+            props: { retailer, emplacement: el.dataset.gaId || '' },
+          });
+        });
+      });
+
+      const navBuy = document.querySelector('a[data-ga-id="gav_nav_acheter"]');
+      if (navBuy) {
+        navBuy.addEventListener('click', () => {
+          window.plausible('Clic Achat', { props: { retailer: 'amazon', emplacement: 'gav_nav_acheter' } });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
