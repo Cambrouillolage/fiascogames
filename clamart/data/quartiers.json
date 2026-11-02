@@ -1,0 +1,548 @@
+{
+  "type": "FeatureCollection",
+  "name": "quartiers_clamart_PROTOTYPE_NON_OFFICIEL",
+  "metadata": {
+    "territory": "Clamart (92023)",
+    "accuracy": "APPROXIMATE – NOT OFFICIAL",
+    "method": "Voronoi approximation clipped to simplified commune boundary, based on approximate centers, not administrative boundaries",
+    "reference": "https://www.clamart.fr/sites/default/files/Infos%20et%20D%C3%A9marches/Urbanisme_Habitat_Travaux/PLU%202022/1.1%20Diagnostic%20territorial%20-%202022.pdf"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "percy_schneider",
+        "name": "Percy-Schneider",
+        "name_fr": "Percy-Schneider",
+        "color": "#9BC5E4",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.2396,
+              48.79963
+            ],
+            [
+              2.24158,
+              48.8009
+            ],
+            [
+              2.2418,
+              48.8016
+            ],
+            [
+              2.24103,
+              48.80191
+            ],
+            [
+              2.24276,
+              48.80325
+            ],
+            [
+              2.24628,
+              48.8048
+            ],
+            [
+              2.24842,
+              48.80402
+            ],
+            [
+              2.24956,
+              48.80559
+            ],
+            [
+              2.25042,
+              48.80791
+            ],
+            [
+              2.2530617800366697,
+              48.809778425225
+            ],
+            [
+              2.2559155620671256,
+              48.796496178305816
+            ],
+            [
+              2.2530290897292837,
+              48.795159073247646
+            ],
+            [
+              2.2362806299434594,
+              48.79577650395477
+            ],
+            [
+              2.23876,
+              48.79776
+            ],
+            [
+              2.2396,
+              48.79963
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "gare",
+        "name": "Gare",
+        "name_fr": "Gare",
+        "color": "#EDADD1",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.25994,
+              48.81426
+            ],
+            [
+              2.26167,
+              48.8134
+            ],
+            [
+              2.26494,
+              48.81357
+            ],
+            [
+              2.26728,
+              48.81402
+            ],
+            [
+              2.27448,
+              48.81459
+            ],
+            [
+              2.27719,
+              48.81534
+            ],
+            [
+              2.27818,
+              48.81425
+            ],
+            [
+              2.27449,
+              48.81343
+            ],
+            [
+              2.2761,
+              48.81245
+            ],
+            [
+              2.2785,
+              48.81143
+            ],
+            [
+              2.27997,
+              48.81097
+            ],
+            [
+              2.27724,
+              48.80758
+            ],
+            [
+              2.276397189750498,
+              48.80637972195502
+            ],
+            [
+              2.2712613064184675,
+              48.80577348920559
+            ],
+            [
+              2.254107597204229,
+              48.81051808982594
+            ],
+            [
+              2.25469,
+              48.81093
+            ],
+            [
+              2.25408,
+              48.81346
+            ],
+            [
+              2.25364,
+              48.81412
+            ],
+            [
+              2.25674,
+              48.81664
+            ],
+            [
+              2.25836,
+              48.81521
+            ],
+            [
+              2.25994,
+              48.81426
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "centre",
+        "name": "Centre",
+        "name_fr": "Centre",
+        "color": "#A6D9BA",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.2578604701069636,
+              48.79663681843274
+            ],
+            [
+              2.255915562067126,
+              48.796496178305816
+            ],
+            [
+              2.2530617800366697,
+              48.809778425225
+            ],
+            [
+              2.2541075972042286,
+              48.81051808982594
+            ],
+            [
+              2.2712613064184834,
+              48.805773489205585
+            ],
+            [
+              2.2578604701069636,
+              48.79663681843274
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "galvents_corby",
+        "name": "Galvents-Corby",
+        "name_fr": "Galvents-Corby",
+        "color": "#F7DE95",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.27638,
+              48.79772
+            ],
+            [
+              2.27139,
+              48.79491
+            ],
+            [
+              2.272527785124985,
+              48.79200864793129
+            ],
+            [
+              2.257860470106956,
+              48.79663681843274
+            ],
+            [
+              2.2712613064184923,
+              48.80577348920559
+            ],
+            [
+              2.2763971897504978,
+              48.80637972195502
+            ],
+            [
+              2.27434,
+              48.80345
+            ],
+            [
+              2.27309,
+              48.80186
+            ],
+            [
+              2.27647,
+              48.80109
+            ],
+            [
+              2.27532,
+              48.79826
+            ],
+            [
+              2.27638,
+              48.79772
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jardin_parisien",
+        "name": "Jardin Parisien",
+        "name_fr": "Jardin Parisien",
+        "color": "#DDC9B5",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.2578604701069676,
+              48.79663681843274
+            ],
+            [
+              2.272527785124985,
+              48.79200864793129
+            ],
+            [
+              2.27299,
+              48.79083
+            ],
+            [
+              2.26878,
+              48.78932
+            ],
+            [
+              2.2639,
+              48.78841
+            ],
+            [
+              2.25873,
+              48.78627
+            ],
+            [
+              2.2559628185228857,
+              48.78529439114589
+            ],
+            [
+              2.2530290897292917,
+              48.795159073247646
+            ],
+            [
+              2.2559155620671203,
+              48.79649617830581
+            ],
+            [
+              2.2578604701069676,
+              48.79663681843274
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "plaine",
+        "name": "Plaine",
+        "name_fr": "Plaine",
+        "color": "#F8BFA0",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.23585,
+              48.78827
+            ],
+            [
+              2.23661,
+              48.78893
+            ],
+            [
+              2.23479,
+              48.79543
+            ],
+            [
+              2.23606,
+              48.7956
+            ],
+            [
+              2.2362806299434594,
+              48.79577650395477
+            ],
+            [
+              2.2530290897292904,
+              48.79515907324765
+            ],
+            [
+              2.2559628185228857,
+              48.78529439114589
+            ],
+            [
+              2.25561,
+              48.78517
+            ],
+            [
+              2.25057,
+              48.78468
+            ],
+            [
+              2.24839,
+              48.78254
+            ],
+            [
+              2.24632,
+              48.7791
+            ],
+            [
+              2.244593631112334,
+              48.779311508771
+            ],
+            [
+              2.2356222749438306,
+              48.78757623296841
+            ],
+            [
+              2.23585,
+              48.78827
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "trivaux_garenne_3f",
+        "name": "Trivaux–La Garenne–3F",
+        "name_fr": "Trivaux–La Garenne–3F",
+        "color": "#C9B6E4",
+        "level": "quartier",
+        "quality": "approximate_not_official",
+        "source_names": "PLU Clamart / diagnostic territorial 2022",
+        "note": "Limites PROVISOIRES générées par zones de proximité et ajustement manuel nécessaire."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.2248,
+              48.78085
+            ],
+            [
+              2.22814,
+              48.78223
+            ],
+            [
+              2.2329,
+              48.78408
+            ],
+            [
+              2.23542,
+              48.78696
+            ],
+            [
+              2.2356222749438306,
+              48.78757623296841
+            ],
+            [
+              2.244593631112334,
+              48.779311508771
+            ],
+            [
+              2.24028,
+              48.77984
+            ],
+            [
+              2.2392,
+              48.77625
+            ],
+            [
+              2.2403,
+              48.77476
+            ],
+            [
+              2.23768,
+              48.77628
+            ],
+            [
+              2.23039,
+              48.7768
+            ],
+            [
+              2.22891,
+              48.77598
+            ],
+            [
+              2.22876,
+              48.77553
+            ],
+            [
+              2.22884,
+              48.77447
+            ],
+            [
+              2.22785,
+              48.77565
+            ],
+            [
+              2.22655,
+              48.7761
+            ],
+            [
+              2.22495,
+              48.77668
+            ],
+            [
+              2.2241,
+              48.7778
+            ],
+            [
+              2.22398,
+              48.77822
+            ],
+            [
+              2.22425,
+              48.77921
+            ],
+            [
+              2.22365,
+              48.78058
+            ],
+            [
+              2.2248,
+              48.78085
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

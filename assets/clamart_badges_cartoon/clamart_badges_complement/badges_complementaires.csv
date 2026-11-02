@@ -1,0 +1,7 @@
+id,label,category,png,webp
+gare,Gare,lieux_speciaux,public/badges/lieux_speciaux/gare.png,public/badges/lieux_speciaux/gare.webp
+cinema,Cinéma,lieux_speciaux,public/badges/lieux_speciaux/cinema.png,public/badges/lieux_speciaux/cinema.webp
+hotel,Hôtel,lieux_speciaux,public/badges/lieux_speciaux/hotel.png,public/badges/lieux_speciaux/hotel.webp
+theatre,Théâtre,lieux_speciaux,public/badges/lieux_speciaux/theatre.png,public/badges/lieux_speciaux/theatre.webp
+marche,Marché,lieux_speciaux,public/badges/lieux_speciaux/marche.png,public/badges/lieux_speciaux/marche.webp
+cimetiere,Cimetière,lieux_speciaux,public/badges/lieux_speciaux/cimetiere.png,public/badges/lieux_speciaux/cimetiere.webp

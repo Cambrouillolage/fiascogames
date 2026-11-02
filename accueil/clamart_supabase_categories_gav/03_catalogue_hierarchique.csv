@@ -1,0 +1,197 @@
+﻿id,label,parent_id,badge_id,row_type
+restaurants_bars,Restaurants & bars,,restaurant,categorie
+alimentation,Alimentation & marchés,,epicerie,categorie
+beaute_bien_etre,Beauté & bien-être,,coiffeur,categorie
+sante,Santé,,sante,categorie
+shopping,Shopping & boutiques,,boutique,categorie
+maison_bricolage,Maison & travaux,,maison_deco,categorie
+services,Services du quotidien,,reparation,categorie
+culture_loisirs,Culture & loisirs,,culture,categorie
+sports,Sport,,complexe_sportif,categorie
+education_enfance,Éducation & enfance,,ecole,categorie
+services_publics,Services publics & institutions,,mairie,categorie
+mobilite,Transports & mobilité,,transport,categorie
+religion,Lieux de culte,,eglise,categorie
+hebergement_tourisme,Hébergement & tourisme,,hotel,categorie
+nature,Parcs & environnement,,parc,categorie
+agence_immobiliere,Agence immobilière,services,agence_immobiliere,sous_categorie
+ameublement,Meubles,maison_bricolage,ameublement,sous_categorie
+animalerie,Animalerie,shopping,animalerie,sous_categorie
+arts_creatifs,Arts créatifs,culture_loisirs,arts_creatifs,sous_categorie
+asiatique,Restaurant asiatique,restaurants_bars,asiatique,sous_categorie
+association,Association,services,association,sous_categorie
+audition,Audition / audioprothésiste,sante,audition,sous_categorie
+automobile,Automobile,mobilite,automobile,sous_categorie
+banque_assurance,Banque / assurance,services,banque_assurance,sous_categorie
+bar,Bar / pub,restaurants_bars,bar,sous_categorie
+bar_cocktail,Bar à cocktails,restaurants_bars,bar_cocktail,sous_categorie
+bijouterie,Bijouterie,shopping,bijouterie,sous_categorie
+bio,Produits bio,alimentation,bio,sous_categorie
+boucherie,Boucherie,alimentation,boucherie,sous_categorie
+boulanger,Boulanger / pain,alimentation,boulanger,sous_categorie
+boulangerie,Boulangerie (croissant),alimentation,boulangerie,sous_categorie
+boutique,Boutique généraliste,shopping,boutique,sous_categorie
+bricolage,Bricolage,maison_bricolage,bricolage,sous_categorie
+burger,Burger / fast-food,restaurants_bars,burger,sous_categorie
+cafe,Café,restaurants_bars,cafe,sous_categorie
+caviste,Caviste,alimentation,caviste,sous_categorie
+charcuterie,Charcuterie,alimentation,charcuterie,sous_categorie
+chaussures,Chaussures,shopping,chaussures,sous_categorie
+chocolaterie,Chocolaterie,alimentation,chocolaterie,sous_categorie
+cimetiere,Cimetière,services_publics,cimetiere,sous_categorie
+cinema,Cinéma,culture_loisirs,cinema,sous_categorie
+coiffeur,Coiffeur,beaute_bien_etre,coiffeur,sous_categorie
+college_lycee,Collège / lycée,education_enfance,college_lycee,sous_categorie
+commissariat,Commissariat,services_publics,commissariat,sous_categorie
+complexe_sportif,Complexe sportif,sports,complexe_sportif,sous_categorie
+confiserie,Confiserie,alimentation,confiserie,sous_categorie
+cosmetique,Cosmétiques,beaute_bien_etre,cosmetique,sous_categorie
+creche,Crèche,education_enfance,creche,sous_categorie
+cuisine_du_monde,Cuisine du monde,restaurants_bars,cuisine_du_monde,sous_categorie
+culture,Culture / spectacles,culture_loisirs,culture,sous_categorie
+dentiste,Dentiste,sante,dentiste,sous_categorie
+ecole,École,education_enfance,ecole,sous_categorie
+eglise,Église,religion,eglise,sous_categorie
+epicerie,Épicerie,alimentation,epicerie,sous_categorie
+fleuriste,Fleuriste,shopping,fleuriste,sous_categorie
+fromagerie,Fromagerie,alimentation,fromagerie,sous_categorie
+gare,Gare,mobilite,gare,sous_categorie
+glacier,Glacier,alimentation,glacier,sous_categorie
+hopital,Hôpital,sante,hopital,sous_categorie
+hotel,Hôtel,hebergement_tourisme,hotel,sous_categorie
+information,Information,services_publics,information,sous_categorie
+informatique,Informatique,shopping,informatique,sous_categorie
+institut_beaute,Institut de beauté,beaute_bien_etre,institut_beaute,sous_categorie
+japonais,Restaurant japonais,restaurants_bars,japonais,sous_categorie
+jardinage,Jardinage,maison_bricolage,jardinage,sous_categorie
+jeux_video,Jeux vidéo,culture_loisirs,jeux_video,sous_categorie
+jouets,Magasin de jouets,shopping,jouets,sous_categorie
+justice,Justice / tribunal,services_publics,justice,sous_categorie
+librairie,Librairie,culture_loisirs,librairie,sous_categorie
+loisirs,Loisirs,culture_loisirs,loisirs,sous_categorie
+luminaire,Luminaires,maison_bricolage,luminaire,sous_categorie
+mairie,Mairie,services_publics,mairie,sous_categorie
+maison_deco,Décoration intérieure,maison_bricolage,maison_deco,sous_categorie
+marche,Marché,alimentation,marche,sous_categorie
+massage,Massage,beaute_bien_etre,massage,sous_categorie
+mediatheque,Médiathèque,culture_loisirs,mediatheque,sous_categorie
+mosquee,Mosquée,religion,mosquee,sous_categorie
+moto,Moto,mobilite,moto,sous_categorie
+musique,Musique,culture_loisirs,musique,sous_categorie
+notaire,Notaire,services,notaire,sous_categorie
+optique,Opticien,sante,optique,sous_categorie
+parc,Parc,nature,parc,sous_categorie
+parfumerie,Parfumerie,beaute_bien_etre,parfumerie,sous_categorie
+parking,Parking,mobilite,parking,sous_categorie
+patisserie,Pâtisserie,alimentation,patisserie,sous_categorie
+patrimoine,Monument / patrimoine,culture_loisirs,patrimoine,sous_categorie
+pharmacie,Pharmacie,sante,pharmacie,sous_categorie
+photographe,Photographe,services,photographe,sous_categorie
+piscine,Piscine,sports,piscine,sous_categorie
+pizzeria,Pizzeria,restaurants_bars,pizzeria,sous_categorie
+pneumatique,Pneumatiques,mobilite,pneumatique,sous_categorie
+poissonnerie,Poissonnerie,alimentation,poissonnerie,sous_categorie
+pompier,Pompiers,services_publics,pompier,sous_categorie
+poste,La Poste,services_publics,poste,sous_categorie
+pret_a_porter,Prêt-à-porter,shopping,pret_a_porter,sous_categorie
+primeur,Primeur / fruits et légumes,alimentation,primeur,sous_categorie
+produits_locaux,Produits locaux,alimentation,produits_locaux,sous_categorie
+psychologue,Psychologue,sante,psychologue,sous_categorie
+puericulture,Puériculture,education_enfance,puericulture,sous_categorie
+recyclage,Recyclage,services_publics,recyclage,sous_categorie
+reparation,Réparation / dépannage,services,reparation,sous_categorie
+restaurant,Restaurant,restaurants_bars,restaurant,sous_categorie
+salle_sport,Salle de sport,sports,salle_sport,sous_categorie
+sante_generale,Santé / médecin,sante,sante,sous_categorie
+serrurerie,Serrurerie,services,serrurerie,sous_categorie
+spa_bien_etre,Spa et bien-être,beaute_bien_etre,spa_bien_etre,sous_categorie
+station_service,Station-service,mobilite,station_service,sous_categorie
+supermarche,Supermarché,alimentation,supermarche,sous_categorie
+synagogue,Synagogue,religion,synagogue,sous_categorie
+telephonie,Téléphonie,shopping,telephonie,sous_categorie
+theatre,Théâtre,culture_loisirs,theatre,sous_categorie
+toilettage_animalier,Toilettage animalier,services,toilettage_animalier,sous_categorie
+tourisme,Tourisme,hebergement_tourisme,tourisme,sous_categorie
+transport,Transports en commun,mobilite,transport,sous_categorie
+velo,Magasin de vélos,mobilite,velo,sous_categorie
+vetements,Vêtements,shopping,vetements,sous_categorie
+veterinaire,Vétérinaire,sante,veterinaire,sous_categorie
+brasserie,Brasserie,restaurants_bars,restaurant,sous_categorie
+restaurant_francais,Cuisine française,restaurants_bars,restaurant,sous_categorie
+restaurant_italien,Restaurant italien,restaurants_bars,pizzeria,sous_categorie
+kebab,Kebab,restaurants_bars,burger,sous_categorie
+traiteur,Traiteur,restaurants_bars,restaurant,sous_categorie
+salon_de_the,Salon de thé,restaurants_bars,cafe,sous_categorie
+restauration_rapide,Restauration rapide,restaurants_bars,burger,sous_categorie
+food_truck,Food truck,restaurants_bars,burger,sous_categorie
+creperie,Crêperie,restaurants_bars,restaurant,sous_categorie
+restaurant_indien,Restaurant indien,restaurants_bars,cuisine_du_monde,sous_categorie
+restaurant_chinois,Restaurant chinois,restaurants_bars,asiatique,sous_categorie
+restaurant_vegetarien,Restaurant végétarien,restaurants_bars,restaurant,sous_categorie
+epicerie_fine,Épicerie fine,alimentation,epicerie,sous_categorie
+superette,Supérette,alimentation,epicerie,sous_categorie
+marchand_de_vin,Vins & spiritueux,alimentation,caviste,sous_categorie
+produits_orientaux,Alimentation du monde,alimentation,epicerie,sous_categorie
+barbier,Barbier,beaute_bien_etre,coiffeur,sous_categorie
+onglerie,Onglerie,beaute_bien_etre,institut_beaute,sous_categorie
+tatoueur,Tatouage & piercing,beaute_bien_etre,institut_beaute,sous_categorie
+estheticienne,Esthétique,beaute_bien_etre,institut_beaute,sous_categorie
+medecin,Médecin généraliste,sante,sante,sous_categorie
+specialiste,Médecin spécialiste,sante,sante,sous_categorie
+kinesitherapeute,Kinésithérapeute,sante,sante,sous_categorie
+osteopathe,Ostéopathe,sante,sante,sous_categorie
+infirmier,Cabinet infirmier,sante,sante,sous_categorie
+laboratoire,Laboratoire d’analyses,sante,sante,sous_categorie
+centre_medical,Centre médical,sante,sante,sous_categorie
+papeterie,Papeterie,shopping,librairie,sous_categorie
+tabac_presse,Tabac & presse,shopping,boutique,sous_categorie
+maroquinerie,Maroquinerie,shopping,boutique,sous_categorie
+opticien_boutique,Opticien (boutique),shopping,optique,sous_categorie
+magasin_sport,Articles de sport,shopping,boutique,sous_categorie
+cadeaux,Cadeaux & souvenirs,shopping,boutique,sous_categorie
+quincaillerie,Quincaillerie,maison_bricolage,bricolage,sous_categorie
+plombier,Plomberie,maison_bricolage,bricolage,sous_categorie
+electricien,Électricité,maison_bricolage,bricolage,sous_categorie
+electromenager,Électroménager,maison_bricolage,ameublement,sous_categorie
+peinture,Peinture & décoration,maison_bricolage,maison_deco,sous_categorie
+pressing,Pressing,services,reparation,sous_categorie
+cordonnerie,Cordonnerie,services,reparation,sous_categorie
+retoucherie,Retoucherie,services,reparation,sous_categorie
+auto_ecole,Auto-école,services,automobile,sous_categorie
+expert_comptable,Expert-comptable,services,notaire,sous_categorie
+assurance,Assurance,services,banque_assurance,sous_categorie
+banque,Banque,services,banque_assurance,sous_categorie
+agence_voyage,Agence de voyage,services,tourisme,sous_categorie
+ludotheque,Ludothèque,culture_loisirs,loisirs,sous_categorie
+bar_a_jeux,Bar à jeux,culture_loisirs,loisirs,sous_categorie
+salle_spectacle,Salle de spectacle,culture_loisirs,theatre,sous_categorie
+musee,Musée,culture_loisirs,patrimoine,sous_categorie
+galerie_art,Galerie d’art,culture_loisirs,arts_creatifs,sous_categorie
+gymnase,Gymnase,sports,complexe_sportif,sous_categorie
+stade,Stade,sports,complexe_sportif,sous_categorie
+club_sportif,Club sportif,sports,complexe_sportif,sous_categorie
+tennis,Tennis,sports,complexe_sportif,sous_categorie
+danse,Danse,sports,salle_sport,sous_categorie
+yoga,Yoga & pilates,sports,salle_sport,sous_categorie
+ecole_maternelle,École maternelle,education_enfance,ecole,sous_categorie
+ecole_elementaire,École élémentaire,education_enfance,ecole,sous_categorie
+college,Collège,education_enfance,college_lycee,sous_categorie
+lycee,Lycée,education_enfance,college_lycee,sous_categorie
+centre_loisirs,Centre de loisirs,education_enfance,creche,sous_categorie
+formation,Formation & cours,education_enfance,ecole,sous_categorie
+centre_administratif,Centre administratif,services_publics,mairie,sous_categorie
+maison_associations,Maison des associations,services_publics,association,sous_categorie
+service_social,Service social,services_publics,mairie,sous_categorie
+arret_bus,Arrêt de bus,mobilite,transport,sous_categorie
+taxi,Station de taxis,mobilite,automobile,sous_categorie
+station_velos,Station vélos,mobilite,velo,sous_categorie
+borne_recharge,Borne de recharge,mobilite,automobile,sous_categorie
+garage,Garage auto,mobilite,automobile,sous_categorie
+controle_technique,Contrôle technique,mobilite,automobile,sous_categorie
+temple,Temple protestant,religion,eglise,sous_categorie
+lieu_culte_autre,Autre lieu de culte,religion,eglise,sous_categorie
+chambres_hotes,Chambres d’hôtes,hebergement_tourisme,hotel,sous_categorie
+residence_hoteliere,Résidence hôtelière,hebergement_tourisme,hotel,sous_categorie
+jardin_public,Jardin public,nature,parc,sous_categorie
+aire_de_jeux,Aire de jeux,nature,parc,sous_categorie
+jardin_partage,Jardin partagé,nature,parc,sous_categorie

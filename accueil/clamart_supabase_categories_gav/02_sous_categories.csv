@@ -1,0 +1,182 @@
+﻿category_id,subcategory_id,subcategory_label,badge_id,badge_path,public_landmark_hint,source
+services,agence_immobiliere,Agence immobilière,agence_immobiliere,/badges_webp/services/agence_immobiliere.webp,false,badge_existant
+maison_bricolage,ameublement,Meubles,ameublement,/badges_webp/maison_bricolage/ameublement.webp,false,badge_existant
+shopping,animalerie,Animalerie,animalerie,/badges_webp/shopping/animalerie.webp,false,badge_existant
+culture_loisirs,arts_creatifs,Arts créatifs,arts_creatifs,/badges_webp/culture_loisirs/arts_creatifs.webp,false,badge_existant
+restaurants_bars,asiatique,Restaurant asiatique,asiatique,/badges_webp/restaurants_bars/asiatique.webp,false,badge_existant
+services,association,Association,association,/badges_webp/services/association.webp,false,badge_existant
+sante,audition,Audition / audioprothésiste,audition,/badges_webp/sante/audition.webp,false,badge_existant
+mobilite,automobile,Automobile,automobile,/badges_webp/mobilite/automobile.webp,false,badge_existant
+services,banque_assurance,Banque / assurance,banque_assurance,/badges_webp/services/banque_assurance.webp,false,badge_existant
+restaurants_bars,bar,Bar / pub,bar,/badges_webp/restaurants_bars/bar.webp,false,badge_existant
+restaurants_bars,bar_cocktail,Bar à cocktails,bar_cocktail,/badges_webp/restaurants_bars/bar_cocktail.webp,false,badge_existant
+shopping,bijouterie,Bijouterie,bijouterie,/badges_webp/shopping/bijouterie.webp,false,badge_existant
+alimentation,bio,Produits bio,bio,/badges_webp/alimentation/bio.webp,false,badge_existant
+alimentation,boucherie,Boucherie,boucherie,/badges_webp/alimentation/boucherie.webp,false,badge_existant
+alimentation,boulanger,Boulanger / pain,boulanger,/badges_webp/alimentation/boulanger.webp,false,badge_existant
+alimentation,boulangerie,Boulangerie (croissant),boulangerie,/badges_webp/alimentation/boulangerie.webp,false,badge_existant
+shopping,boutique,Boutique généraliste,boutique,/badges_webp/shopping/boutique.webp,false,badge_existant
+maison_bricolage,bricolage,Bricolage,bricolage,/badges_webp/maison_bricolage/bricolage.webp,false,badge_existant
+restaurants_bars,burger,Burger / fast-food,burger,/badges_webp/restaurants_bars/burger.webp,false,badge_existant
+restaurants_bars,cafe,Café,cafe,/badges_webp/restaurants_bars/cafe.webp,false,badge_existant
+alimentation,caviste,Caviste,caviste,/badges_webp/alimentation/caviste.webp,false,badge_existant
+alimentation,charcuterie,Charcuterie,charcuterie,/badges_webp/alimentation/charcuterie.webp,false,badge_existant
+shopping,chaussures,Chaussures,chaussures,/badges_webp/shopping/chaussures.webp,false,badge_existant
+alimentation,chocolaterie,Chocolaterie,chocolaterie,/badges_webp/alimentation/chocolaterie.webp,false,badge_existant
+services_publics,cimetiere,Cimetière,cimetiere,/badges/lieux_speciaux/cimetiere.webp,true,badge_existant
+culture_loisirs,cinema,Cinéma,cinema,/badges/lieux_speciaux/cinema.webp,false,badge_existant
+beaute_bien_etre,coiffeur,Coiffeur,coiffeur,/badges_webp/beaute_bien_etre/coiffeur.webp,false,badge_existant
+education_enfance,college_lycee,Collège / lycée,college_lycee,/badges_webp/education_enfance/college_lycee.webp,true,badge_existant
+services_publics,commissariat,Commissariat,commissariat,/badges_webp/services_publics/commissariat.webp,true,badge_existant
+sports,complexe_sportif,Complexe sportif,complexe_sportif,/badges_webp/sports/complexe_sportif.webp,true,badge_existant
+alimentation,confiserie,Confiserie,confiserie,/badges_webp/alimentation/confiserie.webp,false,badge_existant
+beaute_bien_etre,cosmetique,Cosmétiques,cosmetique,/badges_webp/beaute_bien_etre/cosmetique.webp,false,badge_existant
+education_enfance,creche,Crèche,creche,/badges_webp/education_enfance/creche.webp,true,badge_existant
+restaurants_bars,cuisine_du_monde,Cuisine du monde,cuisine_du_monde,/badges_webp/restaurants_bars/cuisine_du_monde.webp,false,badge_existant
+culture_loisirs,culture,Culture / spectacles,culture,/badges_webp/culture_loisirs/culture.webp,false,badge_existant
+sante,dentiste,Dentiste,dentiste,/badges_webp/sante/dentiste.webp,false,badge_existant
+education_enfance,ecole,École,ecole,/badges_webp/education_enfance/ecole.webp,true,badge_existant
+religion,eglise,Église,eglise,/badges_webp/religion/eglise.webp,true,badge_existant
+alimentation,epicerie,Épicerie,epicerie,/badges_webp/alimentation/epicerie.webp,false,badge_existant
+shopping,fleuriste,Fleuriste,fleuriste,/badges_webp/shopping/fleuriste.webp,false,badge_existant
+alimentation,fromagerie,Fromagerie,fromagerie,/badges_webp/alimentation/fromagerie.webp,false,badge_existant
+mobilite,gare,Gare,gare,/badges/lieux_speciaux/gare.webp,true,badge_existant
+alimentation,glacier,Glacier,glacier,/badges_webp/alimentation/glacier.webp,false,badge_existant
+sante,hopital,Hôpital,hopital,/badges_webp/sante/hopital.webp,true,badge_existant
+hebergement_tourisme,hotel,Hôtel,hotel,/badges/lieux_speciaux/hotel.webp,false,badge_existant
+services_publics,information,Information,information,/badges_webp/services_publics/information.webp,true,badge_existant
+shopping,informatique,Informatique,informatique,/badges_webp/shopping/informatique.webp,false,badge_existant
+beaute_bien_etre,institut_beaute,Institut de beauté,institut_beaute,/badges_webp/beaute_bien_etre/institut_beaute.webp,false,badge_existant
+restaurants_bars,japonais,Restaurant japonais,japonais,/badges_webp/restaurants_bars/japonais.webp,false,badge_existant
+maison_bricolage,jardinage,Jardinage,jardinage,/badges_webp/maison_bricolage/jardinage.webp,false,badge_existant
+culture_loisirs,jeux_video,Jeux vidéo,jeux_video,/badges_webp/culture_loisirs/jeux_video.webp,false,badge_existant
+shopping,jouets,Magasin de jouets,jouets,/badges_webp/shopping/jouets.webp,false,badge_existant
+services_publics,justice,Justice / tribunal,justice,/badges_webp/services_publics/justice.webp,true,badge_existant
+culture_loisirs,librairie,Librairie,librairie,/badges_webp/culture_loisirs/librairie.webp,false,badge_existant
+culture_loisirs,loisirs,Loisirs,loisirs,/badges_webp/culture_loisirs/loisirs.webp,false,badge_existant
+maison_bricolage,luminaire,Luminaires,luminaire,/badges_webp/maison_bricolage/luminaire.webp,false,badge_existant
+services_publics,mairie,Mairie,mairie,/badges_webp/services_publics/mairie.webp,true,badge_existant
+maison_bricolage,maison_deco,Décoration intérieure,maison_deco,/badges_webp/maison_bricolage/maison_deco.webp,false,badge_existant
+alimentation,marche,Marché,marche,/badges/lieux_speciaux/marche.webp,false,badge_existant
+beaute_bien_etre,massage,Massage,massage,/badges_webp/beaute_bien_etre/massage.webp,false,badge_existant
+culture_loisirs,mediatheque,Médiathèque,mediatheque,/badges_webp/culture_loisirs/mediatheque.webp,true,badge_existant
+religion,mosquee,Mosquée,mosquee,/badges_webp/religion/mosquee.webp,true,badge_existant
+mobilite,moto,Moto,moto,/badges_webp/mobilite/moto.webp,false,badge_existant
+culture_loisirs,musique,Musique,musique,/badges_webp/culture_loisirs/musique.webp,false,badge_existant
+services,notaire,Notaire,notaire,/badges_webp/services/notaire.webp,false,badge_existant
+sante,optique,Opticien,optique,/badges_webp/sante/optique.webp,false,badge_existant
+nature,parc,Parc,parc,/badges_webp/nature/parc.webp,true,badge_existant
+beaute_bien_etre,parfumerie,Parfumerie,parfumerie,/badges_webp/beaute_bien_etre/parfumerie.webp,false,badge_existant
+mobilite,parking,Parking,parking,/badges_webp/mobilite/parking.webp,true,badge_existant
+alimentation,patisserie,Pâtisserie,patisserie,/badges_webp/alimentation/patisserie.webp,false,badge_existant
+culture_loisirs,patrimoine,Monument / patrimoine,patrimoine,/badges_webp/culture_loisirs/patrimoine.webp,true,badge_existant
+sante,pharmacie,Pharmacie,pharmacie,/badges_webp/sante/pharmacie.webp,false,badge_existant
+services,photographe,Photographe,photographe,/badges_webp/services/photographe.webp,false,badge_existant
+sports,piscine,Piscine,piscine,/badges_webp/sports/piscine.webp,true,badge_existant
+restaurants_bars,pizzeria,Pizzeria,pizzeria,/badges_webp/restaurants_bars/pizzeria.webp,false,badge_existant
+mobilite,pneumatique,Pneumatiques,pneumatique,/badges_webp/mobilite/pneumatique.webp,false,badge_existant
+alimentation,poissonnerie,Poissonnerie,poissonnerie,/badges_webp/alimentation/poissonnerie.webp,false,badge_existant
+services_publics,pompier,Pompiers,pompier,/badges_webp/services_publics/pompier.webp,true,badge_existant
+services_publics,poste,La Poste,poste,/badges_webp/services_publics/poste.webp,true,badge_existant
+shopping,pret_a_porter,Prêt-à-porter,pret_a_porter,/badges_webp/shopping/pret_a_porter.webp,false,badge_existant
+alimentation,primeur,Primeur / fruits et légumes,primeur,/badges_webp/alimentation/primeur.webp,false,badge_existant
+alimentation,produits_locaux,Produits locaux,produits_locaux,/badges_webp/alimentation/produits_locaux.webp,false,badge_existant
+sante,psychologue,Psychologue,psychologue,/badges_webp/sante/psychologue.webp,false,badge_existant
+education_enfance,puericulture,Puériculture,puericulture,/badges_webp/education_enfance/puericulture.webp,false,badge_existant
+services_publics,recyclage,Recyclage,recyclage,/badges_webp/nature/recyclage.webp,true,badge_existant
+services,reparation,Réparation / dépannage,reparation,/badges_webp/services/reparation.webp,false,badge_existant
+restaurants_bars,restaurant,Restaurant,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,badge_existant
+sports,salle_sport,Salle de sport,salle_sport,/badges_webp/sports/salle_sport.webp,false,badge_existant
+sante,sante_generale,Santé / médecin,sante,/badges_webp/sante/sante.webp,false,badge_existant
+services,serrurerie,Serrurerie,serrurerie,/badges_webp/services/serrurerie.webp,false,badge_existant
+beaute_bien_etre,spa_bien_etre,Spa et bien-être,spa_bien_etre,/badges_webp/beaute_bien_etre/spa_bien_etre.webp,false,badge_existant
+mobilite,station_service,Station-service,station_service,/badges_webp/mobilite/station_service.webp,false,badge_existant
+alimentation,supermarche,Supermarché,supermarche,/badges_webp/alimentation/supermarche.webp,false,badge_existant
+religion,synagogue,Synagogue,synagogue,/badges_webp/religion/synagogue.webp,true,badge_existant
+shopping,telephonie,Téléphonie,telephonie,/badges_webp/shopping/telephonie.webp,false,badge_existant
+culture_loisirs,theatre,Théâtre,theatre,/badges/lieux_speciaux/theatre.webp,false,badge_existant
+services,toilettage_animalier,Toilettage animalier,toilettage_animalier,/badges_webp/services/toilettage_animalier.webp,false,badge_existant
+hebergement_tourisme,tourisme,Tourisme,tourisme,/badges_webp/culture_loisirs/tourisme.webp,false,badge_existant
+mobilite,transport,Transports en commun,transport,/badges_webp/mobilite/transport.webp,false,badge_existant
+mobilite,velo,Magasin de vélos,velo,/badges_webp/mobilite/velo.webp,false,badge_existant
+shopping,vetements,Vêtements,vetements,/badges_webp/shopping/vetements.webp,false,badge_existant
+sante,veterinaire,Vétérinaire,veterinaire,/badges_webp/sante/veterinaire.webp,false,badge_existant
+restaurants_bars,brasserie,Brasserie,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,ajout_taxonomie
+restaurants_bars,restaurant_francais,Cuisine française,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,ajout_taxonomie
+restaurants_bars,restaurant_italien,Restaurant italien,pizzeria,/badges_webp/restaurants_bars/pizzeria.webp,false,ajout_taxonomie
+restaurants_bars,kebab,Kebab,burger,/badges_webp/restaurants_bars/burger.webp,false,ajout_taxonomie
+restaurants_bars,traiteur,Traiteur,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,ajout_taxonomie
+restaurants_bars,salon_de_the,Salon de thé,cafe,/badges_webp/restaurants_bars/cafe.webp,false,ajout_taxonomie
+restaurants_bars,restauration_rapide,Restauration rapide,burger,/badges_webp/restaurants_bars/burger.webp,false,ajout_taxonomie
+restaurants_bars,food_truck,Food truck,burger,/badges_webp/restaurants_bars/burger.webp,false,ajout_taxonomie
+restaurants_bars,creperie,Crêperie,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,ajout_taxonomie
+restaurants_bars,restaurant_indien,Restaurant indien,cuisine_du_monde,/badges_webp/restaurants_bars/cuisine_du_monde.webp,false,ajout_taxonomie
+restaurants_bars,restaurant_chinois,Restaurant chinois,asiatique,/badges_webp/restaurants_bars/asiatique.webp,false,ajout_taxonomie
+restaurants_bars,restaurant_vegetarien,Restaurant végétarien,restaurant,/badges_webp/restaurants_bars/restaurant.webp,false,ajout_taxonomie
+alimentation,epicerie_fine,Épicerie fine,epicerie,/badges_webp/alimentation/epicerie.webp,false,ajout_taxonomie
+alimentation,superette,Supérette,epicerie,/badges_webp/alimentation/epicerie.webp,false,ajout_taxonomie
+alimentation,marchand_de_vin,Vins & spiritueux,caviste,/badges_webp/alimentation/caviste.webp,false,ajout_taxonomie
+alimentation,produits_orientaux,Alimentation du monde,epicerie,/badges_webp/alimentation/epicerie.webp,false,ajout_taxonomie
+beaute_bien_etre,barbier,Barbier,coiffeur,/badges_webp/beaute_bien_etre/coiffeur.webp,false,ajout_taxonomie
+beaute_bien_etre,onglerie,Onglerie,institut_beaute,/badges_webp/beaute_bien_etre/institut_beaute.webp,false,ajout_taxonomie
+beaute_bien_etre,tatoueur,Tatouage & piercing,institut_beaute,/badges_webp/beaute_bien_etre/institut_beaute.webp,false,ajout_taxonomie
+beaute_bien_etre,estheticienne,Esthétique,institut_beaute,/badges_webp/beaute_bien_etre/institut_beaute.webp,false,ajout_taxonomie
+sante,medecin,Médecin généraliste,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,specialiste,Médecin spécialiste,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,kinesitherapeute,Kinésithérapeute,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,osteopathe,Ostéopathe,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,infirmier,Cabinet infirmier,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,laboratoire,Laboratoire d’analyses,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+sante,centre_medical,Centre médical,sante,/badges_webp/sante/sante.webp,false,ajout_taxonomie
+shopping,papeterie,Papeterie,librairie,/badges_webp/culture_loisirs/librairie.webp,false,ajout_taxonomie
+shopping,tabac_presse,Tabac & presse,boutique,/badges_webp/shopping/boutique.webp,false,ajout_taxonomie
+shopping,maroquinerie,Maroquinerie,boutique,/badges_webp/shopping/boutique.webp,false,ajout_taxonomie
+shopping,opticien_boutique,Opticien (boutique),optique,/badges_webp/sante/optique.webp,false,ajout_taxonomie
+shopping,magasin_sport,Articles de sport,boutique,/badges_webp/shopping/boutique.webp,false,ajout_taxonomie
+shopping,cadeaux,Cadeaux & souvenirs,boutique,/badges_webp/shopping/boutique.webp,false,ajout_taxonomie
+maison_bricolage,quincaillerie,Quincaillerie,bricolage,/badges_webp/maison_bricolage/bricolage.webp,false,ajout_taxonomie
+maison_bricolage,plombier,Plomberie,bricolage,/badges_webp/maison_bricolage/bricolage.webp,false,ajout_taxonomie
+maison_bricolage,electricien,Électricité,bricolage,/badges_webp/maison_bricolage/bricolage.webp,false,ajout_taxonomie
+maison_bricolage,electromenager,Électroménager,ameublement,/badges_webp/maison_bricolage/ameublement.webp,false,ajout_taxonomie
+maison_bricolage,peinture,Peinture & décoration,maison_deco,/badges_webp/maison_bricolage/maison_deco.webp,false,ajout_taxonomie
+services,pressing,Pressing,reparation,/badges_webp/services/reparation.webp,false,ajout_taxonomie
+services,cordonnerie,Cordonnerie,reparation,/badges_webp/services/reparation.webp,false,ajout_taxonomie
+services,retoucherie,Retoucherie,reparation,/badges_webp/services/reparation.webp,false,ajout_taxonomie
+services,auto_ecole,Auto-école,automobile,/badges_webp/mobilite/automobile.webp,false,ajout_taxonomie
+services,expert_comptable,Expert-comptable,notaire,/badges_webp/services/notaire.webp,false,ajout_taxonomie
+services,assurance,Assurance,banque_assurance,/badges_webp/services/banque_assurance.webp,false,ajout_taxonomie
+services,banque,Banque,banque_assurance,/badges_webp/services/banque_assurance.webp,false,ajout_taxonomie
+services,agence_voyage,Agence de voyage,tourisme,/badges_webp/culture_loisirs/tourisme.webp,false,ajout_taxonomie
+culture_loisirs,ludotheque,Ludothèque,loisirs,/badges_webp/culture_loisirs/loisirs.webp,false,ajout_taxonomie
+culture_loisirs,bar_a_jeux,Bar à jeux,loisirs,/badges_webp/culture_loisirs/loisirs.webp,false,ajout_taxonomie
+culture_loisirs,salle_spectacle,Salle de spectacle,theatre,/badges/lieux_speciaux/theatre.webp,false,ajout_taxonomie
+culture_loisirs,musee,Musée,patrimoine,/badges_webp/culture_loisirs/patrimoine.webp,false,ajout_taxonomie
+culture_loisirs,galerie_art,Galerie d’art,arts_creatifs,/badges_webp/culture_loisirs/arts_creatifs.webp,false,ajout_taxonomie
+sports,gymnase,Gymnase,complexe_sportif,/badges_webp/sports/complexe_sportif.webp,true,ajout_taxonomie
+sports,stade,Stade,complexe_sportif,/badges_webp/sports/complexe_sportif.webp,true,ajout_taxonomie
+sports,club_sportif,Club sportif,complexe_sportif,/badges_webp/sports/complexe_sportif.webp,false,ajout_taxonomie
+sports,tennis,Tennis,complexe_sportif,/badges_webp/sports/complexe_sportif.webp,false,ajout_taxonomie
+sports,danse,Danse,salle_sport,/badges_webp/sports/salle_sport.webp,false,ajout_taxonomie
+sports,yoga,Yoga & pilates,salle_sport,/badges_webp/sports/salle_sport.webp,false,ajout_taxonomie
+education_enfance,ecole_maternelle,École maternelle,ecole,/badges_webp/education_enfance/ecole.webp,true,ajout_taxonomie
+education_enfance,ecole_elementaire,École élémentaire,ecole,/badges_webp/education_enfance/ecole.webp,true,ajout_taxonomie
+education_enfance,college,Collège,college_lycee,/badges_webp/education_enfance/college_lycee.webp,true,ajout_taxonomie
+education_enfance,lycee,Lycée,college_lycee,/badges_webp/education_enfance/college_lycee.webp,true,ajout_taxonomie
+education_enfance,centre_loisirs,Centre de loisirs,creche,/badges_webp/education_enfance/creche.webp,true,ajout_taxonomie
+education_enfance,formation,Formation & cours,ecole,/badges_webp/education_enfance/ecole.webp,false,ajout_taxonomie
+services_publics,centre_administratif,Centre administratif,mairie,/badges_webp/services_publics/mairie.webp,true,ajout_taxonomie
+services_publics,maison_associations,Maison des associations,association,/badges_webp/services/association.webp,true,ajout_taxonomie
+services_publics,service_social,Service social,mairie,/badges_webp/services_publics/mairie.webp,true,ajout_taxonomie
+mobilite,arret_bus,Arrêt de bus,transport,/badges_webp/mobilite/transport.webp,true,ajout_taxonomie
+mobilite,taxi,Station de taxis,automobile,/badges_webp/mobilite/automobile.webp,false,ajout_taxonomie
+mobilite,station_velos,Station vélos,velo,/badges_webp/mobilite/velo.webp,true,ajout_taxonomie
+mobilite,borne_recharge,Borne de recharge,automobile,/badges_webp/mobilite/automobile.webp,true,ajout_taxonomie
+mobilite,garage,Garage auto,automobile,/badges_webp/mobilite/automobile.webp,false,ajout_taxonomie
+mobilite,controle_technique,Contrôle technique,automobile,/badges_webp/mobilite/automobile.webp,false,ajout_taxonomie
+religion,temple,Temple protestant,eglise,/badges_webp/religion/eglise.webp,true,ajout_taxonomie
+religion,lieu_culte_autre,Autre lieu de culte,eglise,/badges_webp/religion/eglise.webp,true,ajout_taxonomie
+hebergement_tourisme,chambres_hotes,Chambres d’hôtes,hotel,/badges/lieux_speciaux/hotel.webp,false,ajout_taxonomie
+hebergement_tourisme,residence_hoteliere,Résidence hôtelière,hotel,/badges/lieux_speciaux/hotel.webp,false,ajout_taxonomie
+nature,jardin_public,Jardin public,parc,/badges_webp/nature/parc.webp,true,ajout_taxonomie
+nature,aire_de_jeux,Aire de jeux,parc,/badges_webp/nature/parc.webp,true,ajout_taxonomie
+nature,jardin_partage,Jardin partagé,parc,/badges_webp/nature/parc.webp,true,ajout_taxonomie

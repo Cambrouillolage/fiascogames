@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GAV - Admin boutiques Clamart</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <!--
+    Page non liée dans la navigation du site. Ce n'est PAS la sécurité :
+    l'accès aux données est contrôlé par Supabase Auth + Row Level Security
+    (voir supabase/migrations/0004_shop_directory_stock.sql) — un visiteur
+    qui trouve cette URL ne voit qu'un formulaire de connexion et ne peut
+    lire ni modifier aucune boutique sans le compte admin. Couverte par la
+    règle "Disallow: /gav/admin/" de robots.txt (préfixe).
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#f3ede1;
+      --bg-2:#f9f5ec;
+      --dark:#131313;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container{width:min(1100px, calc(100% - 32px)); margin:0 auto; padding:28px 0 56px}
+    h1{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      font-size:clamp(26px, 5vw, 36px);
+      margin:0 0 18px;
+      color:var(--dark);
+    }
+
+    .card{
+      border:2px solid var(--line);
+      border-radius:16px;
+      background:var(--white);
+      padding:20px;
+    }
+
+    /* --- Connexion --- */
+    #loginView{max-width:380px; margin:60px auto 0}
+    #loginView .card{box-shadow:4px 5px 0 #c9822f; border-color:#dba25a}
+    #loginForm{display:flex; flex-direction:column; gap:12px}
+    #loginForm label{font-size:13px; font-weight:800; color:var(--muted)}
+    #loginForm input{
+      border:2px solid var(--line);
+      border-radius:10px;
+      padding:9px 12px;
+      font-size:14px;
+      font-family:inherit;
+    }
+    .btn{
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:12px;
+      padding:10px 16px;
+      font-weight:800;
+      font-size:13px;
+      cursor:pointer;
+      color:#fff;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
+      transition:transform .16s ease, filter .16s ease;
+    }
+    .btn:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .btn:active{transform:translateY(3px)}
+    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
+    .btnGhost{
+      background:transparent;
+      color:var(--ink);
+      border-color:var(--line);
+      box-shadow:none;
+    }
+    .btnSmall{padding:7px 12px; font-size:12px}
+    .errorText{color:#b3261e; font-size:13px; min-height:16px}
+
+    /* --- Dashboard --- */
+    #dashView{display:none}
+    .topBar{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; flex-wrap:wrap}
+    .who{font-size:13px; color:var(--muted)}
+
+    .shopTable{width:100%; border-collapse:collapse; font-size:13.5px}
+    .shopTable th{
+      text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+      color:var(--muted); padding:8px 10px; border-bottom:2px solid var(--line);
+    }
+    .shopTable td{padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:middle}
+    .shopTable input[type="text"], .shopTable input[type="number"]{
+      width:100%;
+      border:2px solid var(--line);
+      border-radius:8px;
+      padding:6px 8px;
+      font-size:13.5px;
+      font-family:inherit;
+    }
+    .shopTable input[type="number"]{width:90px}
+    .rowSaveStatus{font-size:11px; color:var(--muted); margin-left:8px}
+    .rowSaveStatus.isError{color:#b3261e}
+    .rowSaveStatus.isOk{color:#2f8f6a}
+
+    .empty{color:var(--muted); font-size:14px; padding:20px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GAV — Stock &amp; ventes à Clamart</h1>
+
+    <div id="loginView">
+      <div class="card">
+        <form id="loginForm">
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="username" />
+          </div>
+          <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" required autocomplete="current-password" />
+          </div>
+          <p class="errorText" id="loginError"></p>
+          <button type="submit" class="btn" id="loginBtn">Se connecter</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashView">
+      <div class="topBar">
+        <span class="who" id="whoAmI"></span>
+        <button class="btn btnGhost" id="logoutBtn">Se déconnecter</button>
+      </div>
+      <div class="card">
+        <table class="shopTable" id="shopTable">
+          <thead>
+            <tr>
+              <th>Boutique</th>
+              <th>Catégorie</th>
+              <th>Stock</th>
+              <th>Vendus</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="shopTableBody"></tbody>
+        </table>
+        <p class="empty" id="shopEmpty" hidden>Aucune boutique de Clamart trouvée.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // ⚠️ TODO (Florian) : mêmes valeurs que dans gav/video/index.html
+    // (Dashboard Supabase → Project Settings → API).
+    const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const loginView = document.getElementById("loginView");
+    const dashView = document.getElementById("dashView");
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+    const loginBtn = document.getElementById("loginBtn");
+    const whoAmI = document.getElementById("whoAmI");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const tableBody = document.getElementById("shopTableBody");
+    const emptyEl = document.getElementById("shopEmpty");
+
+    // Pas de .eq("is_active", true) : l'admin doit aussi voir les
+    // boutiques désactivées (sinon elles disparaîtraient silencieusement
+    // de cette page) — voir la policy "admin can read all shops".
+    async function loadShops() {
+      const { data, error } = await supabase
+        .from("shop_directory")
+        .select("id, name, address, category, stock_quantity, units_sold")
+        .ilike("city", "clamart")
+        .order("name", { ascending: true });
+
+      if (error) {
+        tableBody.innerHTML = "";
+        emptyEl.hidden = false;
+        emptyEl.textContent = "Erreur de chargement : " + error.message;
+        return;
+      }
+
+      const shops = data ?? [];
+      if (shops.length === 0) {
+        tableBody.innerHTML = "";
+        emptyEl.hidden = false;
+        emptyEl.textContent = "Aucune boutique de Clamart trouvée.";
+        return;
+      }
+
+      emptyEl.hidden = true;
+      tableBody.innerHTML = "";
+      for (const shop of shops) {
+        const tr = document.createElement("tr");
+        tr.dataset.id = shop.id;
+        tr.innerHTML = `
+          <td>${shop.name}${shop.address ? `<br><span style="color:var(--muted);font-size:12px">${shop.address}</span>` : ""}</td>
+          <td><input type="text" class="rowCategory" value="${shop.category ?? ""}" /></td>
+          <td><input type="number" min="0" step="1" class="rowStock" value="${shop.stock_quantity ?? 0}" /></td>
+          <td><input type="number" min="0" step="1" class="rowSold" value="${shop.units_sold ?? 0}" /></td>
+          <td>
+            <button type="button" class="btn btnSmall rowSave">Enregistrer</button>
+            <span class="rowSaveStatus"></span>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      }
+    }
+
+    function clampNonNegativeInt(value) {
+      const n = parseInt(value, 10);
+      return Number.isFinite(n) && n >= 0 ? n : 0;
+    }
+
+    tableBody.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".rowSave");
+      if (!btn) return;
+      const tr = btn.closest("tr");
+      const id = tr.dataset.id;
+      const statusEl = tr.querySelector(".rowSaveStatus");
+      const category = tr.querySelector(".rowCategory").value.trim();
+      const stock_quantity = clampNonNegativeInt(tr.querySelector(".rowStock").value);
+      const units_sold = clampNonNegativeInt(tr.querySelector(".rowSold").value);
+      tr.querySelector(".rowStock").value = stock_quantity;
+      tr.querySelector(".rowSold").value = units_sold;
+
+      btn.disabled = true;
+      statusEl.textContent = "Enregistrement…";
+      statusEl.className = "rowSaveStatus";
+
+      const { error } = await supabase
+        .from("shop_directory")
+        .update({
+          category: category || null,
+          stock_quantity,
+          units_sold,
+          stock_updated_at: new Date().toISOString(),
+        })
+        .eq("id", id);
+
+      btn.disabled = false;
+      if (error) {
+        statusEl.textContent = "Erreur : " + error.message;
+        statusEl.className = "rowSaveStatus isError";
+        return;
+      }
+      statusEl.textContent = "Enregistré ✓";
+      statusEl.className = "rowSaveStatus isOk";
+    });
+
+    async function enterDashboard(session) {
+      loginView.style.display = "none";
+      dashView.style.display = "block";
+      whoAmI.textContent = `Connecté en tant que ${session.user.email}`;
+      await loadShops();
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginError.textContent = "";
+      loginBtn.disabled = true;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      loginBtn.disabled = false;
+      if (error) {
+        loginError.textContent = "Connexion impossible : " + error.message;
+        return;
+      }
+      await enterDashboard(data.session);
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      dashView.style.display = "none";
+      loginView.style.display = "block";
+      tableBody.innerHTML = "";
+    });
+
+    // Session déjà active (retour sur la page) ?
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      await enterDashboard(session);
+    }
+  </script>
+</body>
+</html>

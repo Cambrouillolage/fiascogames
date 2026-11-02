@@ -42,6 +42,23 @@ gtag('consent', 'default', {
   gtag('config', GA_MEASUREMENT_ID);
 })();
 
+// Événements dédiés "achat" pour la page GAV : en plus du cta_click
+// générique, on envoie un événement nommé distinct par intention d'achat
+// (Amazon / Philibert / Boutique / bouton principal générique), pour que
+// chacun apparaisse comme sa propre ligne dans Plausible (Site Settings →
+// Goals → Add custom event goal, avec exactement ce nom) sans dépendre des
+// props personnalisées (fonctionnalité payante chez Plausible).
+var ACHAT_PRINCIPAL_IDS = ['gav_nav_ou_acheter', 'gav_nav_acheter', 'gav_sticky_buy'];
+
+function plausibleAchatGoal(ctaId) {
+  if (!ctaId) return null;
+  if (ctaId.indexOf('amazon') !== -1) return 'Achat Amazon';
+  if (ctaId.indexOf('philibert') !== -1) return 'Achat Philibert';
+  if (ctaId.indexOf('boutique') !== -1) return 'Contact Boutique';
+  if (ACHAT_PRINCIPAL_IDS.indexOf(ctaId) !== -1) return 'Achat Principal';
+  return null;
+}
+
 function trackCta(el) {
   var payload = {
     cta_id: el.dataset.gaId,
@@ -55,6 +72,8 @@ function trackCta(el) {
   // n'existe pas et cette ligne ne fait rien.
   if (window.plausible) {
     plausible('cta_click', { props: payload });
+    var achatGoal = plausibleAchatGoal(el.dataset.gaId);
+    if (achatGoal) plausible(achatGoal);
   }
 }
 

@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GAV - Admin commerçants Clamart</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <!--
+    Page non liée dans la navigation du site. Ce n'est PAS la sécurité :
+    l'accès aux données est contrôlé par Supabase Auth + Row Level Security
+    (voir supabase/migrations/0005_clamart_categories.sql et
+    0006_clamart_merchants.sql) — un visiteur qui trouve cette URL ne voit
+    qu'un formulaire de connexion et ne peut lire ni modifier aucun
+    commerçant sans le compte admin. Couverte par la règle
+    "Disallow: /gav/admin/" de robots.txt (préfixe).
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#f3ede1;
+      --bg-2:#f9f5ec;
+      --dark:#131313;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container{width:min(1200px, calc(100% - 32px)); margin:0 auto; padding:28px 0 56px}
+    h1{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      font-size:clamp(26px, 5vw, 36px);
+      margin:0 0 18px;
+      color:var(--dark);
+    }
+    h2{font-size:17px; margin:0 0 14px}
+
+    .card{
+      border:2px solid var(--line);
+      border-radius:16px;
+      background:var(--white);
+      padding:20px;
+      margin-bottom:22px;
+    }
+
+    /* --- Connexion --- */
+    #loginView{max-width:380px; margin:60px auto 0}
+    #loginView .card{box-shadow:4px 5px 0 #c9822f; border-color:#dba25a}
+    #loginForm{display:flex; flex-direction:column; gap:12px}
+    #loginForm label{font-size:13px; font-weight:800; color:var(--muted)}
+    #loginForm input{
+      border:2px solid var(--line);
+      border-radius:10px;
+      padding:9px 12px;
+      font-size:14px;
+      font-family:inherit;
+    }
+    .btn{
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:12px;
+      padding:10px 16px;
+      font-weight:800;
+      font-size:13px;
+      cursor:pointer;
+      color:#fff;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
+      transition:transform .16s ease, filter .16s ease;
+    }
+    .btn:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .btn:active{transform:translateY(3px)}
+    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
+    .btnGhost{
+      background:transparent;
+      color:var(--ink);
+      border-color:var(--line);
+      box-shadow:none;
+    }
+    .btnDanger{
+      background:linear-gradient(180deg, #e8766a, #c43f2f);
+      box-shadow:0 5px 0 #8f2d20, 0 12px 22px rgba(196,63,47,.3);
+    }
+    .btnSmall{padding:6px 11px; font-size:12px; box-shadow:none; border-width:1.5px}
+    .errorText{color:#b3261e; font-size:13px; min-height:16px}
+
+    /* --- Dashboard --- */
+    #dashView{display:none}
+    .topBar{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; flex-wrap:wrap}
+    .who{font-size:13px; color:var(--muted)}
+
+    table{width:100%; border-collapse:collapse; font-size:13.5px}
+    th{
+      text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+      color:var(--muted); padding:8px 10px; border-bottom:2px solid var(--line);
+    }
+    td{padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:middle}
+    input[type="text"], input[type="number"], input[type="url"], select, textarea{
+      border:2px solid var(--line);
+      border-radius:8px;
+      padding:6px 8px;
+      font-size:13.5px;
+      font-family:inherit;
+      width:100%;
+    }
+    input[type="color"]{width:44px; height:30px; padding:2px; border-radius:8px; border:2px solid var(--line)}
+    .inline-num{width:70px}
+    .rowStatus{font-size:11px; color:var(--muted); margin-left:8px}
+    .rowStatus.isError{color:#b3261e}
+    .rowStatus.isOk{color:#2f8f6a}
+
+    .catColorDot{display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; vertical-align:middle}
+    .statusPill{display:inline-block; font-size:11px; font-weight:800; padding:2px 9px; border-radius:999px}
+    .statusPill.active{background:#dcf1e4; color:#2f8f6a}
+    .statusPill.inactive{background:#f1dcdc; color:#b3261e}
+    .lockPill{display:inline-block; font-size:11px; font-weight:800; padding:2px 9px; border-radius:999px; white-space:nowrap}
+    .lockPill.locked{background:#f1dcdc; color:#b3261e}
+    .lockPill.unlocked{background:#dcf1e4; color:#2f8f6a}
+    .stockRow{display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11px; color:var(--text-dim, #888)}
+    .stockRow label{margin:0}
+    .catSubRow .catLabel{padding-left:18px}
+
+    .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center}
+    .toolbar input, .toolbar select{width:auto; min-width:160px}
+
+    .empty{color:var(--muted); font-size:14px; padding:20px}
+
+    /* --- Formulaire commerçant (ajout/édition) --- */
+    #merchantForm{display:none}
+    #merchantForm.isOpen{display:block}
+    .formGrid{display:grid; grid-template-columns:1fr 1fr; gap:12px 16px}
+    @media (max-width:700px){.formGrid{grid-template-columns:1fr}}
+    .formGrid .span2{grid-column:1 / -1}
+    .formGrid label{display:block; font-size:12px; font-weight:800; color:var(--muted); margin-bottom:4px}
+    .formActions{display:flex; gap:10px; margin-top:16px; align-items:center}
+    .hint{font-size:11.5px; color:var(--muted); margin-top:4px}
+    .checkRow{display:flex; align-items:center; gap:8px; font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GAV — Commerçants de Clamart</h1>
+
+    <div id="loginView">
+      <div class="card">
+        <form id="loginForm">
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="username" />
+          </div>
+          <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" required autocomplete="current-password" />
+          </div>
+          <p class="errorText" id="loginError"></p>
+          <button type="submit" class="btn" id="loginBtn">Se connecter</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashView">
+      <div class="topBar">
+        <span class="who" id="whoAmI"></span>
+        <button class="btn btnGhost" id="logoutBtn">Se déconnecter</button>
+      </div>
+
+      <div class="card">
+        <h2>Catégories</h2>
+        <div class="toolbar">
+          <input type="text" id="catSearchInput" placeholder="Rechercher une catégorie ou sous-catégorie…" style="min-width:280px" />
+          <span class="rowStatus" id="catCount"></span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Icône</th><th>Nom</th><th>Couleur</th><th>Parent</th><th>Ordre</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="catTableBody"></tbody>
+        </table>
+        <p style="margin-top:14px">
+          <button type="button" class="btn btnGhost btnSmall" id="addCatBtn">+ Ajouter une catégorie</button>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Commerçants</h2>
+        <div class="toolbar">
+          <input type="text" id="searchInput" placeholder="Rechercher un nom…" />
+          <select id="filterCategory"><option value="">Toutes catégories</option></select>
+          <select id="filterSubcategory"><option value="">Toutes sous-catégories</option></select>
+          <select id="filterStatus">
+            <option value="">Tous statuts</option>
+            <option value="active">Actif</option>
+            <option value="inactive">Inactif</option>
+          </select>
+          <select id="filterLocked">
+            <option value="">Verrouillage : tous</option>
+            <option value="locked">🔒 Verrouillés</option>
+            <option value="unlocked">🔓 Déverrouillés</option>
+          </select>
+          <button type="button" class="btn btnSmall" id="addMerchantBtn" style="margin-left:auto">+ Ajouter un commerçant</button>
+        </div>
+
+        <div class="card" id="merchantForm" style="background:var(--bg-2)">
+          <h2 id="formTitle">Nouveau commerçant</h2>
+          <input type="hidden" id="f_id" />
+          <div class="formGrid">
+            <div>
+              <label for="f_name">Nom du commerce *</label>
+              <input type="text" id="f_name" required />
+            </div>
+            <div>
+              <label for="f_category">Catégorie principale *</label>
+              <select id="f_category" required></select>
+            </div>
+            <div>
+              <label for="f_subcategory">Sous-catégorie</label>
+              <select id="f_subcategory"><option value="">Aucune</option></select>
+            </div>
+            <div>
+              <label for="f_status">Statut</label>
+              <select id="f_status">
+                <option value="active">Actif</option>
+                <option value="inactive">Inactif</option>
+              </select>
+            </div>
+            <div class="span2">
+              <label for="f_description">Spécialité / description courte</label>
+              <input type="text" id="f_description" placeholder="Ex. Restaurant italien" />
+            </div>
+            <div class="span2">
+              <label for="f_address">Adresse</label>
+              <input type="text" id="f_address" placeholder="12 rue Exemple" />
+            </div>
+            <div>
+              <label for="f_postal">Code postal</label>
+              <input type="text" id="f_postal" value="92140" />
+            </div>
+            <div>
+              <label for="f_city">Ville</label>
+              <input type="text" id="f_city" value="Clamart" />
+            </div>
+            <div>
+              <label for="f_lat">Latitude</label>
+              <input type="text" id="f_lat" />
+            </div>
+            <div>
+              <label for="f_lon">Longitude</label>
+              <input type="text" id="f_lon" />
+            </div>
+            <div class="span2">
+              <div class="checkRow">
+                <input type="checkbox" id="f_manual" />
+                <label for="f_manual" style="margin:0">Position validée manuellement (un nouveau géocodage ne l'écrasera pas)</label>
+              </div>
+              <button type="button" class="btn btnGhost btnSmall" id="geocodeBtn" style="margin-top:8px">Géocoder à partir de l'adresse</button>
+              <span class="rowStatus" id="geocodeStatus"></span>
+            </div>
+            <div>
+              <label for="f_photo">Photo / logo (URL)</label>
+              <input type="url" id="f_photo" placeholder="https://…" />
+            </div>
+            <div>
+              <label for="f_website">Site internet</label>
+              <input type="url" id="f_website" placeholder="https://…" />
+            </div>
+            <div class="span2">
+              <label for="f_badgeId">Badge cartoon (marqueur sur la carte)</label>
+              <div style="display:flex; align-items:center; gap:10px">
+                <img id="f_badgePreview" alt="" style="width:44px; height:44px; flex-shrink:0" />
+                <select id="f_badgeId" style="flex:1"></select>
+              </div>
+              <p class="hint">Affiché tel quel sur la carte (marqueur) et sur la fiche commerce. Par défaut : badge « Boutique généraliste ».</p>
+            </div>
+            <div>
+              <label for="f_badgeIcon">Icône de repli (emoji, obsolète)</label>
+              <input type="text" id="f_badgeIcon" placeholder="Par défaut : celui de la catégorie" />
+            </div>
+            <div>
+              <label for="f_badgeColor">Couleur de repli (obsolète)</label>
+              <input type="color" id="f_badgeColor" />
+            </div>
+            <div>
+              <label for="f_pointerType">Type de pointeur</label>
+              <input type="text" id="f_pointerType" value="pin" />
+            </div>
+          </div>
+          <p class="errorText" id="formError"></p>
+          <div class="formActions">
+            <button type="button" class="btn" id="saveMerchantBtn">Enregistrer</button>
+            <button type="button" class="btn btnGhost" id="cancelFormBtn">Annuler</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Badge</th><th>Commerce</th><th>Catégorie</th><th>Adresse</th><th>Statut</th><th>GAV</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="merchantTableBody"></tbody>
+        </table>
+        <p class="empty" id="merchantEmpty" hidden></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { badgesClamart, badgesParId, badgeCategoriesClamart, BADGE_BASE_PATH, BADGE_DEFAULT_ID } from "./badgesClamart.js";
+
+    function badgeImgUrl(path) {
+      return BADGE_BASE_PATH + path;
+    }
+
+    const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const loginView = document.getElementById("loginView");
+    const dashView = document.getElementById("dashView");
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+    const loginBtn = document.getElementById("loginBtn");
+    const whoAmI = document.getElementById("whoAmI");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const catTableBody = document.getElementById("catTableBody");
+    const addCatBtn = document.getElementById("addCatBtn");
+
+    const merchantTableBody = document.getElementById("merchantTableBody");
+    const merchantEmpty = document.getElementById("merchantEmpty");
+    const searchInput = document.getElementById("searchInput");
+    const filterCategory = document.getElementById("filterCategory");
+    const filterSubcategory = document.getElementById("filterSubcategory");
+    const filterStatus = document.getElementById("filterStatus");
+    const filterLocked = document.getElementById("filterLocked");
+    const catSearchInput = document.getElementById("catSearchInput");
+    const catCount = document.getElementById("catCount");
+    const addMerchantBtn = document.getElementById("addMerchantBtn");
+    const merchantForm = document.getElementById("merchantForm");
+    const formTitle = document.getElementById("formTitle");
+    const formError = document.getElementById("formError");
+    const saveMerchantBtn = document.getElementById("saveMerchantBtn");
+    const cancelFormBtn = document.getElementById("cancelFormBtn");
+    const geocodeBtn = document.getElementById("geocodeBtn");
+    const geocodeStatus = document.getElementById("geocodeStatus");
+
+    let categories = [];
+    let merchants = [];
+
+    // ===== Badges cartoon (catalogue statique, pas une table Supabase) =====
+    const f_badgeId = document.getElementById("f_badgeId");
+    const f_badgePreview = document.getElementById("f_badgePreview");
+
+    f_badgeId.innerHTML = badgeCategoriesClamart
+      .map((cat) => {
+        const opts = badgesClamart
+          .filter((b) => b.categorie === cat.id)
+          .map((b) => `<option value="${b.id}">${b.nom}</option>`)
+          .join("");
+        return opts ? `<optgroup label="${cat.nom}">${opts}</optgroup>` : "";
+      })
+      .join("");
+
+    function updateBadgePreview() {
+      const badge = badgesParId[f_badgeId.value] ?? badgesParId[BADGE_DEFAULT_ID];
+      f_badgePreview.src = badgeImgUrl(badge.webp);
+      f_badgePreview.alt = badge.nom;
+    }
+    f_badgeId.addEventListener("change", updateBadgePreview);
+
+    // ===== Catégories =====
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from("clamart_categories")
+        .select("id, label, emoji, color, parent_id, sort_order, badge_id, public_landmark_hint")
+        .order("sort_order", { ascending: true });
+      if (error) {
+        catTableBody.innerHTML = `<tr><td colspan="6">Erreur : ${error.message}</td></tr>`;
+        return;
+      }
+      categories = data ?? [];
+      renderCategories();
+      renderCategorySelects();
+    }
+
+    // 193 catégories/sous-catégories au total depuis l'import de la
+    // taxonomie GAV : affichage groupé (principale puis ses sous-catégories
+    // indentées, triées par label) + filtre texte, plutôt que la longue
+    // liste plate d'origine (pensée pour une dizaine de lignes).
+    function renderCategories() {
+      const q = catSearchInput.value.trim().toLowerCase();
+      const mainCats = categories.filter((c) => !c.parent_id).sort((a, b) => a.sort_order - b.sort_order);
+
+      const rows = [];
+      for (const cat of mainCats) {
+        const subs = categories
+          .filter((c) => c.parent_id === cat.id)
+          .sort((a, b) => a.label.localeCompare(b.label, "fr"));
+        const matchSelf = !q || cat.label.toLowerCase().includes(q) || cat.id.includes(q);
+        const matchingSubs = q ? subs.filter((s) => s.label.toLowerCase().includes(q) || s.id.includes(q)) : subs;
+        if (!matchSelf && matchingSubs.length === 0) continue;
+        rows.push({ cat, isSub: false });
+        for (const s of matchSelf ? subs : matchingSubs) rows.push({ cat: s, isSub: true });
+      }
+
+      catCount.textContent = `${rows.length} ligne(s) affichée(s) sur ${categories.length}`;
+      catTableBody.innerHTML = "";
+      for (const { cat, isSub } of rows) {
+        const tr = document.createElement("tr");
+        if (isSub) tr.className = "catSubRow";
+        tr.dataset.id = cat.id;
+        const parentOptions = ['<option value="">— (principale)</option>']
+          .concat(
+            categories
+              .filter((c) => c.id !== cat.id && !c.parent_id)
+              .map((c) => `<option value="${c.id}" ${c.id === cat.parent_id ? "selected" : ""}>${c.label}</option>`)
+          )
+          .join("");
+        tr.innerHTML = `
+          <td><input type="text" class="catEmoji" value="${cat.emoji}" style="width:50px;text-align:center" /></td>
+          <td><input type="text" class="catLabel" value="${cat.label}" /></td>
+          <td><input type="color" class="catColor" value="${cat.color}" /></td>
+          <td><select class="catParent">${parentOptions}</select></td>
+          <td><input type="number" class="catOrder inline-num" value="${cat.sort_order}" /></td>
+          <td>
+            <button type="button" class="btn btnSmall catSave">Enregistrer</button>
+            <button type="button" class="btn btnGhost btnSmall catDelete">Suppr.</button>
+            <span class="rowStatus"></span>
+          </td>
+        `;
+        catTableBody.appendChild(tr);
+      }
+    }
+    catSearchInput.addEventListener("input", renderCategories);
+
+    function renderCategorySelects() {
+      const mainCats = categories.filter((c) => !c.parent_id).sort((a, b) => a.sort_order - b.sort_order);
+      filterCategory.innerHTML = '<option value="">Toutes catégories</option>' +
+        mainCats.map((c) => `<option value="${c.id}">${c.emoji} ${c.label} (${countForCategory(c.id)})</option>`).join("");
+      document.getElementById("f_category").innerHTML =
+        mainCats.map((c) => `<option value="${c.id}">${c.emoji} ${c.label}</option>`).join("");
+      updateSubcategoryOptions();
+      updateFilterSubcategoryOptions();
+    }
+
+    function countForCategory(catId) {
+      return merchants.filter((m) => m.category_id === catId).length;
+    }
+
+    function updateSubcategoryOptions() {
+      const catId = document.getElementById("f_category").value;
+      const subs = categories.filter((c) => c.parent_id === catId).sort((a, b) => a.label.localeCompare(b.label, "fr"));
+      const sel = document.getElementById("f_subcategory");
+      sel.innerHTML = '<option value="">Aucune</option>' + subs.map((c) => `<option value="${c.id}">${c.emoji} ${c.label}</option>`).join("");
+    }
+    document.getElementById("f_category").addEventListener("change", updateSubcategoryOptions);
+
+    // Filtre sous-catégorie du tableau des commerçants : dépend de la
+    // catégorie principale sélectionnée dans le filtre (vide = toutes).
+    function updateFilterSubcategoryOptions() {
+      const catId = filterCategory.value;
+      const subs = (catId ? categories.filter((c) => c.parent_id === catId) : categories.filter((c) => c.parent_id))
+        .sort((a, b) => a.label.localeCompare(b.label, "fr"));
+      const current = filterSubcategory.value;
+      filterSubcategory.innerHTML = '<option value="">Toutes sous-catégories</option>' +
+        subs.map((c) => `<option value="${c.id}">${c.emoji} ${c.label}</option>`).join("");
+      if (subs.some((s) => s.id === current)) filterSubcategory.value = current;
+    }
+
+    catTableBody.addEventListener("click", async (e) => {
+      const tr = e.target.closest("tr");
+      if (!tr) return;
+      const id = tr.dataset.id;
+      const statusEl = tr.querySelector(".rowStatus");
+
+      if (e.target.closest(".catSave")) {
+        const label = tr.querySelector(".catLabel").value.trim();
+        const emoji = tr.querySelector(".catEmoji").value.trim();
+        const color = tr.querySelector(".catColor").value;
+        const parent_id = tr.querySelector(".catParent").value || null;
+        const sort_order = parseInt(tr.querySelector(".catOrder").value, 10) || 0;
+        statusEl.textContent = "Enregistrement…";
+        statusEl.className = "rowStatus";
+        const { error } = await supabase.from("clamart_categories")
+          .update({ label, emoji, color, parent_id, sort_order }).eq("id", id);
+        if (error) {
+          statusEl.textContent = "Erreur : " + error.message;
+          statusEl.className = "rowStatus isError";
+          return;
+        }
+        statusEl.textContent = "Enregistré ✓";
+        statusEl.className = "rowStatus isOk";
+        await loadCategories();
+      }
+
+      if (e.target.closest(".catDelete")) {
+        if (!confirm(`Supprimer la catégorie "${id}" ? Impossible si des commerçants ou sous-catégories y sont encore rattachés.`)) return;
+        const { error } = await supabase.from("clamart_categories").delete().eq("id", id);
+        if (error) {
+          statusEl.textContent = "Erreur : " + error.message;
+          statusEl.className = "rowStatus isError";
+          return;
+        }
+        await loadCategories();
+      }
+    });
+
+    addCatBtn.addEventListener("click", async () => {
+      const id = prompt("Identifiant (slug, ex. \"italien\") :");
+      if (!id) return;
+      const label = prompt("Nom affiché :") || id;
+      const { error } = await supabase.from("clamart_categories")
+        .insert({ id: id.trim().toLowerCase(), label, emoji: "📍", color: "#9ca3af", sort_order: categories.length + 1 });
+      if (error) {
+        alert("Erreur : " + error.message);
+        return;
+      }
+      await loadCategories();
+    });
+
+    // ===== Commerçants =====
+    async function loadMerchants() {
+      const { data, error } = await supabase
+        .from("clamart_merchants")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) {
+        merchantTableBody.innerHTML = "";
+        merchantEmpty.hidden = false;
+        merchantEmpty.textContent = "Erreur de chargement : " + error.message;
+        return;
+      }
+      merchants = data ?? [];
+      renderCategorySelects();
+      renderMerchants();
+    }
+
+    function categoryLabel(id) {
+      const c = categories.find((cat) => cat.id === id);
+      return c ? `${c.emoji} ${c.label}` : id ?? "—";
+    }
+
+    function renderMerchants() {
+      const search = searchInput.value.trim().toLowerCase();
+      const catFilter = filterCategory.value;
+      const subFilter = filterSubcategory.value;
+      const statusFilter = filterStatus.value;
+      const lockedFilter = filterLocked.value;
+
+      const filtered = merchants.filter((m) => {
+        if (search && !m.name.toLowerCase().includes(search)) return false;
+        if (catFilter && m.category_id !== catFilter) return false;
+        if (subFilter && m.subcategory_id !== subFilter) return false;
+        if (statusFilter && m.status !== statusFilter) return false;
+        if (lockedFilter === "locked" && !m.is_locked) return false;
+        if (lockedFilter === "unlocked" && m.is_locked) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        merchantTableBody.innerHTML = "";
+        merchantEmpty.hidden = false;
+        merchantEmpty.textContent = merchants.length === 0 ? "Aucun commerçant pour le moment." : "Aucun résultat pour ces filtres.";
+        return;
+      }
+      merchantEmpty.hidden = true;
+
+      merchantTableBody.innerHTML = "";
+      for (const m of filtered) {
+        const badge = badgesParId[m.badge_id] ?? badgesParId[BADGE_DEFAULT_ID];
+        const tr = document.createElement("tr");
+        tr.dataset.id = m.id;
+        tr.innerHTML = `
+          <td><img src="${badgeImgUrl(badge.webp)}" alt="${badge.nom}" title="${badge.nom}" width="32" height="32" /></td>
+          <td>${m.name}</td>
+          <td>${categoryLabel(m.category_id)}</td>
+          <td>${m.address ?? ""} ${m.postal_code ?? ""} ${m.city ?? ""}</td>
+          <td><span class="statusPill ${m.status}">${m.status === "active" ? "Actif" : "Inactif"}</span></td>
+          <td>
+            <span class="lockPill ${m.is_locked ? "locked" : "unlocked"}">${m.is_locked ? "🔒 Verrouillé" : "🔓 Revendeur GAV"}</span>
+            <div class="stockRow" title="Nombre d'exemplaires de GAV en stock (affiché sur la carte publique une fois le commerce déverrouillé)">
+              <label>Stock</label>
+              <input type="number" min="0" step="1" class="mStockInput" value="${m.gav_stock_quantity ?? ""}" style="width:56px" />
+            </div>
+          </td>
+          <td>
+            <button type="button" class="btn btnGhost btnSmall mEdit">Modifier</button>
+            <button type="button" class="btn btnGhost btnSmall mToggle">${m.status === "active" ? "Désactiver" : "Activer"}</button>
+            <button type="button" class="btn btnGhost btnSmall mToggleLock">${m.is_locked ? "Déverrouiller" : "Reverrouiller"}</button>
+            <button type="button" class="btn btnDanger btnSmall mDelete">Supprimer</button>
+            <a class="btn btnGhost btnSmall" href="../../../clamart/?merchant=${m.id}" target="_blank" rel="noopener">Voir sur la carte</a>
+          </td>
+        `;
+        merchantTableBody.appendChild(tr);
+      }
+    }
+
+    searchInput.addEventListener("input", renderMerchants);
+    filterCategory.addEventListener("change", () => {
+      updateFilterSubcategoryOptions();
+      renderMerchants();
+    });
+    filterSubcategory.addEventListener("change", renderMerchants);
+    filterStatus.addEventListener("change", renderMerchants);
+    filterLocked.addEventListener("change", renderMerchants);
+
+    function openForm(merchant) {
+      formError.textContent = "";
+      geocodeStatus.textContent = "";
+      formTitle.textContent = merchant ? `Modifier « ${merchant.name} »` : "Nouveau commerçant";
+      document.getElementById("f_id").value = merchant?.id ?? "";
+      document.getElementById("f_name").value = merchant?.name ?? "";
+      document.getElementById("f_category").value = merchant?.category_id ?? categories.find((c) => !c.parent_id)?.id ?? "";
+      updateSubcategoryOptions();
+      document.getElementById("f_subcategory").value = merchant?.subcategory_id ?? "";
+      document.getElementById("f_status").value = merchant?.status ?? "active";
+      document.getElementById("f_description").value = merchant?.description ?? "";
+      document.getElementById("f_address").value = merchant?.address ?? "";
+      document.getElementById("f_postal").value = merchant?.postal_code ?? "92140";
+      document.getElementById("f_city").value = merchant?.city ?? "Clamart";
+      document.getElementById("f_lat").value = merchant?.lat ?? "";
+      document.getElementById("f_lon").value = merchant?.lon ?? "";
+      document.getElementById("f_manual").checked = merchant?.position_is_manual ?? false;
+      document.getElementById("f_photo").value = merchant?.photo_url ?? "";
+      document.getElementById("f_website").value = merchant?.website ?? "";
+      document.getElementById("f_badgeIcon").value = merchant?.badge_icon ?? "";
+      document.getElementById("f_badgeColor").value = merchant?.badge_color ?? "#ea6f11";
+      f_badgeId.value = merchant?.badge_id ?? BADGE_DEFAULT_ID;
+      updateBadgePreview();
+      document.getElementById("f_pointerType").value = merchant?.pointer_type ?? "pin";
+      merchantForm.classList.add("isOpen");
+      merchantForm.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function closeForm() {
+      merchantForm.classList.remove("isOpen");
+    }
+
+    addMerchantBtn.addEventListener("click", () => openForm(null));
+    cancelFormBtn.addEventListener("click", closeForm);
+
+    merchantTableBody.addEventListener("change", async (e) => {
+      if (!e.target.closest(".mStockInput")) return;
+      const tr = e.target.closest("tr");
+      const id = tr.dataset.id;
+      const raw = e.target.value.trim();
+      const value = raw === "" ? null : Math.max(0, parseInt(raw, 10) || 0);
+      const { error } = await supabase.from("clamart_merchants")
+        .update({ gav_stock_quantity: value, updated_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) { alert("Erreur : " + error.message); return; }
+      const merchant = merchants.find((m) => m.id === id);
+      if (merchant) merchant.gav_stock_quantity = value;
+    });
+
+    merchantTableBody.addEventListener("click", async (e) => {
+      const tr = e.target.closest("tr");
+      if (!tr) return;
+      const id = tr.dataset.id;
+      const merchant = merchants.find((m) => m.id === id);
+
+      if (e.target.closest(".mEdit")) {
+        openForm(merchant);
+      }
+
+      if (e.target.closest(".mToggle")) {
+        const newStatus = merchant.status === "active" ? "inactive" : "active";
+        const { error } = await supabase.from("clamart_merchants").update({ status: newStatus, updated_at: new Date().toISOString() }).eq("id", id);
+        if (error) { alert("Erreur : " + error.message); return; }
+        await loadMerchants();
+      }
+
+      if (e.target.closest(".mToggleLock")) {
+        // Le déverrouillage n'est jamais un simple interrupteur : il trace
+        // la confirmation du stock GAV (gav_stock_confirmed_at), condition
+        // posée par l'utilisateur pour que ce soit gérable mais pas
+        // accidentel.
+        if (merchant.is_locked) {
+          if (!confirm(`Confirmer que "${merchant.name}" a du stock GAV vérifié et déverrouiller sa fiche ?`)) return;
+          const { error } = await supabase.from("clamart_merchants")
+            .update({ is_locked: false, gav_stock_confirmed_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+            .eq("id", id);
+          if (error) { alert("Erreur : " + error.message); return; }
+        } else {
+          if (!confirm(`Reverrouiller "${merchant.name}" ? (ex. erreur de confirmation, rupture de stock GAV)`)) return;
+          const { error } = await supabase.from("clamart_merchants")
+            .update({ is_locked: true, updated_at: new Date().toISOString() })
+            .eq("id", id);
+          if (error) { alert("Erreur : " + error.message); return; }
+        }
+        await loadMerchants();
+      }
+
+      if (e.target.closest(".mDelete")) {
+        if (!confirm(`Supprimer définitivement "${merchant.name}" ?`)) return;
+        const { error } = await supabase.from("clamart_merchants").delete().eq("id", id);
+        if (error) { alert("Erreur : " + error.message); return; }
+        await loadMerchants();
+      }
+    });
+
+    // Toute modification manuelle de lat/lon pose position_is_manual à true
+    // automatiquement (évite qu'un futur géocodage écrase une correction).
+    ["f_lat", "f_lon"].forEach((fieldId) => {
+      document.getElementById(fieldId).addEventListener("input", () => {
+        document.getElementById("f_manual").checked = true;
+      });
+    });
+
+    geocodeBtn.addEventListener("click", async () => {
+      const address = document.getElementById("f_address").value.trim();
+      const postal = document.getElementById("f_postal").value.trim();
+      const city = document.getElementById("f_city").value.trim();
+      if (!address) {
+        geocodeStatus.textContent = "Renseigne une adresse d'abord.";
+        geocodeStatus.className = "rowStatus isError";
+        return;
+      }
+      const q = encodeURIComponent(`${address} ${postal} ${city}`);
+      geocodeStatus.textContent = "Recherche…";
+      geocodeStatus.className = "rowStatus";
+      try {
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${q}&limit=1`);
+        const json = await res.json();
+        const feature = json.features?.[0];
+        if (!feature) {
+          geocodeStatus.textContent = "Adresse introuvable.";
+          geocodeStatus.className = "rowStatus isError";
+          return;
+        }
+        const [lon, lat] = feature.geometry.coordinates;
+        document.getElementById("f_lat").value = lat.toFixed(6);
+        document.getElementById("f_lon").value = lon.toFixed(6);
+        geocodeStatus.textContent = `Trouvé : ${feature.properties.label} ✓`;
+        geocodeStatus.className = "rowStatus isOk";
+      } catch (err) {
+        geocodeStatus.textContent = "Erreur réseau : " + err.message;
+        geocodeStatus.className = "rowStatus isError";
+      }
+    });
+
+    saveMerchantBtn.addEventListener("click", async () => {
+      formError.textContent = "";
+      const id = document.getElementById("f_id").value || null;
+      const name = document.getElementById("f_name").value.trim();
+      const category_id = document.getElementById("f_category").value;
+      if (!name || !category_id) {
+        formError.textContent = "Nom et catégorie principale sont obligatoires.";
+        return;
+      }
+      const lat = document.getElementById("f_lat").value;
+      const lon = document.getElementById("f_lon").value;
+
+      const payload = {
+        name,
+        category_id,
+        subcategory_id: document.getElementById("f_subcategory").value || null,
+        status: document.getElementById("f_status").value,
+        description: document.getElementById("f_description").value.trim() || null,
+        address: document.getElementById("f_address").value.trim() || null,
+        postal_code: document.getElementById("f_postal").value.trim() || null,
+        city: document.getElementById("f_city").value.trim() || "Clamart",
+        lat: lat ? parseFloat(lat) : null,
+        lon: lon ? parseFloat(lon) : null,
+        position_is_manual: document.getElementById("f_manual").checked,
+        photo_url: document.getElementById("f_photo").value.trim() || null,
+        website: document.getElementById("f_website").value.trim() || null,
+        badge_icon: document.getElementById("f_badgeIcon").value.trim() || null,
+        badge_color: document.getElementById("f_badgeColor").value || null,
+        badge_id: f_badgeId.value || null,
+        pointer_type: document.getElementById("f_pointerType").value.trim() || "pin",
+        updated_at: new Date().toISOString(),
+      };
+
+      saveMerchantBtn.disabled = true;
+      const { error } = id
+        ? await supabase.from("clamart_merchants").update(payload).eq("id", id)
+        : await supabase.from("clamart_merchants").insert(payload);
+      saveMerchantBtn.disabled = false;
+
+      if (error) {
+        formError.textContent = "Erreur : " + error.message;
+        return;
+      }
+      closeForm();
+      await loadMerchants();
+    });
+
+    // ===== Connexion =====
+    async function enterDashboard(session) {
+      loginView.style.display = "none";
+      dashView.style.display = "block";
+      whoAmI.textContent = `Connecté en tant que ${session.user.email}`;
+      await loadCategories();
+      await loadMerchants();
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginError.textContent = "";
+      loginBtn.disabled = true;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      loginBtn.disabled = false;
+      if (error) {
+        loginError.textContent = "Connexion impossible : " + error.message;
+        return;
+      }
+      await enterDashboard(data.session);
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      dashView.style.display = "none";
+      loginView.style.display = "block";
+    });
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      await enterDashboard(session);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1060 @@
+{
+  "nom": "Badges cartoon pour la carte interactive de Clamart",
+  "version": "1.0.0",
+  "langue": "fr",
+  "total": 97,
+  "style": "rond cartoon coloré, icône centrale, sans pointeur, fond extérieur transparent",
+  "formats": {
+    "png": "256x256 RGBA",
+    "webp": "128x128 RGBA"
+  },
+  "categories": [
+    {
+      "id": "restaurants_bars",
+      "nom": "Restaurants et bars",
+      "nombre": 9
+    },
+    {
+      "id": "alimentation",
+      "nom": "Alimentation",
+      "nombre": 16
+    },
+    {
+      "id": "shopping",
+      "nom": "Shopping et boutiques",
+      "nombre": 10
+    },
+    {
+      "id": "maison_bricolage",
+      "nom": "Maison et bricolage",
+      "nombre": 5
+    },
+    {
+      "id": "beaute_bien_etre",
+      "nom": "Beauté et bien-être",
+      "nombre": 6
+    },
+    {
+      "id": "sante",
+      "nom": "Santé",
+      "nombre": 8
+    },
+    {
+      "id": "sports",
+      "nom": "Sports",
+      "nombre": 3
+    },
+    {
+      "id": "culture_loisirs",
+      "nom": "Culture et loisirs",
+      "nombre": 9
+    },
+    {
+      "id": "services",
+      "nom": "Services et utilitaires",
+      "nombre": 8
+    },
+    {
+      "id": "mobilite",
+      "nom": "Mobilité et transports",
+      "nombre": 7
+    },
+    {
+      "id": "education_enfance",
+      "nom": "Éducation et enfance",
+      "nombre": 4
+    },
+    {
+      "id": "services_publics",
+      "nom": "Services publics",
+      "nombre": 6
+    },
+    {
+      "id": "religion",
+      "nom": "Lieux de culte",
+      "nombre": 3
+    },
+    {
+      "id": "nature",
+      "nom": "Nature et environnement",
+      "nombre": 2
+    },
+    {
+      "id": "interface",
+      "nom": "Interface et statuts",
+      "nombre": 1
+    }
+  ],
+  "badges": [
+    {
+      "id": "restaurant",
+      "nom": "Restaurant",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/restaurant.png",
+      "icon_webp": "/badges_webp/restaurants_bars/restaurant.webp",
+      "couleur": "#FD9C3F",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "cafe",
+      "nom": "Café",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/cafe.png",
+      "icon_webp": "/badges_webp/restaurants_bars/cafe.webp",
+      "couleur": "#A15F38",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "bar",
+      "nom": "Bar / pub",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/bar.png",
+      "icon_webp": "/badges_webp/restaurants_bars/bar.webp",
+      "couleur": "#FDD328",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "pizzeria",
+      "nom": "Pizzeria",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/pizzeria.png",
+      "icon_webp": "/badges_webp/restaurants_bars/pizzeria.webp",
+      "couleur": "#FB523A",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "burger",
+      "nom": "Burger / fast-food",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/burger.png",
+      "icon_webp": "/badges_webp/restaurants_bars/burger.webp",
+      "couleur": "#FC8A3D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "japonais",
+      "nom": "Restaurant japonais",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/japonais.png",
+      "icon_webp": "/badges_webp/restaurants_bars/japonais.webp",
+      "couleur": "#FC7F88",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "asiatique",
+      "nom": "Restaurant asiatique",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/asiatique.png",
+      "icon_webp": "/badges_webp/restaurants_bars/asiatique.webp",
+      "couleur": "#A573F8",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "cuisine_du_monde",
+      "nom": "Cuisine du monde",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/cuisine_du_monde.png",
+      "icon_webp": "/badges_webp/restaurants_bars/cuisine_du_monde.webp",
+      "couleur": "#FDD437",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "boulangerie",
+      "nom": "Boulangerie (croissant)",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/boulangerie.png",
+      "icon_webp": "/badges_webp/alimentation/boulangerie.webp",
+      "couleur": "#FC7C9F",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "boulanger",
+      "nom": "Boulanger / pain",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/boulanger.png",
+      "icon_webp": "/badges_webp/alimentation/boulanger.webp",
+      "couleur": "#FCBB55",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "patisserie",
+      "nom": "Pâtisserie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/patisserie.png",
+      "icon_webp": "/badges_webp/alimentation/patisserie.webp",
+      "couleur": "#FDA0C1",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "glacier",
+      "nom": "Glacier",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/glacier.png",
+      "icon_webp": "/badges_webp/alimentation/glacier.webp",
+      "couleur": "#46E0DD",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "epicerie",
+      "nom": "Épicerie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/epicerie.png",
+      "icon_webp": "/badges_webp/alimentation/epicerie.webp",
+      "couleur": "#64D440",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "supermarche",
+      "nom": "Supermarché",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/supermarche.png",
+      "icon_webp": "/badges_webp/alimentation/supermarche.webp",
+      "couleur": "#33A9FA",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "boucherie",
+      "nom": "Boucherie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/boucherie.png",
+      "icon_webp": "/badges_webp/alimentation/boucherie.webp",
+      "couleur": "#F74F3B",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "charcuterie",
+      "nom": "Charcuterie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/charcuterie.png",
+      "icon_webp": "/badges_webp/alimentation/charcuterie.webp",
+      "couleur": "#FD886D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "fromagerie",
+      "nom": "Fromagerie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/fromagerie.png",
+      "icon_webp": "/badges_webp/alimentation/fromagerie.webp",
+      "couleur": "#FDC413",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "poissonnerie",
+      "nom": "Poissonnerie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/poissonnerie.png",
+      "icon_webp": "/badges_webp/alimentation/poissonnerie.webp",
+      "couleur": "#2291F2",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "primeur",
+      "nom": "Primeur / fruits et légumes",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/primeur.png",
+      "icon_webp": "/badges_webp/alimentation/primeur.webp",
+      "couleur": "#4BD66E",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "caviste",
+      "nom": "Caviste",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/caviste.png",
+      "icon_webp": "/badges_webp/alimentation/caviste.webp",
+      "couleur": "#A675F6",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "bio",
+      "nom": "Produits bio",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/bio.png",
+      "icon_webp": "/badges_webp/alimentation/bio.webp",
+      "couleur": "#B56A34",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "produits_locaux",
+      "nom": "Produits locaux",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/produits_locaux.png",
+      "icon_webp": "/badges_webp/alimentation/produits_locaux.webp",
+      "couleur": "#BDF16F",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "chocolaterie",
+      "nom": "Chocolaterie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/chocolaterie.png",
+      "icon_webp": "/badges_webp/alimentation/chocolaterie.webp",
+      "couleur": "#A56339",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "confiserie",
+      "nom": "Confiserie",
+      "categorie": "alimentation",
+      "categorie_label": "Alimentation",
+      "icon_png": "/badges/alimentation/confiserie.png",
+      "icon_webp": "/badges_webp/alimentation/confiserie.webp",
+      "couleur": "#FC81B4",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "boutique",
+      "nom": "Boutique généraliste",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/boutique.png",
+      "icon_webp": "/badges_webp/shopping/boutique.webp",
+      "couleur": "#FC82B3",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "vetements",
+      "nom": "Vêtements",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/vetements.png",
+      "icon_webp": "/badges_webp/shopping/vetements.webp",
+      "couleur": "#A57AFB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "chaussures",
+      "nom": "Chaussures",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/chaussures.png",
+      "icon_webp": "/badges_webp/shopping/chaussures.webp",
+      "couleur": "#42A2F9",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "bijouterie",
+      "nom": "Bijouterie",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/bijouterie.png",
+      "icon_webp": "/badges_webp/shopping/bijouterie.webp",
+      "couleur": "#9A80FA",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "optique",
+      "nom": "Opticien",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/optique.png",
+      "icon_webp": "/badges_webp/sante/optique.webp",
+      "couleur": "#3ADDCB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "parfumerie",
+      "nom": "Parfumerie",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/parfumerie.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/parfumerie.webp",
+      "couleur": "#FC80A4",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "cosmetique",
+      "nom": "Cosmétiques",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/cosmetique.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/cosmetique.webp",
+      "couleur": "#FCA2CE",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "jouets",
+      "nom": "Magasin de jouets",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/jouets.png",
+      "icon_webp": "/badges_webp/shopping/jouets.webp",
+      "couleur": "#FD914D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "librairie",
+      "nom": "Librairie",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/librairie.png",
+      "icon_webp": "/badges_webp/culture_loisirs/librairie.webp",
+      "couleur": "#35A2F5",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "jeux_video",
+      "nom": "Jeux vidéo",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/jeux_video.png",
+      "icon_webp": "/badges_webp/culture_loisirs/jeux_video.webp",
+      "couleur": "#CA90FB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "telephonie",
+      "nom": "Téléphonie",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/telephonie.png",
+      "icon_webp": "/badges_webp/shopping/telephonie.webp",
+      "couleur": "#31D0FC",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "informatique",
+      "nom": "Informatique",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/informatique.png",
+      "icon_webp": "/badges_webp/shopping/informatique.webp",
+      "couleur": "#6EDEFB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "maison_deco",
+      "nom": "Décoration intérieure",
+      "categorie": "maison_bricolage",
+      "categorie_label": "Maison et bricolage",
+      "icon_png": "/badges/maison_bricolage/maison_deco.png",
+      "icon_webp": "/badges_webp/maison_bricolage/maison_deco.webp",
+      "couleur": "#FD8C5E",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "luminaire",
+      "nom": "Luminaires",
+      "categorie": "maison_bricolage",
+      "categorie_label": "Maison et bricolage",
+      "icon_png": "/badges/maison_bricolage/luminaire.png",
+      "icon_webp": "/badges_webp/maison_bricolage/luminaire.webp",
+      "couleur": "#FDD639",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "bricolage",
+      "nom": "Bricolage",
+      "categorie": "maison_bricolage",
+      "categorie_label": "Maison et bricolage",
+      "icon_png": "/badges/maison_bricolage/bricolage.png",
+      "icon_webp": "/badges_webp/maison_bricolage/bricolage.webp",
+      "couleur": "#5EE6AD",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "jardinage",
+      "nom": "Jardinage",
+      "categorie": "maison_bricolage",
+      "categorie_label": "Maison et bricolage",
+      "icon_png": "/badges/maison_bricolage/jardinage.png",
+      "icon_webp": "/badges_webp/maison_bricolage/jardinage.webp",
+      "couleur": "#90E450",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "animalerie",
+      "nom": "Animalerie",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/animalerie.png",
+      "icon_webp": "/badges_webp/shopping/animalerie.webp",
+      "couleur": "#FC963D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "velo",
+      "nom": "Magasin de vélos",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/velo.png",
+      "icon_webp": "/badges_webp/mobilite/velo.webp",
+      "couleur": "#3CC6FB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "moto",
+      "nom": "Moto",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/moto.png",
+      "icon_webp": "/badges_webp/mobilite/moto.webp",
+      "couleur": "#FC7B62",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "automobile",
+      "nom": "Automobile",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/automobile.png",
+      "icon_webp": "/badges_webp/mobilite/automobile.webp",
+      "couleur": "#2AA7F6",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "station_service",
+      "nom": "Station-service",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/station_service.png",
+      "icon_webp": "/badges_webp/mobilite/station_service.webp",
+      "couleur": "#FCDB46",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "pneumatique",
+      "nom": "Pneumatiques",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/pneumatique.png",
+      "icon_webp": "/badges_webp/mobilite/pneumatique.webp",
+      "couleur": "#898E93",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "serrurerie",
+      "nom": "Serrurerie",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/serrurerie.png",
+      "icon_webp": "/badges_webp/services/serrurerie.webp",
+      "couleur": "#28D9C7",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "ameublement",
+      "nom": "Meubles",
+      "categorie": "maison_bricolage",
+      "categorie_label": "Maison et bricolage",
+      "icon_png": "/badges/maison_bricolage/ameublement.png",
+      "icon_webp": "/badges_webp/maison_bricolage/ameublement.webp",
+      "couleur": "#AD7AF9",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "coiffeur",
+      "nom": "Coiffeur",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/coiffeur.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/coiffeur.webp",
+      "couleur": "#FC6DA9",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "institut_beaute",
+      "nom": "Institut de beauté",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/institut_beaute.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/institut_beaute.webp",
+      "couleur": "#AE72F3",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "spa_bien_etre",
+      "nom": "Spa et bien-être",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/spa_bien_etre.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/spa_bien_etre.webp",
+      "couleur": "#73C842",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "salle_sport",
+      "nom": "Salle de sport",
+      "categorie": "sports",
+      "categorie_label": "Sports",
+      "icon_png": "/badges/sports/salle_sport.png",
+      "icon_webp": "/badges_webp/sports/salle_sport.webp",
+      "couleur": "#1C9AF5",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "massage",
+      "nom": "Massage",
+      "categorie": "beaute_bien_etre",
+      "categorie_label": "Beauté et bien-être",
+      "icon_png": "/badges/beaute_bien_etre/massage.png",
+      "icon_webp": "/badges_webp/beaute_bien_etre/massage.webp",
+      "couleur": "#FC7CB5",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "veterinaire",
+      "nom": "Vétérinaire",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/veterinaire.png",
+      "icon_webp": "/badges_webp/sante/veterinaire.webp",
+      "couleur": "#8EE2FC",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "photographe",
+      "nom": "Photographe",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/photographe.png",
+      "icon_webp": "/badges_webp/services/photographe.webp",
+      "couleur": "#FCDB37",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "arts_creatifs",
+      "nom": "Arts créatifs",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/arts_creatifs.png",
+      "icon_webp": "/badges_webp/culture_loisirs/arts_creatifs.webp",
+      "couleur": "#FC7A68",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "musique",
+      "nom": "Musique",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/musique.png",
+      "icon_webp": "/badges_webp/culture_loisirs/musique.webp",
+      "couleur": "#9D6CFB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "culture",
+      "nom": "Culture / spectacles",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/culture.png",
+      "icon_webp": "/badges_webp/culture_loisirs/culture.webp",
+      "couleur": "#FC9638",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "loisirs",
+      "nom": "Loisirs",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/loisirs.png",
+      "icon_webp": "/badges_webp/culture_loisirs/loisirs.webp",
+      "couleur": "#FC79AC",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "tourisme",
+      "nom": "Tourisme",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/tourisme.png",
+      "icon_webp": "/badges_webp/culture_loisirs/tourisme.webp",
+      "couleur": "#42DFE6",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "ecole",
+      "nom": "École",
+      "categorie": "education_enfance",
+      "categorie_label": "Éducation et enfance",
+      "icon_png": "/badges/education_enfance/ecole.png",
+      "icon_webp": "/badges_webp/education_enfance/ecole.webp",
+      "couleur": "#4EB7FC",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "college_lycee",
+      "nom": "Collège / lycée",
+      "categorie": "education_enfance",
+      "categorie_label": "Éducation et enfance",
+      "icon_png": "/badges/education_enfance/college_lycee.png",
+      "icon_webp": "/badges_webp/education_enfance/college_lycee.webp",
+      "couleur": "#B178F9",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "creche",
+      "nom": "Crèche",
+      "categorie": "education_enfance",
+      "categorie_label": "Éducation et enfance",
+      "icon_png": "/badges/education_enfance/creche.png",
+      "icon_webp": "/badges_webp/education_enfance/creche.webp",
+      "couleur": "#FC7EC5",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "mairie",
+      "nom": "Mairie",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/mairie.png",
+      "icon_webp": "/badges_webp/services_publics/mairie.webp",
+      "couleur": "#F5D49F",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "poste",
+      "nom": "La Poste",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/poste.png",
+      "icon_webp": "/badges_webp/services_publics/poste.webp",
+      "couleur": "#FDD72D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "commissariat",
+      "nom": "Commissariat",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/commissariat.png",
+      "icon_webp": "/badges_webp/services_publics/commissariat.webp",
+      "couleur": "#5BB7FC",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "pompier",
+      "nom": "Pompiers",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/pompier.png",
+      "icon_webp": "/badges_webp/services_publics/pompier.webp",
+      "couleur": "#FB524D",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "hopital",
+      "nom": "Hôpital",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/hopital.png",
+      "icon_webp": "/badges_webp/sante/hopital.webp",
+      "couleur": "#93E7FB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "pharmacie",
+      "nom": "Pharmacie",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/pharmacie.png",
+      "icon_webp": "/badges_webp/sante/pharmacie.webp",
+      "couleur": "#79E76E",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "sante",
+      "nom": "Santé / médecin",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/sante.png",
+      "icon_webp": "/badges_webp/sante/sante.webp",
+      "couleur": "#39DBD4",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "justice",
+      "nom": "Justice / tribunal",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/justice.png",
+      "icon_webp": "/badges_webp/services_publics/justice.webp",
+      "couleur": "#9F68F8",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "eglise",
+      "nom": "Église",
+      "categorie": "religion",
+      "categorie_label": "Lieux de culte",
+      "icon_png": "/badges/religion/eglise.png",
+      "icon_webp": "/badges_webp/religion/eglise.webp",
+      "couleur": "#F5DA94",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "mosquee",
+      "nom": "Mosquée",
+      "categorie": "religion",
+      "categorie_label": "Lieux de culte",
+      "icon_png": "/badges/religion/mosquee.png",
+      "icon_webp": "/badges_webp/religion/mosquee.webp",
+      "couleur": "#60DA57",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "synagogue",
+      "nom": "Synagogue",
+      "categorie": "religion",
+      "categorie_label": "Lieux de culte",
+      "icon_png": "/badges/religion/synagogue.png",
+      "icon_webp": "/badges_webp/religion/synagogue.webp",
+      "couleur": "#46B3FB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "complexe_sportif",
+      "nom": "Complexe sportif",
+      "categorie": "sports",
+      "categorie_label": "Sports",
+      "icon_png": "/badges/sports/complexe_sportif.png",
+      "icon_webp": "/badges_webp/sports/complexe_sportif.webp",
+      "couleur": "#31D9A1",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "piscine",
+      "nom": "Piscine",
+      "categorie": "sports",
+      "categorie_label": "Sports",
+      "icon_png": "/badges/sports/piscine.png",
+      "icon_webp": "/badges_webp/sports/piscine.webp",
+      "couleur": "#55E5F0",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "mediatheque",
+      "nom": "Médiathèque",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/mediatheque.png",
+      "icon_webp": "/badges_webp/culture_loisirs/mediatheque.webp",
+      "couleur": "#A978FA",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "parc",
+      "nom": "Parc",
+      "categorie": "nature",
+      "categorie_label": "Nature et environnement",
+      "icon_png": "/badges/nature/parc.png",
+      "icon_webp": "/badges_webp/nature/parc.webp",
+      "couleur": "#82E161",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "parking",
+      "nom": "Parking",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/parking.png",
+      "icon_webp": "/badges_webp/mobilite/parking.webp",
+      "couleur": "#3BAFFB",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "transport",
+      "nom": "Transports en commun",
+      "categorie": "mobilite",
+      "categorie_label": "Mobilité et transports",
+      "icon_png": "/badges/mobilite/transport.png",
+      "icon_webp": "/badges_webp/mobilite/transport.webp",
+      "couleur": "#FCA937",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "recyclage",
+      "nom": "Recyclage",
+      "categorie": "nature",
+      "categorie_label": "Nature et environnement",
+      "icon_png": "/badges/nature/recyclage.png",
+      "icon_webp": "/badges_webp/nature/recyclage.webp",
+      "couleur": "#5DD248",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "information",
+      "nom": "Information",
+      "categorie": "services_publics",
+      "categorie_label": "Services publics",
+      "icon_png": "/badges/services_publics/information.png",
+      "icon_webp": "/badges_webp/services_publics/information.webp",
+      "couleur": "#2D9BF6",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "association",
+      "nom": "Association",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/association.png",
+      "icon_webp": "/badges_webp/services/association.webp",
+      "couleur": "#9760F5",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "cadenas",
+      "nom": "Cadenas / verrouillé",
+      "categorie": "interface",
+      "categorie_label": "Interface et statuts",
+      "icon_png": "/badges/interface/cadenas.png",
+      "icon_webp": "/badges_webp/interface/cadenas.webp",
+      "couleur": "#959EAA",
+      "source_graphique": "planche_principale"
+    },
+    {
+      "id": "bar_cocktail",
+      "nom": "Bar à cocktails",
+      "categorie": "restaurants_bars",
+      "categorie_label": "Restaurants et bars",
+      "icon_png": "/badges/restaurants_bars/bar_cocktail.png",
+      "icon_webp": "/badges_webp/restaurants_bars/bar_cocktail.webp",
+      "couleur": "#FD6974",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "toilettage_animalier",
+      "nom": "Toilettage animalier",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/toilettage_animalier.png",
+      "icon_webp": "/badges_webp/services/toilettage_animalier.webp",
+      "couleur": "#FCF9FE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "pret_a_porter",
+      "nom": "Prêt-à-porter",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/pret_a_porter.png",
+      "icon_webp": "/badges_webp/shopping/pret_a_porter.webp",
+      "couleur": "#FBFDFE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "reparation",
+      "nom": "Réparation / dépannage",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/reparation.png",
+      "icon_webp": "/badges_webp/services/reparation.webp",
+      "couleur": "#FCFCFD",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "agence_immobiliere",
+      "nom": "Agence immobilière",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/agence_immobiliere.png",
+      "icon_webp": "/badges_webp/services/agence_immobiliere.webp",
+      "couleur": "#FEFEFE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "banque_assurance",
+      "nom": "Banque / assurance",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/banque_assurance.png",
+      "icon_webp": "/badges_webp/services/banque_assurance.webp",
+      "couleur": "#FEFEFE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "notaire",
+      "nom": "Notaire",
+      "categorie": "services",
+      "categorie_label": "Services et utilitaires",
+      "icon_png": "/badges/services/notaire.png",
+      "icon_webp": "/badges_webp/services/notaire.webp",
+      "couleur": "#FEAE44",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "dentiste",
+      "nom": "Dentiste",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/dentiste.png",
+      "icon_webp": "/badges_webp/sante/dentiste.webp",
+      "couleur": "#6DEEBD",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "audition",
+      "nom": "Audition / audioprothésiste",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/audition.png",
+      "icon_webp": "/badges_webp/sante/audition.webp",
+      "couleur": "#C8ACFC",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "psychologue",
+      "nom": "Psychologue",
+      "categorie": "sante",
+      "categorie_label": "Santé",
+      "icon_png": "/badges/sante/psychologue.png",
+      "icon_webp": "/badges_webp/sante/psychologue.webp",
+      "couleur": "#FEFEFE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "puericulture",
+      "nom": "Puériculture",
+      "categorie": "education_enfance",
+      "categorie_label": "Éducation et enfance",
+      "icon_png": "/badges/education_enfance/puericulture.png",
+      "icon_webp": "/badges_webp/education_enfance/puericulture.webp",
+      "couleur": "#FEFEFE",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "patrimoine",
+      "nom": "Monument / patrimoine",
+      "categorie": "culture_loisirs",
+      "categorie_label": "Culture et loisirs",
+      "icon_png": "/badges/culture_loisirs/patrimoine.png",
+      "icon_webp": "/badges_webp/culture_loisirs/patrimoine.webp",
+      "couleur": "#FCFCFC",
+      "source_graphique": "planche_complementaire"
+    },
+    {
+      "id": "fleuriste",
+      "nom": "Fleuriste",
+      "categorie": "shopping",
+      "categorie_label": "Shopping et boutiques",
+      "icon_png": "/badges/shopping/fleuriste.png",
+      "icon_webp": "/badges_webp/shopping/fleuriste.webp",
+      "couleur": "#F67FAB",
+      "source_graphique": "illustration_florale_complementaire"
+    }
+  ]
+}

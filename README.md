@@ -79,9 +79,8 @@ locale (affichée par `supabase start`) pour tester sans toucher à la prod.
 
 ## Formulaire boutiques (`shop-contact`)
 
-Le bouton "Boutique" (header/footer de `accueil/index.html` et `gav/index.html`)
-et les boutons "Je suis une boutique" de `gav/index.html` (remplaçant les
-anciens boutons "Cultura") ouvrent une modale avec un formulaire (nom,
+Le bouton "Boutique" (header/footer de `accueil/index.html`) ouvre une
+modale avec un formulaire (nom,
 prénom, boutique, email, téléphone). À l'envoi, une Edge Function Supabase
 enregistre la demande et envoie deux emails via [Resend](https://resend.com) :
 une confirmation à la boutique (depuis `galane@fiascogames.fr`) et une
@@ -123,6 +122,41 @@ python3 -m http.server                                         # sert le site st
   base (l'inverse serait pire : perdre un lead à cause d'un souci
   d'emailing) — surveiller les logs de la fonction en cas de doute sur la
   délivrabilité.
+
+## Annuaire des boutiques (`shop_directory`)
+
+Table publique `public.shop_directory` (voir
+`supabase/migrations/0003_shop_directory.sql`, étendue par
+`0004_shop_directory_stock.sql`) : boutiques partenaires qui vendent GAV.
+
+**Plus affichée sur `gav/index.html`** depuis la refonte épurée de cette
+page (carte nationale + recherche retirées, voir le hero/FAQ actuels) —
+la table sert aujourd'hui la page dédiée `gav/clamart/` (carte Leaflet
+stylisée + filtre par catégorie + classement des ventes, limitée aux
+boutiques de Clamart). Rien n'empêche de rebrancher une vue nationale
+ailleurs plus tard, la table et ses données restent intactes.
+
+- **Ajout/modification d'une boutique** : directement dans le Dashboard
+  Supabase → Table Editor → `shop_directory`. Colonnes : `name`,
+  `address`, `postal_code`, `city`, `latitude`, `longitude` (coordonnées
+  GPS à renseigner à la main, ex. via un clic droit → coordonnées sur
+  Google Maps), `photo_url`, `website_url`, `is_active` (passer à `false`
+  pour masquer une boutique sans la supprimer), plus `category`,
+  `stock_quantity`, `units_sold` (éditables aussi depuis la page d'admin
+  `gav/admin/shops/`, voir `0004_shop_directory_stock.sql`).
+- **Photo** : uploader l'image dans le bucket de stockage public
+  `shop-photos` (Dashboard Supabase → Storage), puis copier l'URL
+  publique obtenue dans la colonne `photo_url` de la ligne correspondante.
+- Contrairement à `shop_requests`, cette table est **lisible publiquement**
+  (policy `select` ouverte à `anon` pour les lignes `is_active = true`) :
+  c'est nécessaire pour que la carte s'affiche côté visiteur sans
+  authentification. Écriture : Dashboard (accès propriétaire) pour les
+  champs de base, ou `gav/admin/shops/` (connecté en tant que
+  `florian@fiascogames.fr`) pour `category`/`stock_quantity`/`units_sold`.
+- Le formulaire "Je suis une boutique" (voir section précédente) est
+  séparé de cet annuaire : il recueille des candidatures dans
+  `shop_requests`, à valider manuellement avant de les faire apparaître
+  dans `shop_directory`.
 
 ## Cookies et Google Analytics
 

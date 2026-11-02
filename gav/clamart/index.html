@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GAV à Clamart – Trouvez une boutique partenaire</title>
+  <meta name="description" content="Le jeu de société GAV est en vente chez plusieurs boutiques partenaires à Clamart. Parcourez la carte, filtrez par thématique, et consultez le stock disponible chez chacune." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://fiascogames.fr/gav/clamart/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="GAV à Clamart – Trouvez une boutique partenaire" />
+  <meta property="og:description" content="Le jeu de société GAV est en vente chez plusieurs boutiques partenaires à Clamart. Parcourez la carte et trouvez la plus proche." />
+  <meta property="og:url" content="https://fiascogames.fr/gav/clamart/" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
+  <meta property="og:image:alt" content="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GAV à Clamart – Trouvez une boutique partenaire" />
+  <meta name="twitter:description" content="Le jeu de société GAV est en vente chez plusieurs boutiques partenaires à Clamart." />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
+
+  <link rel="icon" type="image/png" href="../../assets/GAV1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="../../assets/analytics.js"></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-9-ORdU_3KygT_X-zE01g5.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+
+  <style>
+    :root{
+      --bg:#f3ede1;
+      --bg-2:#f9f5ec;
+      --dark:#131313;
+      --ink:#1f1f1f;
+      --muted:#625a50;
+      --line:#dfd3be;
+      --orange:#ea6f11;
+      --orange-2:#ff9e44;
+      --white:#fff;
+      --max:960px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container{width:min(var(--max), calc(100% - 32px));margin:0 auto}
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:2px solid var(--line);
+      background:rgba(249,245,236,.92);
+      backdrop-filter:blur(10px);
+    }
+    .navInner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 0;
+    }
+    .navBack, .navHome{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--ink);
+      border:2px solid var(--line);
+      background:var(--white);
+      border-radius:12px;
+      padding:8px 14px;
+      font-weight:800;
+      font-size:14px;
+    }
+    .navTitle{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      letter-spacing:.04em;
+      font-size:22px;
+      color:var(--orange);
+      text-align:center;
+      flex:1;
+    }
+
+    main{padding:28px 0 56px}
+
+    h1{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      margin:0 0 8px;
+      font-size:clamp(30px, 6vw, 44px);
+      line-height:1.02;
+      color:var(--dark);
+    }
+    .lead{
+      margin:0 0 22px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.5;
+    }
+
+    h2.sectionTitle{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      text-transform:uppercase;
+      text-align:center;
+      font-size:clamp(24px, 5vw, 32px);
+      margin:40px 0 16px;
+      color:var(--dark);
+    }
+    h2.sectionTitle .accent{color:var(--orange)}
+
+    /* Filtre par catégorie : pills générées en JS à partir des valeurs
+       réellement présentes en base (voir le script en bas de page) — pas
+       de liste codée en dur, pour ne pas avoir à retoucher cette page le
+       jour où la liste définitive de catégories arrive. */
+    .clamartFilters{
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+      margin:0 0 20px;
+    }
+    .filterPill{
+      font:inherit; font-size:13.5px; font-weight:800;
+      padding:8px 16px;
+      border-radius:999px;
+      border:2px solid var(--line);
+      background:var(--white);
+      color:var(--ink);
+      cursor:pointer;
+      transition:transform .14s ease, background .14s ease, border-color .14s ease;
+    }
+    .filterPill:hover{transform:translateY(-1px)}
+    .filterPill.isActive{
+      background:linear-gradient(180deg, var(--orange-2), var(--orange));
+      border-color:transparent;
+      color:#fff;
+    }
+
+    /* Même habillage "cadre bonbon" que la carte nationale sur
+       gav/index.html, + filtre CSS cartoon/vintage repris d'accueil/index.html
+       (pas de serveur de tuiles custom nécessaire). */
+    .clamartMapFrame{
+      margin:0 auto; max-width:760px;
+      border:3px solid #dba25a;
+      border-radius:24px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:7px 8px 0 #c9822f, 0 16px 26px rgba(36,22,8,.14);
+      padding:10px;
+    }
+    .clamartMap{width:100%; height:420px; border-radius:16px; background:#e9e2d2; overflow:hidden; position:relative; z-index:0}
+    .clamartMap .leaflet-tile-pane{
+      filter:grayscale(.88) sepia(.62) saturate(.68) contrast(.94) brightness(.92);
+    }
+    .clamartMap .leaflet-control-zoom a{
+      background:#fff8eb;
+      color:#4a3420;
+      border-color:rgba(115,86,52,.45);
+    }
+
+    /* Marqueurs custom (L.divIcon) : un point coloré par catégorie +
+       une étiquette avec le nom, dimensionné pour un tap confortable au
+       doigt (plus gros que le pattern desktop-hover d'accueil/index.html). */
+    .clamartPinIcon{display:flex; flex-direction:column; align-items:center; gap:4px; pointer-events:auto}
+    .clamartPinDot{
+      --pin-color:#ea6f11;
+      width:40px; height:40px;
+      border-radius:999px;
+      background:#fff8ec;
+      border:3px solid var(--pin-color);
+      box-shadow:0 4px 12px rgba(62,35,10,.3);
+      display:grid; place-items:center;
+      font-size:20px;
+      cursor:pointer;
+    }
+    .clamartPinLabel{
+      font-family:"Segoe UI", Tahoma, sans-serif;
+      font-size:11px; font-weight:800;
+      color:#3f2d1a;
+      background:rgba(255,248,236,.95);
+      padding:3px 9px;
+      border-radius:999px;
+      border:1px solid rgba(98,62,25,.32);
+      white-space:nowrap;
+      box-shadow:0 3px 8px rgba(62,35,10,.18);
+      pointer-events:none;
+    }
+
+    .clamartList{
+      margin:22px auto 0; max-width:760px;
+      display:grid; gap:14px;
+    }
+    .clamartCard{
+      border:2px solid #dba25a;
+      border-radius:14px;
+      background:linear-gradient(180deg, #fdf7ea, #f7ecd6);
+      box-shadow:4px 5px 0 #c9822f;
+      padding:12px 16px;
+      cursor:pointer;
+      transition:transform .14s ease;
+    }
+    .clamartCard:hover{transform:translateY(-2px)}
+    .clamartCardName{margin:0; font-weight:900; color:#a8420c; font-size:16px}
+    .clamartCardAddress{margin:2px 0 0; color:var(--muted); font-size:13px; font-weight:600}
+    .clamartCardBadge{
+      display:inline-block; margin-top:6px;
+      font-size:11px; font-weight:800; text-transform:uppercase;
+      padding:3px 10px; border-radius:999px;
+      background:var(--bg-2); border:1px solid var(--line); color:var(--muted);
+    }
+    .clamartCardStock{margin:6px 0 0; font-size:13px; font-weight:800; color:var(--orange)}
+    .clamartEmpty{margin:22px auto 0; max-width:560px; text-align:center; color:var(--muted); font-weight:600}
+
+    /* Fiche détail : déclenchée par un clic sur un marqueur OU une carte
+       (fonction showShopDetail partagée, voir le script). */
+    .clamartDetail{
+      margin:22px auto 0; max-width:760px;
+      position:relative;
+      border:3px solid #dba25a;
+      border-radius:20px;
+      background:var(--white);
+      box-shadow:5px 6px 0 #c9822f;
+      padding:22px 24px;
+    }
+    .clamartDetailClose{
+      position:absolute; top:10px; right:12px;
+      border:none; background:transparent;
+      font-size:24px; line-height:1; color:var(--muted);
+      cursor:pointer;
+    }
+    .clamartDetail h3{margin:0 0 6px; font-family:"Bebas Neue","Impact",sans-serif; font-size:26px; color:var(--dark)}
+    .clamartDetail p{margin:4px 0; color:var(--muted); font-size:14px}
+    .clamartDetail .clamartDetailStock{font-weight:800; color:var(--orange)}
+    .clamartDetail .btn{margin-top:14px}
+
+    .btn{
+      border:2px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      padding:11px 18px;
+      font-weight:800;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:pointer;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+    }
+    .btnPrimary{
+      color:#fff;
+      background:linear-gradient(180deg, #ff9e44, #ea6f11);
+      border-color:rgba(255,255,255,.22);
+      box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.35);
+      white-space:nowrap;
+    }
+    .btnPrimary:hover{transform:translateY(-2px); filter:brightness(1.06)}
+    .btnPrimary:active{transform:translateY(3px)}
+
+    /* Classement : toujours calculé sur l'ensemble des boutiques de
+       Clamart, pas affecté par le filtre catégorie (voir renderLeaderboard
+       dans le script — appelé une seule fois avec allShops, jamais avec le
+       sous-ensemble filtré). */
+    .leaderboardList{
+      list-style:none; margin:0 auto; padding:0; max-width:560px;
+      display:grid; gap:10px;
+    }
+    .leaderboardItem{
+      display:flex; align-items:center; gap:12px;
+      border:2px solid var(--line);
+      border-radius:12px;
+      background:var(--white);
+      padding:10px 16px;
+    }
+    .leaderboardRank{
+      font-family:"Bebas Neue","Impact",sans-serif;
+      font-size:20px; color:var(--orange);
+      min-width:34px;
+    }
+    .leaderboardName{flex:1; font-weight:800; color:var(--ink)}
+    .leaderboardCount{font-size:13px; font-weight:800; color:var(--muted)}
+
+    @media (max-width:640px){
+      .navTitle{font-size:18px}
+      .navBack, .navHome{padding:7px 10px; font-size:13px}
+      .clamartMap{height:280px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container navInner">
+      <a class="navBack" href="../" data-ga-id="gav_clamart_nav_back">Retour</a>
+      <div class="navTitle">GAV à Clamart</div>
+      <a class="navHome" href="../../" data-ga-id="gav_clamart_nav_home">Accueil</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h1>Trouvez GAV près de chez vous</h1>
+      <p class="lead">GAV est en vente chez plusieurs boutiques partenaires à Clamart. Parcourez la carte comme un plan de ville, filtrez par thématique, et découvrez le stock disponible chez chacune.</p>
+
+      <div class="clamartFilters" id="clamartFilters" role="group" aria-label="Filtrer par catégorie"></div>
+
+      <div class="clamartMapFrame">
+        <div id="clamartMap" class="clamartMap" aria-label="Carte des boutiques GAV à Clamart"></div>
+      </div>
+
+      <div id="clamartList" class="clamartList"></div>
+      <p id="clamartEmpty" class="clamartEmpty" hidden>Aucune boutique ne correspond à ce filtre pour le moment.</p>
+
+      <div id="clamartDetail" class="clamartDetail" hidden>
+        <button type="button" class="clamartDetailClose" id="clamartDetailClose" aria-label="Fermer la fiche">×</button>
+        <h3 id="clamartDetailName"></h3>
+        <p id="clamartDetailAddress"></p>
+        <p id="clamartDetailCategory"></p>
+        <p id="clamartDetailStock" class="clamartDetailStock"></p>
+        <a id="clamartDetailLink" class="btn btnPrimary" target="_blank" rel="noopener noreferrer" data-ga-id="gav_clamart_detail_website">Voir le site de la boutique →</a>
+      </div>
+
+      <section>
+        <h2 class="sectionTitle">CLASSEMENT DES BOUTIQUES <span class="accent">À CLAMART</span></h2>
+        <ol class="leaderboardList" id="leaderboardList"></ol>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    (function(){
+      const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+
+      const mapEl = document.getElementById('clamartMap');
+      const listEl = document.getElementById('clamartList');
+      const emptyEl = document.getElementById('clamartEmpty');
+      const filtersEl = document.getElementById('clamartFilters');
+      const detailEl = document.getElementById('clamartDetail');
+      const leaderboardEl = document.getElementById('leaderboardList');
+      if (!mapEl) return;
+
+      const CATEGORY_COLORS = ['#ea6f11', '#2f8f6a', '#3a6ea5', '#a8420c', '#8a4fb0', '#c0392b'];
+      function colorForCategory(category){
+        if (!category) return CATEGORY_COLORS[0];
+        const idx = categories.indexOf(category);
+        return CATEGORY_COLORS[idx >= 0 ? idx % CATEGORY_COLORS.length : 0];
+      }
+      function slugify(str){
+        return (str || '')
+          .toLowerCase()
+          .normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '_')
+          .replace(/^_+|_+$/g, '');
+      }
+      function formatStock(shop){
+        const qty = shop.stock_quantity || 0;
+        if (qty <= 0) return 'Rupture de stock pour le moment — recontactez la boutique';
+        const label = qty === 1 ? '1 exemplaire en stock' : `${qty} exemplaires en stock`;
+        if (!shop.stock_updated_at) return label;
+        const d = new Date(shop.stock_updated_at);
+        return `${label} (mis à jour le ${d.toLocaleDateString('fr-FR')})`;
+      }
+
+      // Bornes approximatives de Clamart — premier réglage, à affiner une
+      // fois les vraies adresses/coordonnées des boutiques connues (voir
+      // le plan : certaines pourraient tomber près du bord).
+      const clamartBounds = L.latLngBounds([[48.778, 2.230], [48.822, 2.300]]);
+      const map = L.map(mapEl, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        minZoom: 13,
+        maxZoom: 18,
+        maxBounds: clamartBounds.pad(0.1),
+        maxBoundsViscosity: 1,
+      }).setView([48.798, 2.264], 14.3);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
+
+      setTimeout(() => map.invalidateSize(), 200);
+      window.addEventListener('resize', () => map.invalidateSize());
+
+      let allShops = [];
+      let categories = [];
+      let activeCategory = '';
+      let markers = [];
+
+      function clearMarkers(){ markers.forEach((m) => map.removeLayer(m)); markers = []; }
+
+      function showShopDetail(shop){
+        detailEl.hidden = false;
+        document.getElementById('clamartDetailName').textContent = shop.name;
+        document.getElementById('clamartDetailAddress').textContent =
+          [shop.address, shop.postal_code, shop.city].filter(Boolean).join(', ');
+        const categoryEl = document.getElementById('clamartDetailCategory');
+        categoryEl.textContent = shop.category || '';
+        categoryEl.hidden = !shop.category;
+        document.getElementById('clamartDetailStock').textContent = formatStock(shop);
+        const linkEl = document.getElementById('clamartDetailLink');
+        if (shop.website_url){
+          linkEl.href = shop.website_url;
+          linkEl.hidden = false;
+          linkEl.dataset.gaId = `gav_clamart_detail_website_${slugify(shop.name)}`;
+        } else {
+          linkEl.hidden = true;
+        }
+        detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function renderPills(){
+        filtersEl.innerHTML = '';
+        const allBtn = document.createElement('button');
+        allBtn.type = 'button';
+        allBtn.className = 'filterPill' + (activeCategory === '' ? ' isActive' : '');
+        allBtn.textContent = 'Toutes';
+        allBtn.dataset.gaId = 'gav_clamart_filter_toutes';
+        allBtn.addEventListener('click', () => applyFilter(''));
+        filtersEl.appendChild(allBtn);
+
+        categories.forEach((cat) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'filterPill' + (activeCategory === cat ? ' isActive' : '');
+          btn.textContent = cat;
+          btn.dataset.gaId = `gav_clamart_filter_${slugify(cat)}`;
+          btn.addEventListener('click', () => applyFilter(cat));
+          filtersEl.appendChild(btn);
+        });
+      }
+
+      function renderMap(shops){
+        clearMarkers();
+        shops.forEach((shop) => {
+          if (typeof shop.latitude !== 'number' || typeof shop.longitude !== 'number') return;
+          const marker = L.marker([shop.latitude, shop.longitude], {
+            icon: L.divIcon({
+              className: 'clamartPinIcon',
+              html: `<span class="clamartPinDot" style="--pin-color:${colorForCategory(shop.category)}">📍</span><span class="clamartPinLabel">${shop.name}</span>`,
+              iconSize: [160, 72],
+              iconAnchor: [20, 48],
+            }),
+          }).addTo(map);
+          marker.on('click', () => showShopDetail(shop));
+          markers.push(marker);
+        });
+      }
+
+      function renderList(shops){
+        listEl.innerHTML = '';
+        emptyEl.hidden = shops.length > 0;
+        shops.forEach((shop) => {
+          const card = document.createElement('article');
+          card.className = 'clamartCard';
+          card.dataset.gaId = `gav_clamart_card_${slugify(shop.name)}`;
+          card.innerHTML = `
+            <p class="clamartCardName">${shop.name}</p>
+            <p class="clamartCardAddress">${[shop.address, shop.postal_code, shop.city].filter(Boolean).join(', ')}</p>
+            ${shop.category ? `<span class="clamartCardBadge">${shop.category}</span>` : ''}
+            <p class="clamartCardStock">${(shop.stock_quantity || 0) > 0 ? `${shop.stock_quantity} en stock` : 'Rupture de stock'}</p>
+          `;
+          card.addEventListener('click', () => showShopDetail(shop));
+          listEl.appendChild(card);
+        });
+      }
+
+      // Toujours calculé sur l'ensemble complet (pas le sous-ensemble
+      // filtré) : une boutique ne doit pas disparaître du classement juste
+      // parce qu'un filtre catégorie est actif.
+      function renderLeaderboard(shops){
+        const sorted = [...shops].sort(
+          (a, b) => (b.units_sold || 0) - (a.units_sold || 0) || a.name.localeCompare(b.name)
+        );
+        leaderboardEl.innerHTML = '';
+        sorted.slice(0, 10).forEach((shop, index) => {
+          const li = document.createElement('li');
+          li.className = 'leaderboardItem';
+          li.innerHTML = `
+            <span class="leaderboardRank">#${index + 1}</span>
+            <span class="leaderboardName">${shop.name}</span>
+            <span class="leaderboardCount">${shop.units_sold || 0} vendus</span>
+          `;
+          leaderboardEl.appendChild(li);
+        });
+      }
+
+      function applyFilter(category){
+        activeCategory = category;
+        renderPills();
+        const filtered = category ? allShops.filter((s) => s.category === category) : allShops;
+        renderMap(filtered);
+        renderList(filtered);
+      }
+
+      document.getElementById('clamartDetailClose').addEventListener('click', () => {
+        detailEl.hidden = true;
+      });
+
+      fetch(`${SUPABASE_URL}/rest/v1/shop_directory?select=*&is_active=eq.true&city=ilike.clamart&order=name.asc`, {
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+      })
+        .then((res) => res.ok ? res.json() : [])
+        .then((shops) => {
+          allShops = Array.isArray(shops) ? shops : [];
+          categories = Array.from(new Set(allShops.map((s) => s.category).filter(Boolean))).sort();
+          renderPills();
+          renderMap(allShops);
+          renderList(allShops);
+          renderLeaderboard(allShops);
+        })
+        .catch(() => {
+          emptyEl.textContent = 'Impossible de charger les boutiques pour le moment.';
+          emptyEl.hidden = false;
+        });
+    })();
+  </script>
+</body>
+</html>

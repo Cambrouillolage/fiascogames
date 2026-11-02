@@ -1,0 +1,1755 @@
+{
+  "categories": [
+    {
+      "category_id": "restaurants_bars",
+      "category_label": "Restaurants & bars",
+      "default_badge_id": "restaurant",
+      "color": "#F59E0B",
+      "sort_order": 10,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "alimentation",
+      "category_label": "Alimentation & marchés",
+      "default_badge_id": "epicerie",
+      "color": "#E98A42",
+      "sort_order": 20,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "beaute_bien_etre",
+      "category_label": "Beauté & bien-être",
+      "default_badge_id": "coiffeur",
+      "color": "#DA80BB",
+      "sort_order": 30,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "sante",
+      "category_label": "Santé",
+      "default_badge_id": "sante",
+      "color": "#4DB6AC",
+      "sort_order": 40,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "shopping",
+      "category_label": "Shopping & boutiques",
+      "default_badge_id": "boutique",
+      "color": "#AF82E2",
+      "sort_order": 50,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "maison_bricolage",
+      "category_label": "Maison & travaux",
+      "default_badge_id": "maison_deco",
+      "color": "#B88767",
+      "sort_order": 60,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "services",
+      "category_label": "Services du quotidien",
+      "default_badge_id": "reparation",
+      "color": "#6FA4D8",
+      "sort_order": 70,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "culture_loisirs",
+      "category_label": "Culture & loisirs",
+      "default_badge_id": "culture",
+      "color": "#9B79D3",
+      "sort_order": 80,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "sports",
+      "category_label": "Sport",
+      "default_badge_id": "complexe_sportif",
+      "color": "#4DAFC3",
+      "sort_order": 90,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "education_enfance",
+      "category_label": "Éducation & enfance",
+      "default_badge_id": "ecole",
+      "color": "#F4B648",
+      "sort_order": 100,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "services_publics",
+      "category_label": "Services publics & institutions",
+      "default_badge_id": "mairie",
+      "color": "#6687B5",
+      "sort_order": 110,
+      "is_lockable_by_default": "false"
+    },
+    {
+      "category_id": "mobilite",
+      "category_label": "Transports & mobilité",
+      "default_badge_id": "transport",
+      "color": "#57A5A4",
+      "sort_order": 120,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "religion",
+      "category_label": "Lieux de culte",
+      "default_badge_id": "eglise",
+      "color": "#8B9CA5",
+      "sort_order": 130,
+      "is_lockable_by_default": "false"
+    },
+    {
+      "category_id": "hebergement_tourisme",
+      "category_label": "Hébergement & tourisme",
+      "default_badge_id": "hotel",
+      "color": "#CD9A71",
+      "sort_order": 140,
+      "is_lockable_by_default": "true"
+    },
+    {
+      "category_id": "nature",
+      "category_label": "Parcs & environnement",
+      "default_badge_id": "parc",
+      "color": "#77AF75",
+      "sort_order": 150,
+      "is_lockable_by_default": "false"
+    }
+  ],
+  "subcategories": [
+    {
+      "subcategory_id": "agence_immobiliere",
+      "subcategory_label": "Agence immobilière",
+      "category_id": "services",
+      "badge_id": "agence_immobiliere",
+      "badge_path": "/badges_webp/services/agence_immobiliere.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "ameublement",
+      "subcategory_label": "Meubles",
+      "category_id": "maison_bricolage",
+      "badge_id": "ameublement",
+      "badge_path": "/badges_webp/maison_bricolage/ameublement.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "animalerie",
+      "subcategory_label": "Animalerie",
+      "category_id": "shopping",
+      "badge_id": "animalerie",
+      "badge_path": "/badges_webp/shopping/animalerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "arts_creatifs",
+      "subcategory_label": "Arts créatifs",
+      "category_id": "culture_loisirs",
+      "badge_id": "arts_creatifs",
+      "badge_path": "/badges_webp/culture_loisirs/arts_creatifs.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "asiatique",
+      "subcategory_label": "Restaurant asiatique",
+      "category_id": "restaurants_bars",
+      "badge_id": "asiatique",
+      "badge_path": "/badges_webp/restaurants_bars/asiatique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "association",
+      "subcategory_label": "Association",
+      "category_id": "services",
+      "badge_id": "association",
+      "badge_path": "/badges_webp/services/association.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "audition",
+      "subcategory_label": "Audition / audioprothésiste",
+      "category_id": "sante",
+      "badge_id": "audition",
+      "badge_path": "/badges_webp/sante/audition.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "automobile",
+      "subcategory_label": "Automobile",
+      "category_id": "mobilite",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "banque_assurance",
+      "subcategory_label": "Banque / assurance",
+      "category_id": "services",
+      "badge_id": "banque_assurance",
+      "badge_path": "/badges_webp/services/banque_assurance.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bar",
+      "subcategory_label": "Bar / pub",
+      "category_id": "restaurants_bars",
+      "badge_id": "bar",
+      "badge_path": "/badges_webp/restaurants_bars/bar.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bar_cocktail",
+      "subcategory_label": "Bar à cocktails",
+      "category_id": "restaurants_bars",
+      "badge_id": "bar_cocktail",
+      "badge_path": "/badges_webp/restaurants_bars/bar_cocktail.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bijouterie",
+      "subcategory_label": "Bijouterie",
+      "category_id": "shopping",
+      "badge_id": "bijouterie",
+      "badge_path": "/badges_webp/shopping/bijouterie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bio",
+      "subcategory_label": "Produits bio",
+      "category_id": "alimentation",
+      "badge_id": "bio",
+      "badge_path": "/badges_webp/alimentation/bio.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "boucherie",
+      "subcategory_label": "Boucherie",
+      "category_id": "alimentation",
+      "badge_id": "boucherie",
+      "badge_path": "/badges_webp/alimentation/boucherie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "boulanger",
+      "subcategory_label": "Boulanger / pain",
+      "category_id": "alimentation",
+      "badge_id": "boulanger",
+      "badge_path": "/badges_webp/alimentation/boulanger.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "boulangerie",
+      "subcategory_label": "Boulangerie (croissant)",
+      "category_id": "alimentation",
+      "badge_id": "boulangerie",
+      "badge_path": "/badges_webp/alimentation/boulangerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "boutique",
+      "subcategory_label": "Boutique généraliste",
+      "category_id": "shopping",
+      "badge_id": "boutique",
+      "badge_path": "/badges_webp/shopping/boutique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bricolage",
+      "subcategory_label": "Bricolage",
+      "category_id": "maison_bricolage",
+      "badge_id": "bricolage",
+      "badge_path": "/badges_webp/maison_bricolage/bricolage.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "burger",
+      "subcategory_label": "Burger / fast-food",
+      "category_id": "restaurants_bars",
+      "badge_id": "burger",
+      "badge_path": "/badges_webp/restaurants_bars/burger.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "cafe",
+      "subcategory_label": "Café",
+      "category_id": "restaurants_bars",
+      "badge_id": "cafe",
+      "badge_path": "/badges_webp/restaurants_bars/cafe.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "caviste",
+      "subcategory_label": "Caviste",
+      "category_id": "alimentation",
+      "badge_id": "caviste",
+      "badge_path": "/badges_webp/alimentation/caviste.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "charcuterie",
+      "subcategory_label": "Charcuterie",
+      "category_id": "alimentation",
+      "badge_id": "charcuterie",
+      "badge_path": "/badges_webp/alimentation/charcuterie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "chaussures",
+      "subcategory_label": "Chaussures",
+      "category_id": "shopping",
+      "badge_id": "chaussures",
+      "badge_path": "/badges_webp/shopping/chaussures.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "chocolaterie",
+      "subcategory_label": "Chocolaterie",
+      "category_id": "alimentation",
+      "badge_id": "chocolaterie",
+      "badge_path": "/badges_webp/alimentation/chocolaterie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "cimetiere",
+      "subcategory_label": "Cimetière",
+      "category_id": "services_publics",
+      "badge_id": "cimetiere",
+      "badge_path": "/badges/lieux_speciaux/cimetiere.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "cinema",
+      "subcategory_label": "Cinéma",
+      "category_id": "culture_loisirs",
+      "badge_id": "cinema",
+      "badge_path": "/badges/lieux_speciaux/cinema.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "coiffeur",
+      "subcategory_label": "Coiffeur",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "coiffeur",
+      "badge_path": "/badges_webp/beaute_bien_etre/coiffeur.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "college_lycee",
+      "subcategory_label": "Collège / lycée",
+      "category_id": "education_enfance",
+      "badge_id": "college_lycee",
+      "badge_path": "/badges_webp/education_enfance/college_lycee.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "commissariat",
+      "subcategory_label": "Commissariat",
+      "category_id": "services_publics",
+      "badge_id": "commissariat",
+      "badge_path": "/badges_webp/services_publics/commissariat.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "complexe_sportif",
+      "subcategory_label": "Complexe sportif",
+      "category_id": "sports",
+      "badge_id": "complexe_sportif",
+      "badge_path": "/badges_webp/sports/complexe_sportif.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "confiserie",
+      "subcategory_label": "Confiserie",
+      "category_id": "alimentation",
+      "badge_id": "confiserie",
+      "badge_path": "/badges_webp/alimentation/confiserie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "cosmetique",
+      "subcategory_label": "Cosmétiques",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "cosmetique",
+      "badge_path": "/badges_webp/beaute_bien_etre/cosmetique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "creche",
+      "subcategory_label": "Crèche",
+      "category_id": "education_enfance",
+      "badge_id": "creche",
+      "badge_path": "/badges_webp/education_enfance/creche.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "cuisine_du_monde",
+      "subcategory_label": "Cuisine du monde",
+      "category_id": "restaurants_bars",
+      "badge_id": "cuisine_du_monde",
+      "badge_path": "/badges_webp/restaurants_bars/cuisine_du_monde.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "culture",
+      "subcategory_label": "Culture / spectacles",
+      "category_id": "culture_loisirs",
+      "badge_id": "culture",
+      "badge_path": "/badges_webp/culture_loisirs/culture.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "dentiste",
+      "subcategory_label": "Dentiste",
+      "category_id": "sante",
+      "badge_id": "dentiste",
+      "badge_path": "/badges_webp/sante/dentiste.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "ecole",
+      "subcategory_label": "École",
+      "category_id": "education_enfance",
+      "badge_id": "ecole",
+      "badge_path": "/badges_webp/education_enfance/ecole.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "eglise",
+      "subcategory_label": "Église",
+      "category_id": "religion",
+      "badge_id": "eglise",
+      "badge_path": "/badges_webp/religion/eglise.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "epicerie",
+      "subcategory_label": "Épicerie",
+      "category_id": "alimentation",
+      "badge_id": "epicerie",
+      "badge_path": "/badges_webp/alimentation/epicerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "fleuriste",
+      "subcategory_label": "Fleuriste",
+      "category_id": "shopping",
+      "badge_id": "fleuriste",
+      "badge_path": "/badges_webp/shopping/fleuriste.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "fromagerie",
+      "subcategory_label": "Fromagerie",
+      "category_id": "alimentation",
+      "badge_id": "fromagerie",
+      "badge_path": "/badges_webp/alimentation/fromagerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "gare",
+      "subcategory_label": "Gare",
+      "category_id": "mobilite",
+      "badge_id": "gare",
+      "badge_path": "/badges/lieux_speciaux/gare.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "glacier",
+      "subcategory_label": "Glacier",
+      "category_id": "alimentation",
+      "badge_id": "glacier",
+      "badge_path": "/badges_webp/alimentation/glacier.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "hopital",
+      "subcategory_label": "Hôpital",
+      "category_id": "sante",
+      "badge_id": "hopital",
+      "badge_path": "/badges_webp/sante/hopital.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "hotel",
+      "subcategory_label": "Hôtel",
+      "category_id": "hebergement_tourisme",
+      "badge_id": "hotel",
+      "badge_path": "/badges/lieux_speciaux/hotel.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "information",
+      "subcategory_label": "Information",
+      "category_id": "services_publics",
+      "badge_id": "information",
+      "badge_path": "/badges_webp/services_publics/information.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "informatique",
+      "subcategory_label": "Informatique",
+      "category_id": "shopping",
+      "badge_id": "informatique",
+      "badge_path": "/badges_webp/shopping/informatique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "institut_beaute",
+      "subcategory_label": "Institut de beauté",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "institut_beaute",
+      "badge_path": "/badges_webp/beaute_bien_etre/institut_beaute.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "japonais",
+      "subcategory_label": "Restaurant japonais",
+      "category_id": "restaurants_bars",
+      "badge_id": "japonais",
+      "badge_path": "/badges_webp/restaurants_bars/japonais.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "jardinage",
+      "subcategory_label": "Jardinage",
+      "category_id": "maison_bricolage",
+      "badge_id": "jardinage",
+      "badge_path": "/badges_webp/maison_bricolage/jardinage.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "jeux_video",
+      "subcategory_label": "Jeux vidéo",
+      "category_id": "culture_loisirs",
+      "badge_id": "jeux_video",
+      "badge_path": "/badges_webp/culture_loisirs/jeux_video.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "jouets",
+      "subcategory_label": "Magasin de jouets",
+      "category_id": "shopping",
+      "badge_id": "jouets",
+      "badge_path": "/badges_webp/shopping/jouets.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "justice",
+      "subcategory_label": "Justice / tribunal",
+      "category_id": "services_publics",
+      "badge_id": "justice",
+      "badge_path": "/badges_webp/services_publics/justice.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "librairie",
+      "subcategory_label": "Librairie",
+      "category_id": "culture_loisirs",
+      "badge_id": "librairie",
+      "badge_path": "/badges_webp/culture_loisirs/librairie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "loisirs",
+      "subcategory_label": "Loisirs",
+      "category_id": "culture_loisirs",
+      "badge_id": "loisirs",
+      "badge_path": "/badges_webp/culture_loisirs/loisirs.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "luminaire",
+      "subcategory_label": "Luminaires",
+      "category_id": "maison_bricolage",
+      "badge_id": "luminaire",
+      "badge_path": "/badges_webp/maison_bricolage/luminaire.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "mairie",
+      "subcategory_label": "Mairie",
+      "category_id": "services_publics",
+      "badge_id": "mairie",
+      "badge_path": "/badges_webp/services_publics/mairie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "maison_deco",
+      "subcategory_label": "Décoration intérieure",
+      "category_id": "maison_bricolage",
+      "badge_id": "maison_deco",
+      "badge_path": "/badges_webp/maison_bricolage/maison_deco.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "marche",
+      "subcategory_label": "Marché",
+      "category_id": "alimentation",
+      "badge_id": "marche",
+      "badge_path": "/badges/lieux_speciaux/marche.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "massage",
+      "subcategory_label": "Massage",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "massage",
+      "badge_path": "/badges_webp/beaute_bien_etre/massage.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "mediatheque",
+      "subcategory_label": "Médiathèque",
+      "category_id": "culture_loisirs",
+      "badge_id": "mediatheque",
+      "badge_path": "/badges_webp/culture_loisirs/mediatheque.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "mosquee",
+      "subcategory_label": "Mosquée",
+      "category_id": "religion",
+      "badge_id": "mosquee",
+      "badge_path": "/badges_webp/religion/mosquee.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "moto",
+      "subcategory_label": "Moto",
+      "category_id": "mobilite",
+      "badge_id": "moto",
+      "badge_path": "/badges_webp/mobilite/moto.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "musique",
+      "subcategory_label": "Musique",
+      "category_id": "culture_loisirs",
+      "badge_id": "musique",
+      "badge_path": "/badges_webp/culture_loisirs/musique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "notaire",
+      "subcategory_label": "Notaire",
+      "category_id": "services",
+      "badge_id": "notaire",
+      "badge_path": "/badges_webp/services/notaire.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "optique",
+      "subcategory_label": "Opticien",
+      "category_id": "sante",
+      "badge_id": "optique",
+      "badge_path": "/badges_webp/sante/optique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "parc",
+      "subcategory_label": "Parc",
+      "category_id": "nature",
+      "badge_id": "parc",
+      "badge_path": "/badges_webp/nature/parc.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "parfumerie",
+      "subcategory_label": "Parfumerie",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "parfumerie",
+      "badge_path": "/badges_webp/beaute_bien_etre/parfumerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "parking",
+      "subcategory_label": "Parking",
+      "category_id": "mobilite",
+      "badge_id": "parking",
+      "badge_path": "/badges_webp/mobilite/parking.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "patisserie",
+      "subcategory_label": "Pâtisserie",
+      "category_id": "alimentation",
+      "badge_id": "patisserie",
+      "badge_path": "/badges_webp/alimentation/patisserie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "patrimoine",
+      "subcategory_label": "Monument / patrimoine",
+      "category_id": "culture_loisirs",
+      "badge_id": "patrimoine",
+      "badge_path": "/badges_webp/culture_loisirs/patrimoine.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "pharmacie",
+      "subcategory_label": "Pharmacie",
+      "category_id": "sante",
+      "badge_id": "pharmacie",
+      "badge_path": "/badges_webp/sante/pharmacie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "photographe",
+      "subcategory_label": "Photographe",
+      "category_id": "services",
+      "badge_id": "photographe",
+      "badge_path": "/badges_webp/services/photographe.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "piscine",
+      "subcategory_label": "Piscine",
+      "category_id": "sports",
+      "badge_id": "piscine",
+      "badge_path": "/badges_webp/sports/piscine.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "pizzeria",
+      "subcategory_label": "Pizzeria",
+      "category_id": "restaurants_bars",
+      "badge_id": "pizzeria",
+      "badge_path": "/badges_webp/restaurants_bars/pizzeria.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "pneumatique",
+      "subcategory_label": "Pneumatiques",
+      "category_id": "mobilite",
+      "badge_id": "pneumatique",
+      "badge_path": "/badges_webp/mobilite/pneumatique.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "poissonnerie",
+      "subcategory_label": "Poissonnerie",
+      "category_id": "alimentation",
+      "badge_id": "poissonnerie",
+      "badge_path": "/badges_webp/alimentation/poissonnerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "pompier",
+      "subcategory_label": "Pompiers",
+      "category_id": "services_publics",
+      "badge_id": "pompier",
+      "badge_path": "/badges_webp/services_publics/pompier.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "poste",
+      "subcategory_label": "La Poste",
+      "category_id": "services_publics",
+      "badge_id": "poste",
+      "badge_path": "/badges_webp/services_publics/poste.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "pret_a_porter",
+      "subcategory_label": "Prêt-à-porter",
+      "category_id": "shopping",
+      "badge_id": "pret_a_porter",
+      "badge_path": "/badges_webp/shopping/pret_a_porter.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "primeur",
+      "subcategory_label": "Primeur / fruits et légumes",
+      "category_id": "alimentation",
+      "badge_id": "primeur",
+      "badge_path": "/badges_webp/alimentation/primeur.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "produits_locaux",
+      "subcategory_label": "Produits locaux",
+      "category_id": "alimentation",
+      "badge_id": "produits_locaux",
+      "badge_path": "/badges_webp/alimentation/produits_locaux.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "psychologue",
+      "subcategory_label": "Psychologue",
+      "category_id": "sante",
+      "badge_id": "psychologue",
+      "badge_path": "/badges_webp/sante/psychologue.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "puericulture",
+      "subcategory_label": "Puériculture",
+      "category_id": "education_enfance",
+      "badge_id": "puericulture",
+      "badge_path": "/badges_webp/education_enfance/puericulture.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "recyclage",
+      "subcategory_label": "Recyclage",
+      "category_id": "services_publics",
+      "badge_id": "recyclage",
+      "badge_path": "/badges_webp/nature/recyclage.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "reparation",
+      "subcategory_label": "Réparation / dépannage",
+      "category_id": "services",
+      "badge_id": "reparation",
+      "badge_path": "/badges_webp/services/reparation.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant",
+      "subcategory_label": "Restaurant",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "salle_sport",
+      "subcategory_label": "Salle de sport",
+      "category_id": "sports",
+      "badge_id": "salle_sport",
+      "badge_path": "/badges_webp/sports/salle_sport.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "sante_generale",
+      "subcategory_label": "Santé / médecin",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "serrurerie",
+      "subcategory_label": "Serrurerie",
+      "category_id": "services",
+      "badge_id": "serrurerie",
+      "badge_path": "/badges_webp/services/serrurerie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "spa_bien_etre",
+      "subcategory_label": "Spa et bien-être",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "spa_bien_etre",
+      "badge_path": "/badges_webp/beaute_bien_etre/spa_bien_etre.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "station_service",
+      "subcategory_label": "Station-service",
+      "category_id": "mobilite",
+      "badge_id": "station_service",
+      "badge_path": "/badges_webp/mobilite/station_service.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "supermarche",
+      "subcategory_label": "Supermarché",
+      "category_id": "alimentation",
+      "badge_id": "supermarche",
+      "badge_path": "/badges_webp/alimentation/supermarche.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "synagogue",
+      "subcategory_label": "Synagogue",
+      "category_id": "religion",
+      "badge_id": "synagogue",
+      "badge_path": "/badges_webp/religion/synagogue.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "telephonie",
+      "subcategory_label": "Téléphonie",
+      "category_id": "shopping",
+      "badge_id": "telephonie",
+      "badge_path": "/badges_webp/shopping/telephonie.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "theatre",
+      "subcategory_label": "Théâtre",
+      "category_id": "culture_loisirs",
+      "badge_id": "theatre",
+      "badge_path": "/badges/lieux_speciaux/theatre.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "toilettage_animalier",
+      "subcategory_label": "Toilettage animalier",
+      "category_id": "services",
+      "badge_id": "toilettage_animalier",
+      "badge_path": "/badges_webp/services/toilettage_animalier.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "tourisme",
+      "subcategory_label": "Tourisme",
+      "category_id": "hebergement_tourisme",
+      "badge_id": "tourisme",
+      "badge_path": "/badges_webp/culture_loisirs/tourisme.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "transport",
+      "subcategory_label": "Transports en commun",
+      "category_id": "mobilite",
+      "badge_id": "transport",
+      "badge_path": "/badges_webp/mobilite/transport.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "velo",
+      "subcategory_label": "Magasin de vélos",
+      "category_id": "mobilite",
+      "badge_id": "velo",
+      "badge_path": "/badges_webp/mobilite/velo.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "vetements",
+      "subcategory_label": "Vêtements",
+      "category_id": "shopping",
+      "badge_id": "vetements",
+      "badge_path": "/badges_webp/shopping/vetements.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "veterinaire",
+      "subcategory_label": "Vétérinaire",
+      "category_id": "sante",
+      "badge_id": "veterinaire",
+      "badge_path": "/badges_webp/sante/veterinaire.webp",
+      "source": "badge_existant",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "brasserie",
+      "subcategory_label": "Brasserie",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant_francais",
+      "subcategory_label": "Cuisine française",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant_italien",
+      "subcategory_label": "Restaurant italien",
+      "category_id": "restaurants_bars",
+      "badge_id": "pizzeria",
+      "badge_path": "/badges_webp/restaurants_bars/pizzeria.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "kebab",
+      "subcategory_label": "Kebab",
+      "category_id": "restaurants_bars",
+      "badge_id": "burger",
+      "badge_path": "/badges_webp/restaurants_bars/burger.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "traiteur",
+      "subcategory_label": "Traiteur",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "salon_de_the",
+      "subcategory_label": "Salon de thé",
+      "category_id": "restaurants_bars",
+      "badge_id": "cafe",
+      "badge_path": "/badges_webp/restaurants_bars/cafe.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restauration_rapide",
+      "subcategory_label": "Restauration rapide",
+      "category_id": "restaurants_bars",
+      "badge_id": "burger",
+      "badge_path": "/badges_webp/restaurants_bars/burger.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "food_truck",
+      "subcategory_label": "Food truck",
+      "category_id": "restaurants_bars",
+      "badge_id": "burger",
+      "badge_path": "/badges_webp/restaurants_bars/burger.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "creperie",
+      "subcategory_label": "Crêperie",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant_indien",
+      "subcategory_label": "Restaurant indien",
+      "category_id": "restaurants_bars",
+      "badge_id": "cuisine_du_monde",
+      "badge_path": "/badges_webp/restaurants_bars/cuisine_du_monde.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant_chinois",
+      "subcategory_label": "Restaurant chinois",
+      "category_id": "restaurants_bars",
+      "badge_id": "asiatique",
+      "badge_path": "/badges_webp/restaurants_bars/asiatique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "restaurant_vegetarien",
+      "subcategory_label": "Restaurant végétarien",
+      "category_id": "restaurants_bars",
+      "badge_id": "restaurant",
+      "badge_path": "/badges_webp/restaurants_bars/restaurant.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "epicerie_fine",
+      "subcategory_label": "Épicerie fine",
+      "category_id": "alimentation",
+      "badge_id": "epicerie",
+      "badge_path": "/badges_webp/alimentation/epicerie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "superette",
+      "subcategory_label": "Supérette",
+      "category_id": "alimentation",
+      "badge_id": "epicerie",
+      "badge_path": "/badges_webp/alimentation/epicerie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "marchand_de_vin",
+      "subcategory_label": "Vins & spiritueux",
+      "category_id": "alimentation",
+      "badge_id": "caviste",
+      "badge_path": "/badges_webp/alimentation/caviste.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "produits_orientaux",
+      "subcategory_label": "Alimentation du monde",
+      "category_id": "alimentation",
+      "badge_id": "epicerie",
+      "badge_path": "/badges_webp/alimentation/epicerie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "barbier",
+      "subcategory_label": "Barbier",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "coiffeur",
+      "badge_path": "/badges_webp/beaute_bien_etre/coiffeur.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "onglerie",
+      "subcategory_label": "Onglerie",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "institut_beaute",
+      "badge_path": "/badges_webp/beaute_bien_etre/institut_beaute.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "tatoueur",
+      "subcategory_label": "Tatouage & piercing",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "institut_beaute",
+      "badge_path": "/badges_webp/beaute_bien_etre/institut_beaute.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "estheticienne",
+      "subcategory_label": "Esthétique",
+      "category_id": "beaute_bien_etre",
+      "badge_id": "institut_beaute",
+      "badge_path": "/badges_webp/beaute_bien_etre/institut_beaute.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "medecin",
+      "subcategory_label": "Médecin généraliste",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "specialiste",
+      "subcategory_label": "Médecin spécialiste",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "kinesitherapeute",
+      "subcategory_label": "Kinésithérapeute",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "osteopathe",
+      "subcategory_label": "Ostéopathe",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "infirmier",
+      "subcategory_label": "Cabinet infirmier",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "laboratoire",
+      "subcategory_label": "Laboratoire d’analyses",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "centre_medical",
+      "subcategory_label": "Centre médical",
+      "category_id": "sante",
+      "badge_id": "sante",
+      "badge_path": "/badges_webp/sante/sante.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "papeterie",
+      "subcategory_label": "Papeterie",
+      "category_id": "shopping",
+      "badge_id": "librairie",
+      "badge_path": "/badges_webp/culture_loisirs/librairie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "tabac_presse",
+      "subcategory_label": "Tabac & presse",
+      "category_id": "shopping",
+      "badge_id": "boutique",
+      "badge_path": "/badges_webp/shopping/boutique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "maroquinerie",
+      "subcategory_label": "Maroquinerie",
+      "category_id": "shopping",
+      "badge_id": "boutique",
+      "badge_path": "/badges_webp/shopping/boutique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "opticien_boutique",
+      "subcategory_label": "Opticien (boutique)",
+      "category_id": "shopping",
+      "badge_id": "optique",
+      "badge_path": "/badges_webp/sante/optique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "magasin_sport",
+      "subcategory_label": "Articles de sport",
+      "category_id": "shopping",
+      "badge_id": "boutique",
+      "badge_path": "/badges_webp/shopping/boutique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "cadeaux",
+      "subcategory_label": "Cadeaux & souvenirs",
+      "category_id": "shopping",
+      "badge_id": "boutique",
+      "badge_path": "/badges_webp/shopping/boutique.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "quincaillerie",
+      "subcategory_label": "Quincaillerie",
+      "category_id": "maison_bricolage",
+      "badge_id": "bricolage",
+      "badge_path": "/badges_webp/maison_bricolage/bricolage.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "plombier",
+      "subcategory_label": "Plomberie",
+      "category_id": "maison_bricolage",
+      "badge_id": "bricolage",
+      "badge_path": "/badges_webp/maison_bricolage/bricolage.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "electricien",
+      "subcategory_label": "Électricité",
+      "category_id": "maison_bricolage",
+      "badge_id": "bricolage",
+      "badge_path": "/badges_webp/maison_bricolage/bricolage.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "electromenager",
+      "subcategory_label": "Électroménager",
+      "category_id": "maison_bricolage",
+      "badge_id": "ameublement",
+      "badge_path": "/badges_webp/maison_bricolage/ameublement.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "peinture",
+      "subcategory_label": "Peinture & décoration",
+      "category_id": "maison_bricolage",
+      "badge_id": "maison_deco",
+      "badge_path": "/badges_webp/maison_bricolage/maison_deco.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "pressing",
+      "subcategory_label": "Pressing",
+      "category_id": "services",
+      "badge_id": "reparation",
+      "badge_path": "/badges_webp/services/reparation.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "cordonnerie",
+      "subcategory_label": "Cordonnerie",
+      "category_id": "services",
+      "badge_id": "reparation",
+      "badge_path": "/badges_webp/services/reparation.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "retoucherie",
+      "subcategory_label": "Retoucherie",
+      "category_id": "services",
+      "badge_id": "reparation",
+      "badge_path": "/badges_webp/services/reparation.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "auto_ecole",
+      "subcategory_label": "Auto-école",
+      "category_id": "services",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "expert_comptable",
+      "subcategory_label": "Expert-comptable",
+      "category_id": "services",
+      "badge_id": "notaire",
+      "badge_path": "/badges_webp/services/notaire.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "assurance",
+      "subcategory_label": "Assurance",
+      "category_id": "services",
+      "badge_id": "banque_assurance",
+      "badge_path": "/badges_webp/services/banque_assurance.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "banque",
+      "subcategory_label": "Banque",
+      "category_id": "services",
+      "badge_id": "banque_assurance",
+      "badge_path": "/badges_webp/services/banque_assurance.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "agence_voyage",
+      "subcategory_label": "Agence de voyage",
+      "category_id": "services",
+      "badge_id": "tourisme",
+      "badge_path": "/badges_webp/culture_loisirs/tourisme.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "ludotheque",
+      "subcategory_label": "Ludothèque",
+      "category_id": "culture_loisirs",
+      "badge_id": "loisirs",
+      "badge_path": "/badges_webp/culture_loisirs/loisirs.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "bar_a_jeux",
+      "subcategory_label": "Bar à jeux",
+      "category_id": "culture_loisirs",
+      "badge_id": "loisirs",
+      "badge_path": "/badges_webp/culture_loisirs/loisirs.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "salle_spectacle",
+      "subcategory_label": "Salle de spectacle",
+      "category_id": "culture_loisirs",
+      "badge_id": "theatre",
+      "badge_path": "/badges/lieux_speciaux/theatre.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "musee",
+      "subcategory_label": "Musée",
+      "category_id": "culture_loisirs",
+      "badge_id": "patrimoine",
+      "badge_path": "/badges_webp/culture_loisirs/patrimoine.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "galerie_art",
+      "subcategory_label": "Galerie d’art",
+      "category_id": "culture_loisirs",
+      "badge_id": "arts_creatifs",
+      "badge_path": "/badges_webp/culture_loisirs/arts_creatifs.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "gymnase",
+      "subcategory_label": "Gymnase",
+      "category_id": "sports",
+      "badge_id": "complexe_sportif",
+      "badge_path": "/badges_webp/sports/complexe_sportif.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "stade",
+      "subcategory_label": "Stade",
+      "category_id": "sports",
+      "badge_id": "complexe_sportif",
+      "badge_path": "/badges_webp/sports/complexe_sportif.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "club_sportif",
+      "subcategory_label": "Club sportif",
+      "category_id": "sports",
+      "badge_id": "complexe_sportif",
+      "badge_path": "/badges_webp/sports/complexe_sportif.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "tennis",
+      "subcategory_label": "Tennis",
+      "category_id": "sports",
+      "badge_id": "complexe_sportif",
+      "badge_path": "/badges_webp/sports/complexe_sportif.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "danse",
+      "subcategory_label": "Danse",
+      "category_id": "sports",
+      "badge_id": "salle_sport",
+      "badge_path": "/badges_webp/sports/salle_sport.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "yoga",
+      "subcategory_label": "Yoga & pilates",
+      "category_id": "sports",
+      "badge_id": "salle_sport",
+      "badge_path": "/badges_webp/sports/salle_sport.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "ecole_maternelle",
+      "subcategory_label": "École maternelle",
+      "category_id": "education_enfance",
+      "badge_id": "ecole",
+      "badge_path": "/badges_webp/education_enfance/ecole.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "ecole_elementaire",
+      "subcategory_label": "École élémentaire",
+      "category_id": "education_enfance",
+      "badge_id": "ecole",
+      "badge_path": "/badges_webp/education_enfance/ecole.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "college",
+      "subcategory_label": "Collège",
+      "category_id": "education_enfance",
+      "badge_id": "college_lycee",
+      "badge_path": "/badges_webp/education_enfance/college_lycee.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "lycee",
+      "subcategory_label": "Lycée",
+      "category_id": "education_enfance",
+      "badge_id": "college_lycee",
+      "badge_path": "/badges_webp/education_enfance/college_lycee.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "centre_loisirs",
+      "subcategory_label": "Centre de loisirs",
+      "category_id": "education_enfance",
+      "badge_id": "creche",
+      "badge_path": "/badges_webp/education_enfance/creche.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "formation",
+      "subcategory_label": "Formation & cours",
+      "category_id": "education_enfance",
+      "badge_id": "ecole",
+      "badge_path": "/badges_webp/education_enfance/ecole.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "centre_administratif",
+      "subcategory_label": "Centre administratif",
+      "category_id": "services_publics",
+      "badge_id": "mairie",
+      "badge_path": "/badges_webp/services_publics/mairie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "maison_associations",
+      "subcategory_label": "Maison des associations",
+      "category_id": "services_publics",
+      "badge_id": "association",
+      "badge_path": "/badges_webp/services/association.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "service_social",
+      "subcategory_label": "Service social",
+      "category_id": "services_publics",
+      "badge_id": "mairie",
+      "badge_path": "/badges_webp/services_publics/mairie.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "arret_bus",
+      "subcategory_label": "Arrêt de bus",
+      "category_id": "mobilite",
+      "badge_id": "transport",
+      "badge_path": "/badges_webp/mobilite/transport.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "taxi",
+      "subcategory_label": "Station de taxis",
+      "category_id": "mobilite",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "station_velos",
+      "subcategory_label": "Station vélos",
+      "category_id": "mobilite",
+      "badge_id": "velo",
+      "badge_path": "/badges_webp/mobilite/velo.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "borne_recharge",
+      "subcategory_label": "Borne de recharge",
+      "category_id": "mobilite",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "garage",
+      "subcategory_label": "Garage auto",
+      "category_id": "mobilite",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "controle_technique",
+      "subcategory_label": "Contrôle technique",
+      "category_id": "mobilite",
+      "badge_id": "automobile",
+      "badge_path": "/badges_webp/mobilite/automobile.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "temple",
+      "subcategory_label": "Temple protestant",
+      "category_id": "religion",
+      "badge_id": "eglise",
+      "badge_path": "/badges_webp/religion/eglise.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "lieu_culte_autre",
+      "subcategory_label": "Autre lieu de culte",
+      "category_id": "religion",
+      "badge_id": "eglise",
+      "badge_path": "/badges_webp/religion/eglise.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "chambres_hotes",
+      "subcategory_label": "Chambres d’hôtes",
+      "category_id": "hebergement_tourisme",
+      "badge_id": "hotel",
+      "badge_path": "/badges/lieux_speciaux/hotel.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "residence_hoteliere",
+      "subcategory_label": "Résidence hôtelière",
+      "category_id": "hebergement_tourisme",
+      "badge_id": "hotel",
+      "badge_path": "/badges/lieux_speciaux/hotel.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "false"
+    },
+    {
+      "subcategory_id": "jardin_public",
+      "subcategory_label": "Jardin public",
+      "category_id": "nature",
+      "badge_id": "parc",
+      "badge_path": "/badges_webp/nature/parc.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "aire_de_jeux",
+      "subcategory_label": "Aire de jeux",
+      "category_id": "nature",
+      "badge_id": "parc",
+      "badge_path": "/badges_webp/nature/parc.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    },
+    {
+      "subcategory_id": "jardin_partage",
+      "subcategory_label": "Jardin partagé",
+      "category_id": "nature",
+      "badge_id": "parc",
+      "badge_path": "/badges_webp/nature/parc.webp",
+      "source": "ajout_taxonomie",
+      "public_landmark_hint": "true"
+    }
+  ]
+}

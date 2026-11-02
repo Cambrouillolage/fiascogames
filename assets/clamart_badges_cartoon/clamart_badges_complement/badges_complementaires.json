@@ -1,0 +1,44 @@
+[
+  {
+    "id": "gare",
+    "label": "Gare",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/gare.png",
+    "webp": "public/badges/lieux_speciaux/gare.webp"
+  },
+  {
+    "id": "cinema",
+    "label": "Cinéma",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/cinema.png",
+    "webp": "public/badges/lieux_speciaux/cinema.webp"
+  },
+  {
+    "id": "hotel",
+    "label": "Hôtel",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/hotel.png",
+    "webp": "public/badges/lieux_speciaux/hotel.webp"
+  },
+  {
+    "id": "theatre",
+    "label": "Théâtre",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/theatre.png",
+    "webp": "public/badges/lieux_speciaux/theatre.webp"
+  },
+  {
+    "id": "marche",
+    "label": "Marché",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/marche.png",
+    "webp": "public/badges/lieux_speciaux/marche.webp"
+  },
+  {
+    "id": "cimetiere",
+    "label": "Cimetière",
+    "category": "lieux_speciaux",
+    "png": "public/badges/lieux_speciaux/cimetiere.png",
+    "webp": "public/badges/lieux_speciaux/cimetiere.webp"
+  }
+]

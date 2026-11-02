@@ -1,0 +1,98 @@
+﻿id,nom,categorie,categorie_label,icon_png,icon_webp,couleur,source_graphique
+restaurant,Restaurant,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/restaurant.png,/badges_webp/restaurants_bars/restaurant.webp,#FD9C3F,planche_principale
+cafe,Café,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/cafe.png,/badges_webp/restaurants_bars/cafe.webp,#A15F38,planche_principale
+bar,Bar / pub,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/bar.png,/badges_webp/restaurants_bars/bar.webp,#FDD328,planche_principale
+pizzeria,Pizzeria,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/pizzeria.png,/badges_webp/restaurants_bars/pizzeria.webp,#FB523A,planche_principale
+burger,Burger / fast-food,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/burger.png,/badges_webp/restaurants_bars/burger.webp,#FC8A3D,planche_principale
+japonais,Restaurant japonais,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/japonais.png,/badges_webp/restaurants_bars/japonais.webp,#FC7F88,planche_principale
+asiatique,Restaurant asiatique,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/asiatique.png,/badges_webp/restaurants_bars/asiatique.webp,#A573F8,planche_principale
+cuisine_du_monde,Cuisine du monde,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/cuisine_du_monde.png,/badges_webp/restaurants_bars/cuisine_du_monde.webp,#FDD437,planche_principale
+boulangerie,Boulangerie (croissant),alimentation,Alimentation,/badges/alimentation/boulangerie.png,/badges_webp/alimentation/boulangerie.webp,#FC7C9F,planche_principale
+boulanger,Boulanger / pain,alimentation,Alimentation,/badges/alimentation/boulanger.png,/badges_webp/alimentation/boulanger.webp,#FCBB55,planche_principale
+patisserie,Pâtisserie,alimentation,Alimentation,/badges/alimentation/patisserie.png,/badges_webp/alimentation/patisserie.webp,#FDA0C1,planche_principale
+glacier,Glacier,alimentation,Alimentation,/badges/alimentation/glacier.png,/badges_webp/alimentation/glacier.webp,#46E0DD,planche_principale
+epicerie,Épicerie,alimentation,Alimentation,/badges/alimentation/epicerie.png,/badges_webp/alimentation/epicerie.webp,#64D440,planche_principale
+supermarche,Supermarché,alimentation,Alimentation,/badges/alimentation/supermarche.png,/badges_webp/alimentation/supermarche.webp,#33A9FA,planche_principale
+boucherie,Boucherie,alimentation,Alimentation,/badges/alimentation/boucherie.png,/badges_webp/alimentation/boucherie.webp,#F74F3B,planche_principale
+charcuterie,Charcuterie,alimentation,Alimentation,/badges/alimentation/charcuterie.png,/badges_webp/alimentation/charcuterie.webp,#FD886D,planche_principale
+fromagerie,Fromagerie,alimentation,Alimentation,/badges/alimentation/fromagerie.png,/badges_webp/alimentation/fromagerie.webp,#FDC413,planche_principale
+poissonnerie,Poissonnerie,alimentation,Alimentation,/badges/alimentation/poissonnerie.png,/badges_webp/alimentation/poissonnerie.webp,#2291F2,planche_principale
+primeur,Primeur / fruits et légumes,alimentation,Alimentation,/badges/alimentation/primeur.png,/badges_webp/alimentation/primeur.webp,#4BD66E,planche_principale
+caviste,Caviste,alimentation,Alimentation,/badges/alimentation/caviste.png,/badges_webp/alimentation/caviste.webp,#A675F6,planche_principale
+bio,Produits bio,alimentation,Alimentation,/badges/alimentation/bio.png,/badges_webp/alimentation/bio.webp,#B56A34,planche_principale
+produits_locaux,Produits locaux,alimentation,Alimentation,/badges/alimentation/produits_locaux.png,/badges_webp/alimentation/produits_locaux.webp,#BDF16F,planche_principale
+chocolaterie,Chocolaterie,alimentation,Alimentation,/badges/alimentation/chocolaterie.png,/badges_webp/alimentation/chocolaterie.webp,#A56339,planche_principale
+confiserie,Confiserie,alimentation,Alimentation,/badges/alimentation/confiserie.png,/badges_webp/alimentation/confiserie.webp,#FC81B4,planche_principale
+boutique,Boutique généraliste,shopping,Shopping et boutiques,/badges/shopping/boutique.png,/badges_webp/shopping/boutique.webp,#FC82B3,planche_principale
+vetements,Vêtements,shopping,Shopping et boutiques,/badges/shopping/vetements.png,/badges_webp/shopping/vetements.webp,#A57AFB,planche_principale
+chaussures,Chaussures,shopping,Shopping et boutiques,/badges/shopping/chaussures.png,/badges_webp/shopping/chaussures.webp,#42A2F9,planche_principale
+bijouterie,Bijouterie,shopping,Shopping et boutiques,/badges/shopping/bijouterie.png,/badges_webp/shopping/bijouterie.webp,#9A80FA,planche_principale
+optique,Opticien,sante,Santé,/badges/sante/optique.png,/badges_webp/sante/optique.webp,#3ADDCB,planche_principale
+parfumerie,Parfumerie,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/parfumerie.png,/badges_webp/beaute_bien_etre/parfumerie.webp,#FC80A4,planche_principale
+cosmetique,Cosmétiques,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/cosmetique.png,/badges_webp/beaute_bien_etre/cosmetique.webp,#FCA2CE,planche_principale
+jouets,Magasin de jouets,shopping,Shopping et boutiques,/badges/shopping/jouets.png,/badges_webp/shopping/jouets.webp,#FD914D,planche_principale
+librairie,Librairie,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/librairie.png,/badges_webp/culture_loisirs/librairie.webp,#35A2F5,planche_principale
+jeux_video,Jeux vidéo,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/jeux_video.png,/badges_webp/culture_loisirs/jeux_video.webp,#CA90FB,planche_principale
+telephonie,Téléphonie,shopping,Shopping et boutiques,/badges/shopping/telephonie.png,/badges_webp/shopping/telephonie.webp,#31D0FC,planche_principale
+informatique,Informatique,shopping,Shopping et boutiques,/badges/shopping/informatique.png,/badges_webp/shopping/informatique.webp,#6EDEFB,planche_principale
+maison_deco,Décoration intérieure,maison_bricolage,Maison et bricolage,/badges/maison_bricolage/maison_deco.png,/badges_webp/maison_bricolage/maison_deco.webp,#FD8C5E,planche_principale
+luminaire,Luminaires,maison_bricolage,Maison et bricolage,/badges/maison_bricolage/luminaire.png,/badges_webp/maison_bricolage/luminaire.webp,#FDD639,planche_principale
+bricolage,Bricolage,maison_bricolage,Maison et bricolage,/badges/maison_bricolage/bricolage.png,/badges_webp/maison_bricolage/bricolage.webp,#5EE6AD,planche_principale
+jardinage,Jardinage,maison_bricolage,Maison et bricolage,/badges/maison_bricolage/jardinage.png,/badges_webp/maison_bricolage/jardinage.webp,#90E450,planche_principale
+animalerie,Animalerie,shopping,Shopping et boutiques,/badges/shopping/animalerie.png,/badges_webp/shopping/animalerie.webp,#FC963D,planche_principale
+velo,Magasin de vélos,mobilite,Mobilité et transports,/badges/mobilite/velo.png,/badges_webp/mobilite/velo.webp,#3CC6FB,planche_principale
+moto,Moto,mobilite,Mobilité et transports,/badges/mobilite/moto.png,/badges_webp/mobilite/moto.webp,#FC7B62,planche_principale
+automobile,Automobile,mobilite,Mobilité et transports,/badges/mobilite/automobile.png,/badges_webp/mobilite/automobile.webp,#2AA7F6,planche_principale
+station_service,Station-service,mobilite,Mobilité et transports,/badges/mobilite/station_service.png,/badges_webp/mobilite/station_service.webp,#FCDB46,planche_principale
+pneumatique,Pneumatiques,mobilite,Mobilité et transports,/badges/mobilite/pneumatique.png,/badges_webp/mobilite/pneumatique.webp,#898E93,planche_principale
+serrurerie,Serrurerie,services,Services et utilitaires,/badges/services/serrurerie.png,/badges_webp/services/serrurerie.webp,#28D9C7,planche_principale
+ameublement,Meubles,maison_bricolage,Maison et bricolage,/badges/maison_bricolage/ameublement.png,/badges_webp/maison_bricolage/ameublement.webp,#AD7AF9,planche_principale
+coiffeur,Coiffeur,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/coiffeur.png,/badges_webp/beaute_bien_etre/coiffeur.webp,#FC6DA9,planche_principale
+institut_beaute,Institut de beauté,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/institut_beaute.png,/badges_webp/beaute_bien_etre/institut_beaute.webp,#AE72F3,planche_principale
+spa_bien_etre,Spa et bien-être,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/spa_bien_etre.png,/badges_webp/beaute_bien_etre/spa_bien_etre.webp,#73C842,planche_principale
+salle_sport,Salle de sport,sports,Sports,/badges/sports/salle_sport.png,/badges_webp/sports/salle_sport.webp,#1C9AF5,planche_principale
+massage,Massage,beaute_bien_etre,Beauté et bien-être,/badges/beaute_bien_etre/massage.png,/badges_webp/beaute_bien_etre/massage.webp,#FC7CB5,planche_principale
+veterinaire,Vétérinaire,sante,Santé,/badges/sante/veterinaire.png,/badges_webp/sante/veterinaire.webp,#8EE2FC,planche_principale
+photographe,Photographe,services,Services et utilitaires,/badges/services/photographe.png,/badges_webp/services/photographe.webp,#FCDB37,planche_principale
+arts_creatifs,Arts créatifs,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/arts_creatifs.png,/badges_webp/culture_loisirs/arts_creatifs.webp,#FC7A68,planche_principale
+musique,Musique,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/musique.png,/badges_webp/culture_loisirs/musique.webp,#9D6CFB,planche_principale
+culture,Culture / spectacles,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/culture.png,/badges_webp/culture_loisirs/culture.webp,#FC9638,planche_principale
+loisirs,Loisirs,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/loisirs.png,/badges_webp/culture_loisirs/loisirs.webp,#FC79AC,planche_principale
+tourisme,Tourisme,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/tourisme.png,/badges_webp/culture_loisirs/tourisme.webp,#42DFE6,planche_principale
+ecole,École,education_enfance,Éducation et enfance,/badges/education_enfance/ecole.png,/badges_webp/education_enfance/ecole.webp,#4EB7FC,planche_principale
+college_lycee,Collège / lycée,education_enfance,Éducation et enfance,/badges/education_enfance/college_lycee.png,/badges_webp/education_enfance/college_lycee.webp,#B178F9,planche_principale
+creche,Crèche,education_enfance,Éducation et enfance,/badges/education_enfance/creche.png,/badges_webp/education_enfance/creche.webp,#FC7EC5,planche_principale
+mairie,Mairie,services_publics,Services publics,/badges/services_publics/mairie.png,/badges_webp/services_publics/mairie.webp,#F5D49F,planche_principale
+poste,La Poste,services_publics,Services publics,/badges/services_publics/poste.png,/badges_webp/services_publics/poste.webp,#FDD72D,planche_principale
+commissariat,Commissariat,services_publics,Services publics,/badges/services_publics/commissariat.png,/badges_webp/services_publics/commissariat.webp,#5BB7FC,planche_principale
+pompier,Pompiers,services_publics,Services publics,/badges/services_publics/pompier.png,/badges_webp/services_publics/pompier.webp,#FB524D,planche_principale
+hopital,Hôpital,sante,Santé,/badges/sante/hopital.png,/badges_webp/sante/hopital.webp,#93E7FB,planche_principale
+pharmacie,Pharmacie,sante,Santé,/badges/sante/pharmacie.png,/badges_webp/sante/pharmacie.webp,#79E76E,planche_principale
+sante,Santé / médecin,sante,Santé,/badges/sante/sante.png,/badges_webp/sante/sante.webp,#39DBD4,planche_principale
+justice,Justice / tribunal,services_publics,Services publics,/badges/services_publics/justice.png,/badges_webp/services_publics/justice.webp,#9F68F8,planche_principale
+eglise,Église,religion,Lieux de culte,/badges/religion/eglise.png,/badges_webp/religion/eglise.webp,#F5DA94,planche_principale
+mosquee,Mosquée,religion,Lieux de culte,/badges/religion/mosquee.png,/badges_webp/religion/mosquee.webp,#60DA57,planche_principale
+synagogue,Synagogue,religion,Lieux de culte,/badges/religion/synagogue.png,/badges_webp/religion/synagogue.webp,#46B3FB,planche_principale
+complexe_sportif,Complexe sportif,sports,Sports,/badges/sports/complexe_sportif.png,/badges_webp/sports/complexe_sportif.webp,#31D9A1,planche_principale
+piscine,Piscine,sports,Sports,/badges/sports/piscine.png,/badges_webp/sports/piscine.webp,#55E5F0,planche_principale
+mediatheque,Médiathèque,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/mediatheque.png,/badges_webp/culture_loisirs/mediatheque.webp,#A978FA,planche_principale
+parc,Parc,nature,Nature et environnement,/badges/nature/parc.png,/badges_webp/nature/parc.webp,#82E161,planche_principale
+parking,Parking,mobilite,Mobilité et transports,/badges/mobilite/parking.png,/badges_webp/mobilite/parking.webp,#3BAFFB,planche_principale
+transport,Transports en commun,mobilite,Mobilité et transports,/badges/mobilite/transport.png,/badges_webp/mobilite/transport.webp,#FCA937,planche_principale
+recyclage,Recyclage,nature,Nature et environnement,/badges/nature/recyclage.png,/badges_webp/nature/recyclage.webp,#5DD248,planche_principale
+information,Information,services_publics,Services publics,/badges/services_publics/information.png,/badges_webp/services_publics/information.webp,#2D9BF6,planche_principale
+association,Association,services,Services et utilitaires,/badges/services/association.png,/badges_webp/services/association.webp,#9760F5,planche_principale
+cadenas,Cadenas / verrouillé,interface,Interface et statuts,/badges/interface/cadenas.png,/badges_webp/interface/cadenas.webp,#959EAA,planche_principale
+bar_cocktail,Bar à cocktails,restaurants_bars,Restaurants et bars,/badges/restaurants_bars/bar_cocktail.png,/badges_webp/restaurants_bars/bar_cocktail.webp,#FD6974,planche_complementaire
+toilettage_animalier,Toilettage animalier,services,Services et utilitaires,/badges/services/toilettage_animalier.png,/badges_webp/services/toilettage_animalier.webp,#FCF9FE,planche_complementaire
+pret_a_porter,Prêt-à-porter,shopping,Shopping et boutiques,/badges/shopping/pret_a_porter.png,/badges_webp/shopping/pret_a_porter.webp,#FBFDFE,planche_complementaire
+reparation,Réparation / dépannage,services,Services et utilitaires,/badges/services/reparation.png,/badges_webp/services/reparation.webp,#FCFCFD,planche_complementaire
+agence_immobiliere,Agence immobilière,services,Services et utilitaires,/badges/services/agence_immobiliere.png,/badges_webp/services/agence_immobiliere.webp,#FEFEFE,planche_complementaire
+banque_assurance,Banque / assurance,services,Services et utilitaires,/badges/services/banque_assurance.png,/badges_webp/services/banque_assurance.webp,#FEFEFE,planche_complementaire
+notaire,Notaire,services,Services et utilitaires,/badges/services/notaire.png,/badges_webp/services/notaire.webp,#FEAE44,planche_complementaire
+dentiste,Dentiste,sante,Santé,/badges/sante/dentiste.png,/badges_webp/sante/dentiste.webp,#6DEEBD,planche_complementaire
+audition,Audition / audioprothésiste,sante,Santé,/badges/sante/audition.png,/badges_webp/sante/audition.webp,#C8ACFC,planche_complementaire
+psychologue,Psychologue,sante,Santé,/badges/sante/psychologue.png,/badges_webp/sante/psychologue.webp,#FEFEFE,planche_complementaire
+puericulture,Puériculture,education_enfance,Éducation et enfance,/badges/education_enfance/puericulture.png,/badges_webp/education_enfance/puericulture.webp,#FEFEFE,planche_complementaire
+patrimoine,Monument / patrimoine,culture_loisirs,Culture et loisirs,/badges/culture_loisirs/patrimoine.png,/badges_webp/culture_loisirs/patrimoine.webp,#FCFCFC,planche_complementaire
+fleuriste,Fleuriste,shopping,Shopping et boutiques,/badges/shopping/fleuriste.png,/badges_webp/shopping/fleuriste.webp,#F67FAB,illustration_florale_complementaire

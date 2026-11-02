@@ -1,7 +1,14 @@
 node_modules/
 .claude/
+.DS_Store
 
 # Supabase (secrets locaux, jamais committés — voir supabase/.gitignore
 # pour les fichiers déjà couverts par `supabase init`)
 .env
 .env.local
+
+# Source vidéo brute non compressée (seul gav-video.mp4 est servi sur le site)
+assets/gav-video.mov
+
+# Backup local, jamais destiné à la prod
+gav/index.html.bak-refonte

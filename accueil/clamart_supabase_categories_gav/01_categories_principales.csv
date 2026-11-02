@@ -1,0 +1,16 @@
+﻿category_id,category_label,default_badge_id,color,sort_order,is_lockable_by_default
+restaurants_bars,Restaurants & bars,restaurant,#F59E0B,10,true
+alimentation,Alimentation & marchés,epicerie,#E98A42,20,true
+beaute_bien_etre,Beauté & bien-être,coiffeur,#DA80BB,30,true
+sante,Santé,sante,#4DB6AC,40,true
+shopping,Shopping & boutiques,boutique,#AF82E2,50,true
+maison_bricolage,Maison & travaux,maison_deco,#B88767,60,true
+services,Services du quotidien,reparation,#6FA4D8,70,true
+culture_loisirs,Culture & loisirs,culture,#9B79D3,80,true
+sports,Sport,complexe_sportif,#4DAFC3,90,true
+education_enfance,Éducation & enfance,ecole,#F4B648,100,true
+services_publics,Services publics & institutions,mairie,#6687B5,110,false
+mobilite,Transports & mobilité,transport,#57A5A4,120,true
+religion,Lieux de culte,eglise,#8B9CA5,130,false
+hebergement_tourisme,Hébergement & tourisme,hotel,#CD9A71,140,true
+nature,Parcs & environnement,parc,#77AF75,150,false
