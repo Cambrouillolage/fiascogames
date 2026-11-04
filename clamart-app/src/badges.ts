@@ -42,14 +42,36 @@ const EMOJI_BADGE: Partial<Record<LandmarkCategory, { emoji: string; color: stri
   sports_rugby: { emoji: '🏉', color: '#8A5A3C' },
 };
 
-const textureLoader = new THREE.TextureLoader();
 const textureCache = new Map<string, THREE.Texture>();
 
+// Certains badges du catalogue ont un léger liseré blanc non transparent
+// sur une partie du bord (défaut de l'asset source, visible en zoomant —
+// signalé par l'utilisateur) : plutôt que de corriger chaque PNG un par un,
+// on découpe systématiquement à un cercle légèrement en retrait du bord du
+// canvas au chargement, ce qui élimine ce liseré quel que soit le badge
+// concerné.
 function badgeWebpTexture(webpPath: string): THREE.Texture {
   let tex = textureCache.get(webpPath);
   if (!tex) {
-    tex = textureLoader.load(`${import.meta.env.BASE_URL}${webpPath}`);
-    tex.colorSpace = THREE.SRGBColorSpace;
+    const canvas = document.createElement('canvas');
+    const canvasTex = new THREE.CanvasTexture(canvas);
+    canvasTex.colorSpace = THREE.SRGBColorSpace;
+    const img = new Image();
+    img.onload = () => {
+      const size = Math.max(img.naturalWidth, img.naturalHeight);
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size * 0.49, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(img, 0, 0, size, size);
+      ctx.restore();
+      canvasTex.needsUpdate = true;
+    };
+    img.src = `${import.meta.env.BASE_URL}${webpPath}`;
+    tex = canvasTex;
     textureCache.set(webpPath, tex);
   }
   return tex;
