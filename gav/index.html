@@ -199,6 +199,26 @@
       object-fit:cover;
       object-position:center top;
     }
+    /* Certains WebKit (Safari iOS) n'appliquent pas tout de suite object-fit
+       à la <video> avant que la lecture ne soit réellement démarrée : le
+       premier rendu affiche alors la vidéo/poster à sa taille intrinsèque,
+       collée en haut à gauche, puis "saute" à la bonne taille pile au
+       moment où elle commence à jouer. Plutôt que de dépendre du rendu
+       natif du poster pendant cette fenêtre, un <img> recouvre la vidéo
+       avec exactement le même object-fit/object-position — lui est fiable
+       partout — et se masque dès l'évènement `playing` (voir le script en
+       bas de page), au moment précis où la vidéo est enfin correctement
+       composée. Le spectateur ne voit donc jamais l'état cassé. */
+    .heroVideoPoster{
+      position:absolute;
+      inset:0;
+      z-index:10;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center top;
+    }
+    .heroVideoPoster.isHidden{ display:none; }
     @media (min-width:720px){
       .heroStageBg{ background:var(--orange); }
       .heroStage{
@@ -243,6 +263,16 @@
       height:100%;
       object-fit:cover;
     }
+    /* Même recouvrement fiable que .heroVideoPoster, voir son commentaire. */
+    .gavVideoPoster{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .gavVideoPoster.isHidden{ display:none; }
     .gavVideoBadge{
       position:absolute;
       z-index:2;
@@ -1083,6 +1113,7 @@
           preload="auto"
           aria-hidden="true"
         ></video>
+        <img class="heroVideoPoster" id="heroVideoPoster" src="../assets/hero-video-poster.jpg" alt="" aria-hidden="true" />
         <a class="btn btnPrimary heroNavBuy" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" data-ga-id="gav_nav_acheter">DÉCOUVRIR SUR AMAZON</a>
       </div>
     </div>
@@ -1154,6 +1185,7 @@
         preload="auto"
         aria-hidden="true"
       ></video>
+      <img class="gavVideoPoster" id="gavVideoPoster" src="../assets/gav-video-poster.jpg" alt="" aria-hidden="true" />
       <img class="gavVideoBadge" src="../assets/macaron-famille-2026.png" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
       <button type="button" class="gavVideoSoundBtn" id="gavVideoSoundBtn" aria-label="Activer le son de la vidéo" aria-pressed="false">🔇</button>
     </div>
@@ -1484,6 +1516,36 @@
         if (!video) return;
         video.removeAttribute('autoplay');
         video.pause();
+      });
+    })();
+
+    // Recouvrement <img> fiable par-dessus chaque vidéo (voir le commentaire
+    // sur .heroVideoPoster) : masqué dès que la vidéo correspondante
+    // commence réellement à jouer, pile au moment où son rendu devient
+    // correct. Si la vidéo ne joue jamais (prefers-reduced-motion, voir
+    // initAutoplayVideos ci-dessus), le poster reste affiché — c'est déjà
+    // le comportement voulu dans ce cas.
+    //
+    // Ce script s'exécute en bas de page, après le <video> plus haut dans
+    // le HTML : sur un rechargement à cache chaud, le décodage peut être
+    // quasi instantané et l'évènement `playing` se déclencher AVANT que le
+    // parseur n'atteigne ce script (constaté : le bug "miniature" persistait
+    // spécifiquement au rechargement). Un simple addEventListener raterait
+    // alors cet évènement pour toujours, laissant le poster recouvrir la
+    // vidéo en permanence. On vérifie donc d'abord si la vidéo est déjà en
+    // train de jouer à ce moment-là, et on ne s'appuie sur l'évènement que
+    // si ce n'est pas encore le cas.
+    (function initVideoPosterOverlays(){
+      [
+        ['heroVideo', 'heroVideoPoster'],
+        ['gavVideoEl', 'gavVideoPoster'],
+      ].forEach(([videoId, posterId]) => {
+        const video = document.getElementById(videoId);
+        const poster = document.getElementById(posterId);
+        if (!video || !poster) return;
+        const hide = () => poster.classList.add('isHidden');
+        if (!video.paused && video.readyState >= 2) hide();
+        else video.addEventListener('playing', hide, { once: true });
       });
     })();
 
