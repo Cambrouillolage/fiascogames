@@ -1,7 +1,8 @@
 // Modale "Il manque une boutique ?" ouverte depuis la bottom sheet de
-// filtres : un commerce absent de la carte peut être signalé par email ou
-// réseaux sociaux. Même pattern "bottom sheet + fond cliquable pour
-// fermer" que bottomSheet.ts/merchantCard.ts.
+// filtres : contact (erreur sur la carte, commerce manquant, envie de
+// vendre/trouver du GAV) par email ou réseaux sociaux. Même pattern
+// "bottom sheet + fond cliquable pour fermer" que
+// bottomSheet.ts/merchantCard.ts.
 
 const CONTACT_EMAIL = 'contact@fiascogames.fr';
 const AUTHORS_SOCIAL = {
@@ -27,8 +28,8 @@ function ensureSheet() {
     <div class="missingShopHandle"></div>
     <h2 class="missingShopTitle">Il manque une boutique ?</h2>
     <p class="missingShopText">
-      Si un commerce de Clamart n'apparaît pas sur la carte, dites-le-nous :
-      on l'ajoutera dès que possible.
+      Une erreur sur la carte, une boutique qui manque, envie d'avoir des
+      GAV ? Contactez-nous.
     </p>
     <a class="missingShopEmail" href="mailto:${CONTACT_EMAIL}">✉️ ${CONTACT_EMAIL}</a>
     <div class="missingShopSocial">

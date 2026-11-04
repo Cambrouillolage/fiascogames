@@ -9,7 +9,6 @@ import { loadCategories, loadActiveMerchants, latLonToLocalMeters, type Merchant
 import { buildMerchantPins, pickMerchantPin, setSelectedPin, applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
 import { showMerchantCard, hideMerchantCard, onMerchantCardClose, initMerchantCard } from './merchantCard.ts';
 import { setupMapTopBar } from './mapTopBar.ts';
-import { setupUnlockProgress } from './unlockProgress.ts';
 import { setupFiltersSheet } from './filtersSheet.ts';
 import { createAutoHide } from './autoHide.ts';
 import { loadQuartiers } from './quartiersData.ts';
@@ -280,7 +279,6 @@ loadMapData()
       onSelectMerchant: selectMerchant,
       onCameraSettled: () => doDeclutter(),
     });
-    const progressEl = setupUnlockProgress(merchants);
     const filtersSheet = setupFiltersSheet({
       categories,
       merchants,
@@ -297,7 +295,7 @@ loadMapData()
       onCameraSettled: () => doDeclutter(),
     });
 
-    autoHide = createAutoHide([topBar.root, progressEl, filtersSheet.stickyBtn]);
+    autoHide = createAutoHide([topBar.root, filtersSheet.stickyBtn]);
     setupInteraction();
 
     // Très dézoomé (<= seuil) : zones de quartier colorées à la place des

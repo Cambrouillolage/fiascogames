@@ -47,7 +47,10 @@ function ensureCard() {
       <div class="merchantCardTitleWrap">
         <div class="merchantCardTitle"></div>
         <div class="merchantCardSpecialty"></div>
-        <div class="merchantCardStatus"></div>
+        <a class="merchantCardStatus" href="/gav/" target="_blank" rel="noopener">
+          <span class="merchantCardStatusMain">✅ Revendeur GAV</span>
+          <span class="merchantCardStatusMore">En savoir plus ›</span>
+        </a>
         <div class="merchantCardStock"></div>
         <div class="merchantCardDesc"></div>
       </div>
@@ -56,7 +59,6 @@ function ensureCard() {
     <div class="merchantCardActions">
       <a class="merchantCardWeb" target="_blank" rel="noopener"></a>
       <a class="merchantCardGo" target="_blank" rel="noopener">S'y rendre</a>
-      <a class="merchantCardGavInfo" href="/gav/" target="_blank" rel="noopener">En savoir plus</a>
     </div>
   `;
   document.body.appendChild(cardEl);
@@ -86,12 +88,10 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
 
   // Plus aucune mention de verrouillage/déverrouillage ici (demande
   // explicite) : seuls les revendeurs GAV (non verrouillés) ont une
-  // information affichée, avec un lien vers la page GAV pour en savoir plus.
-  const statusEl = cardEl.querySelector('.merchantCardStatus') as HTMLElement;
-  statusEl.textContent = merchant.is_locked ? '' : '✅ Revendeur GAV';
+  // information affichée — le badge "Revendeur GAV" lui-même porte le lien
+  // "En savoir plus" (fusionnés dans une seule pastille cliquable).
+  const statusEl = cardEl.querySelector('.merchantCardStatus') as HTMLAnchorElement;
   statusEl.hidden = merchant.is_locked;
-  statusEl.classList.toggle('isUnlocked', !merchant.is_locked);
-  statusEl.classList.remove('isLocked');
 
   const stockEl = cardEl.querySelector('.merchantCardStock') as HTMLElement;
   if (!merchant.is_locked && merchant.gav_stock_quantity != null) {
@@ -100,9 +100,6 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
   } else {
     stockEl.hidden = true;
   }
-
-  const gavInfoLink = cardEl.querySelector('.merchantCardGavInfo') as HTMLAnchorElement;
-  gavInfoLink.hidden = merchant.is_locked;
 
   cardEl.querySelector('.merchantCardDesc')!.textContent = merchant.description ?? '';
   (cardEl.querySelector('.merchantCardDesc') as HTMLElement).hidden = !merchant.description;

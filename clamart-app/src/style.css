@@ -289,19 +289,27 @@ html, body {
 }
 
 .merchantCardStatus {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   margin-top: 4px;
+  background: #dcf1e4;
+  text-decoration: none;
 }
 .merchantCardStatus[hidden] {
   display: none;
 }
-.merchantCardStatus.isUnlocked {
-  background: #dcf1e4;
+.merchantCardStatusMain {
+  font-weight: 700;
   color: #2f8f6a;
+}
+.merchantCardStatusMore {
+  font-weight: 600;
+  color: #3fa881;
+  text-decoration: underline;
 }
 
 .merchantCardStock {
@@ -369,22 +377,6 @@ html, body {
   filter: brightness(0.97);
 }
 .merchantCardWeb[hidden] {
-  display: none;
-}
-
-.merchantCardGavInfo {
-  display: inline-flex;
-  align-items: center;
-  color: #2f8f6a;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 10px 2px;
-  text-decoration: underline;
-}
-.merchantCardGavInfo:hover {
-  filter: brightness(0.9);
-}
-.merchantCardGavInfo[hidden] {
   display: none;
 }
 
@@ -538,41 +530,6 @@ html, body {
   color: #888;
 }
 
-/* ===== Jauge de déblocage de la ville ===== */
-#unlock-progress {
-  position: fixed;
-  top: max(70px, calc(env(safe-area-inset-top) + 70px));
-  left: 0;
-  right: 0;
-  z-index: 28;
-  padding: 0 14px;
-  max-width: 480px;
-  margin: 0 auto;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.unlockProgressLabel {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-  margin-bottom: 4px;
-}
-
-.unlockProgressTrack {
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.4);
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-}
-
-.unlockProgressFill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #ff9e44, #ea6f11);
-}
-
 /* ===== Bottom sheet "Filtres" ===== */
 #filters-sheet {
   position: fixed;
@@ -653,19 +610,42 @@ html, body {
   margin-top: 12px;
   flex: 0 0 auto;
 }
-.filtersCounter {
+.filtersGavTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #dcf1e4;
+  text-decoration: none;
+}
+.filtersGavTagMain {
+  font-weight: 700;
+  color: #2f8f6a;
+}
+.filtersGavTagMore {
+  font-weight: 600;
+  color: #3fa881;
+  text-decoration: underline;
+}
+.filtersMissingShopTag {
   font-size: 12px;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 999px;
+  border: none;
+  background: #f1efe9;
+  color: #444;
+  cursor: pointer;
 }
-.filtersCounter--unlocked {
-  background: #dcf1e4;
-  color: #2f8f6a;
+.filtersMissingShopTag:hover {
+  filter: brightness(0.97);
 }
-.filtersCounter--locked {
-  background: #f1dcdc;
-  color: #b3261e;
+.filtersQuartierRow {
+  display: flex;
+  margin-top: 8px;
+  flex: 0 0 auto;
 }
 .filtersQuartierSelect {
   margin-left: auto;
@@ -895,24 +875,6 @@ html, body {
 }
 #map-sticky-btn[hidden] {
   display: none;
-}
-
-.filtersMissingShopBtn {
-  display: block;
-  width: calc(100% - 40px);
-  margin: 4px 20px 4px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 10px;
-  background: #f1efe9;
-  color: #444;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-}
-.filtersMissingShopBtn:hover {
-  filter: brightness(0.97);
 }
 
 /* ===== Modale "Il manque une boutique ?" ===== */

@@ -114,8 +114,13 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       </div>
     </div>
     <div class="filtersCounters">
-      <span class="filtersCounter filtersCounter--unlocked" id="filtersCountUnlocked"></span>
-      <span class="filtersCounter filtersCounter--locked" id="filtersCountLocked"></span>
+      <a class="filtersGavTag" id="filtersGavTag" href="/gav/" target="_blank" rel="noopener">
+        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeur GAV</span>
+        <span class="filtersGavTagMore">En savoir plus ›</span>
+      </a>
+      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Il manque une boutique ?</button>
+    </div>
+    <div class="filtersQuartierRow">
       <select class="filtersQuartierSelect" id="filtersQuartierSelect" aria-label="Filtrer par quartier">
         <option value="">Tous les quartiers</option>
         ${quartiersSorted.map((q) => `<option value="${q.id}">${q.name}</option>`).join('')}
@@ -128,7 +133,6 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       <div class="filtersChips filtersSubChips" id="filtersSubChips"></div>
     </div>
     <div class="filtersResultsList" id="filtersResultsList"></div>
-    <button type="button" class="filtersMissingShopBtn" id="filtersMissingShopBtn">Il manque une boutique ?</button>
   `;
   document.body.appendChild(root);
 
@@ -136,13 +140,12 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   const subChipsSliderEl = root.querySelector<HTMLDivElement>('#filtersSubChipsSlider')!;
   const subChipsEl = root.querySelector<HTMLDivElement>('#filtersSubChips')!;
   const listEl = root.querySelector<HTMLDivElement>('#filtersResultsList')!;
-  const countUnlockedEl = root.querySelector<HTMLElement>('#filtersCountUnlocked')!;
-  const countLockedEl = root.querySelector<HTMLElement>('#filtersCountLocked')!;
+  const gavCountEl = root.querySelector<HTMLElement>('#filtersGavCount')!;
+  root.querySelector<HTMLButtonElement>('#filtersMissingShopTag')!.addEventListener('click', showMissingShopInfo);
   const quartierSelectEl = root.querySelector<HTMLSelectElement>('#filtersQuartierSelect')!;
   const categoryCountEl = root.querySelector<HTMLElement>('#filtersCategoryCount')!;
   const closeBtn = root.querySelector<HTMLButtonElement>('#filtersCloseBtn')!;
   const resetBtn = root.querySelector<HTMLButtonElement>('#filtersResetBtn')!;
-  root.querySelector<HTMLButtonElement>('#filtersMissingShopBtn')!.addEventListener('click', showMissingShopInfo);
 
   const stickyBtn = document.createElement('button');
   stickyBtn.type = 'button';
@@ -301,9 +304,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   function render() {
     const filtered = filteredMerchants();
     const unlockedCount = filtered.filter((m) => !m.is_locked).length;
-    const lockedCount = filtered.length - unlockedCount;
-    countUnlockedEl.textContent = `${unlockedCount} débloqué${unlockedCount > 1 ? 's' : ''}`;
-    countLockedEl.textContent = `${lockedCount} verrouillé${lockedCount > 1 ? 's' : ''}`;
+    gavCountEl.textContent = String(unlockedCount);
 
     listEl.innerHTML = filtered.length
       ? filtered.map(renderRow).join('')
