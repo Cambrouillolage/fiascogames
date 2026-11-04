@@ -29,6 +29,7 @@ const CATEGORY_BADGE_ID: Record<LandmarkCategory, string> = {
   sports_pitch: '',
   sports_tennis: '',
   sports_track: '',
+  sports_rugby: '',
 };
 
 // Badge "rond + emoji" dessiné sur canvas pour les catégories sans asset
@@ -38,6 +39,7 @@ const EMOJI_BADGE: Partial<Record<LandmarkCategory, { emoji: string; color: stri
   sports_pitch: { emoji: '⚽', color: '#5FBF4A' },
   sports_tennis: { emoji: '🎾', color: '#4AA8C9' },
   sports_track: { emoji: '🏃', color: '#CC6B3F' },
+  sports_rugby: { emoji: '🏉', color: '#8A5A3C' },
 };
 
 const textureLoader = new THREE.TextureLoader();

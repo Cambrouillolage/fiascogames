@@ -119,6 +119,7 @@ const VEHICLE_WORLD_Y = 0.35; // juste au-dessus de la chaussée (voir road y=0.
 interface CarInstance {
   kind: VehicleKind;
   meshIndex: number; // index d'instance dans l'InstancedMesh de son gabarit
+  globalIndex: number; // position dans `instances` (ordre de création) — pour setActiveCount
   path: VehiclePath;
   distance: number;
   dirSign: 1 | -1;
@@ -132,18 +133,29 @@ export interface TrafficSystem {
    * fondu (pas de changement brutal, voir le plan).
    */
   setOpacity(value: number): void;
+  /**
+   * Combien d'instances du pool (voir `maxVehicles`) sont actuellement
+   * simulées/affichées — palier LOD supplémentaire piloté par main.ts selon
+   * le zoom ("beaucoup plus de voitures" à partir de 70%, voir le plan).
+   * Monte/descend progressivement vers cette cible (pas de saut brutal).
+   */
+  setActiveCount(n: number): void;
   dispose(): void;
 }
 
 const MAX_VEHICLES = 32;
+// Vitesse de rampe du nombre d'instances actives (instances/s) — assez
+// rapide pour suivre un zoom normal, assez lent pour ne pas faire "pop"
+// une dizaine de voitures d'un coup au franchissement d'un seuil.
+const ACTIVE_COUNT_RAMP_PER_SEC = 24;
 
 /**
  * Construit le système de voitures, restreint aux routes du quartier
  * `zoneRingLocal` (polygone en mètres locaux, même repère que `roads` —
- * voir pointInRing dans src/quartiers.ts). Zone de pilotage initiale :
- * seules les routes touchant ce polygone reçoivent du trafic — lever la
- * restriction plus tard = passer le contour de toute la commune ici, pas de
- * réécriture (voir le plan).
+ * voir pointInRing dans src/quartiers.ts). `maxVehicles` dimensionne le
+ * pool construit une fois au chargement (coût ~nul, voir buildVehicleGeometry) ;
+ * combien de ce pool sont réellement actifs à un instant donné se règle
+ * ensuite dynamiquement via `setActiveCount` (palier LOD zoom, voir le plan).
  */
 export function createTraffic(
   roads: MapRoad[],
@@ -205,6 +217,7 @@ export function createTraffic(
       instances.push({
         kind,
         meshIndex,
+        globalIndex: i,
         path,
         distance: Math.random() * path.totalLength,
         dirSign: Math.random() < 0.5 ? 1 : -1,
@@ -223,11 +236,37 @@ export function createTraffic(
   const _up = new THREE.Vector3(0, 1, 0);
 
   let active = true;
+  // Tout le pool actif par défaut (comportement inchangé tant que
+  // setActiveCount n'est pas appelé) ; main.ts le réduit/ramène selon le
+  // palier de zoom juste après la création (voir le plan).
+  let activeCount = instances.length;
+  let activeCountTarget = instances.length;
+  let activeCountInitialized = false; // le tout premier setActiveCount s'applique sans rampe (voir plus bas)
+
+  function applyMeshCounts(n: number) {
+    const perKind: Record<VehicleKind, number> = { car: 0, van: 0, bus: 0 };
+    for (let i = 0; i < n; i++) perKind[instances[i].kind]++;
+    (Object.keys(meshesByKind) as VehicleKind[]).forEach((kind) => {
+      const mesh = meshesByKind[kind];
+      if (mesh) mesh.count = perKind[kind];
+    });
+  }
 
   return {
     update(deltaSeconds: number) {
       if (!active || !instances.length) return;
-      for (const inst of instances) {
+      if (activeCount !== activeCountTarget) {
+        const step = ACTIVE_COUNT_RAMP_PER_SEC * deltaSeconds;
+        activeCount =
+          activeCountTarget > activeCount
+            ? Math.min(activeCountTarget, activeCount + step)
+            : Math.max(activeCountTarget, activeCount - step);
+        applyMeshCounts(Math.round(activeCount));
+      }
+      const liveCount = Math.round(activeCount);
+      if (!liveCount) return;
+      for (let i = 0; i < liveCount; i++) {
+        const inst = instances[i];
         const speed = VEHICLE_SPEED_MPS[inst.kind];
         inst.distance += inst.dirSign * speed * deltaSeconds;
         if (inst.distance <= 0) {
@@ -260,6 +299,17 @@ export function createTraffic(
       group.children.forEach((c) => {
         ((c as THREE.InstancedMesh).material as THREE.MeshToonMaterial).opacity = value;
       });
+    },
+    setActiveCount(n: number) {
+      activeCountTarget = THREE.MathUtils.clamp(Math.round(n), 0, instances.length);
+      if (!activeCountInitialized) {
+        // Le tout premier appel (juste après la création, voir main.ts) se
+        // pose directement au bon palier plutôt que de partir du pool
+        // complet et ramper vers le bas sur les premières frames.
+        activeCountInitialized = true;
+        activeCount = activeCountTarget;
+        applyMeshCounts(activeCount);
+      }
     },
     dispose() {
       scene.remove(group);

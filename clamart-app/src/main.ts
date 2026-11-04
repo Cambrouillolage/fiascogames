@@ -18,12 +18,17 @@ import { createPinDeclutter, type PinDeclutter } from './pinDeclutter.ts';
 import { createTraffic, type TrafficSystem } from './traffic.ts';
 import { createPedestrians, type PedestrianSystem } from './pedestrians.ts';
 import { createLodFader, type LodFader } from './lod.ts';
+import { createTransit, type TransitSystem } from './transit.ts';
 
 // Seuil de "zoom fraction" (0 = dézoomé au max, 1 = zoomé au max, voir
 // IsoCameraRig#getZoomFraction) sous lequel on bascule des badges/pins vers
 // les zones de quartier colorées — "dézoomé à 30% de la ville" de la
 // demande produit, traduit en fraction de la plage de zoom disponible.
 const QUARTIER_MODE_ZOOM_THRESHOLD = 0.3;
+// À partir de 70% de la plage de zoom (même échelle que ci-dessus) :
+// beaucoup plus de voitures/piétons actifs (demande explicite) — reste
+// cadré en-dessous ("baseline"), voir trafficDensityForZoom plus bas.
+const HIGH_DENSITY_ZOOM_THRESHOLD = 0.7;
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 app.innerHTML = `
@@ -75,6 +80,22 @@ function viewportSize() {
 // fois au chargement comme reducedMotion ci-dessous.
 const isLowPowerDevice = viewportSize().w < 768 || (navigator.hardwareConcurrency ?? 8) <= 4;
 
+// Paliers de densité voitures/piétons selon le zoom (voir
+// HIGH_DENSITY_ZOOM_THRESHOLD) : "baseline" tant qu'on n'est pas bien
+// rapproché, "high" (beaucoup plus, demande explicite) au-delà. Le pool
+// construit une fois par src/traffic.ts et src/pedestrians.ts doit couvrir
+// le plus grand des deux (voir HIGH_* passés à createTraffic/createPedestrians).
+const BASELINE_VEHICLES = isLowPowerDevice ? 16 : 32;
+const HIGH_VEHICLES = isLowPowerDevice ? 30 : 60;
+const BASELINE_PEDESTRIANS = isLowPowerDevice ? 24 : 50;
+const HIGH_PEDESTRIANS = isLowPowerDevice ? 45 : 90;
+
+function trafficDensityForZoom(zoomFraction: number): { vehicles: number; pedestrians: number } {
+  return zoomFraction >= HIGH_DENSITY_ZOOM_THRESHOLD
+    ? { vehicles: HIGH_VEHICLES, pedestrians: HIGH_PEDESTRIANS }
+    : { vehicles: BASELINE_VEHICLES, pedestrians: BASELINE_PEDESTRIANS };
+}
+
 const { w: initW, h: initH } = viewportSize();
 let rig = new IsoCameraRig(initW / initH, 450);
 renderer.setSize(initW, initH);
@@ -99,6 +120,8 @@ let trafficSystem: TrafficSystem | null = null;
 let pedestrianSystem: PedestrianSystem | null = null;
 let trafficFader: LodFader | null = null;
 let pedestrianFader: LodFader | null = null;
+let transitSystem: TransitSystem | null = null;
+let transitFader: LodFader | null = null;
 
 // Glissement (inertie) après un pan tactile — "léger glissement" demandé,
 // uniquement au doigt (pointerType === 'touch', voir setupInteraction),
@@ -149,12 +172,21 @@ function animate() {
   // dessous, voitures/piétons n'apportent rien (illisibles à cette échelle,
   // comme les badges/pins) et coûtent une simulation + un rendu pour rien —
   // fondu court plutôt qu'une disparition brutale (voir src/lod.ts).
-  const trafficTarget: 0 | 1 = rig.getZoomFraction() > QUARTIER_MODE_ZOOM_THRESHOLD ? 1 : 0;
+  const zoomFraction = rig.getZoomFraction();
+  const trafficTarget: 0 | 1 = zoomFraction > QUARTIER_MODE_ZOOM_THRESHOLD ? 1 : 0;
   trafficFader?.tick(trafficTarget, deltaSeconds);
   pedestrianFader?.tick(trafficTarget, deltaSeconds);
+  transitFader?.tick(trafficTarget, deltaSeconds);
+  // Palier "beaucoup plus de monde" à partir de 70% de zoom (voir
+  // trafficDensityForZoom) : setActiveCount gère lui-même la rampe
+  // progressive, pas besoin de ne l'appeler qu'au changement de palier.
+  const density = trafficDensityForZoom(zoomFraction);
+  trafficSystem?.setActiveCount(density.vehicles);
+  pedestrianSystem?.setActiveCount(density.pedestrians);
   if (!reducedMotion && pageVisible) {
     trafficSystem?.update(deltaSeconds);
     pedestrianSystem?.update(deltaSeconds, (now - animationStartTime) / 1000);
+    transitSystem?.update(deltaSeconds);
   }
   renderer.render(scene, rig.camera);
 }
@@ -192,9 +224,11 @@ loadMapData()
     // Voitures/piétons sur toute la ville (généralisé après validation sur
     // le quartier pilote "Centre") : `data.boundary` est le vrai contour
     // administratif de Clamart, déjà en mètres locaux (même repère que
-    // `data.roads`) — voir src/traffic.ts et src/pedestrians.ts.
-    trafficSystem = createTraffic(data.roads, data.boundary, scene, isLowPowerDevice ? 16 : undefined);
-    pedestrianSystem = createPedestrians(data.roads, data.boundary, scene, isLowPowerDevice ? 24 : undefined);
+    // `data.roads`) — voir src/traffic.ts et src/pedestrians.ts. Le pool
+    // construit ici couvre le palier "high" (zoom rapproché) ; le palier
+    // réellement actif est piloté dynamiquement (voir plus bas et animate()).
+    trafficSystem = createTraffic(data.roads, data.boundary, scene, HIGH_VEHICLES);
+    pedestrianSystem = createPedestrians(data.roads, data.boundary, scene, HIGH_PEDESTRIANS);
     // Position initiale posée une fois immédiatement (delta=0), y compris
     // sous `prefers-reduced-motion` : sinon chaque instance reste à
     // l'origine (0,0,0) tant que animate() ne les a jamais mises à jour —
@@ -203,9 +237,18 @@ loadMapData()
     // testant l'émulation `prefers-reduced-motion` via CDP).
     trafficSystem.update(0);
     pedestrianSystem.update(0, 0);
+    const initialDensity = trafficDensityForZoom(rig.getZoomFraction());
+    trafficSystem.setActiveCount(initialDensity.vehicles);
+    pedestrianSystem.setActiveCount(initialDensity.pedestrians);
     const initialOpacity: 0 | 1 = rig.getZoomFraction() > QUARTIER_MODE_ZOOM_THRESHOLD ? 1 : 0;
     trafficFader = createLodFader(trafficSystem, initialOpacity);
     pedestrianFader = createLodFader(pedestrianSystem, initialOpacity);
+
+    // Train + trams (nombre fixe, pas de palier "beaucoup plus" — voir
+    // src/transit.ts) : même fondu zoom que voitures/piétons.
+    transitSystem = createTransit(data.railways, data.tramways, data.boundary, scene);
+    transitSystem.update(0);
+    transitFader = createLodFader(transitSystem, initialOpacity);
 
     function doDeclutter() {
       const { w, h } = viewportSize();

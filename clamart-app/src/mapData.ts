@@ -42,7 +42,8 @@ export type LandmarkCategory =
   | 'sports_pitch'
   | 'sports_tennis'
   | 'sports_track'
-  | 'sports_hall';
+  | 'sports_hall'
+  | 'sports_rugby';
 
 export interface MapLandmark {
   c: LandmarkCategory;

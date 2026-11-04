@@ -102,10 +102,13 @@ export interface PedestrianSystem {
   update(deltaSeconds: number, elapsedSeconds: number): void;
   /** Voir TrafficSystem#setOpacity (src/traffic.ts) — même contrat. */
   setOpacity(value: number): void;
+  /** Voir TrafficSystem#setActiveCount (src/traffic.ts) — même contrat. */
+  setActiveCount(n: number): void;
   dispose(): void;
 }
 
 const MAX_PEDESTRIANS = 50;
+const ACTIVE_COUNT_RAMP_PER_SEC = 36;
 
 /**
  * Même principe de zone pilote que src/traffic.ts (voir ce fichier et le
@@ -168,11 +171,25 @@ export function createPedestrians(
   const mesh = group.children[0] as THREE.InstancedMesh | undefined;
 
   let active = true;
+  let activeCount = instances.length;
+  let activeCountTarget = instances.length;
+  let activeCountInitialized = false;
 
   return {
     update(deltaSeconds: number, elapsedSeconds: number) {
       if (!active || !instances.length || !mesh) return;
-      for (const inst of instances) {
+      if (activeCount !== activeCountTarget) {
+        const step = ACTIVE_COUNT_RAMP_PER_SEC * deltaSeconds;
+        activeCount =
+          activeCountTarget > activeCount
+            ? Math.min(activeCountTarget, activeCount + step)
+            : Math.max(activeCountTarget, activeCount - step);
+        mesh.count = Math.round(activeCount);
+      }
+      const liveCount = Math.round(activeCount);
+      if (!liveCount) return;
+      for (let i = 0; i < liveCount; i++) {
+        const inst = instances[i];
         if (inst.speed > 0) {
           inst.distance += inst.dirSign * inst.speed * deltaSeconds;
           if (inst.distance <= 0) {
@@ -205,6 +222,14 @@ export function createPedestrians(
       active = value > 0;
       group.visible = active;
       if (mesh) (mesh.material as THREE.MeshToonMaterial).opacity = value;
+    },
+    setActiveCount(n: number) {
+      activeCountTarget = THREE.MathUtils.clamp(Math.round(n), 0, instances.length);
+      if (!activeCountInitialized) {
+        activeCountInitialized = true;
+        activeCount = activeCountTarget;
+        if (mesh) mesh.count = activeCount;
+      }
     },
     dispose() {
       scene.remove(group);

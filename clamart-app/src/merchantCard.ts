@@ -1,7 +1,6 @@
 import type { Category, Merchant } from './merchants.ts';
 import { googleMapsDirectionsUrl, merchantSearchUrl } from './merchants.ts';
 import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
-import { showUnlockInfo } from './unlockInfo.ts';
 
 // Catégories pour résoudre le libellé de "spécialité" (sous-catégorie, ou à
 // défaut catégorie) — jamais masquée par la vue Supabase même verrouillé
@@ -57,12 +56,11 @@ function ensureCard() {
     <div class="merchantCardActions">
       <a class="merchantCardWeb" target="_blank" rel="noopener"></a>
       <a class="merchantCardGo" target="_blank" rel="noopener">S'y rendre</a>
-      <button type="button" class="merchantCardUnlockBtn">🔓 Déverrouiller ce commerce</button>
+      <a class="merchantCardGavInfo" href="/gav/" target="_blank" rel="noopener">En savoir plus</a>
     </div>
   `;
   document.body.appendChild(cardEl);
   cardEl.querySelector('.merchantCardClose')!.addEventListener('click', hideMerchantCard);
-  cardEl.querySelector('.merchantCardUnlockBtn')!.addEventListener('click', showUnlockInfo);
 }
 
 export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: number }) {
@@ -86,10 +84,14 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
   specialtyEl.textContent = specialty;
   specialtyEl.hidden = !specialty;
 
+  // Plus aucune mention de verrouillage/déverrouillage ici (demande
+  // explicite) : seuls les revendeurs GAV (non verrouillés) ont une
+  // information affichée, avec un lien vers la page GAV pour en savoir plus.
   const statusEl = cardEl.querySelector('.merchantCardStatus') as HTMLElement;
-  statusEl.textContent = merchant.is_locked ? '🔒 Commerce à débloquer' : '✅ Revendeur GAV';
-  statusEl.classList.toggle('isLocked', merchant.is_locked);
+  statusEl.textContent = merchant.is_locked ? '' : '✅ Revendeur GAV';
+  statusEl.hidden = merchant.is_locked;
   statusEl.classList.toggle('isUnlocked', !merchant.is_locked);
+  statusEl.classList.remove('isLocked');
 
   const stockEl = cardEl.querySelector('.merchantCardStock') as HTMLElement;
   if (!merchant.is_locked && merchant.gav_stock_quantity != null) {
@@ -99,8 +101,8 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
     stockEl.hidden = true;
   }
 
-  const unlockBtn = cardEl.querySelector('.merchantCardUnlockBtn') as HTMLButtonElement;
-  unlockBtn.hidden = !merchant.is_locked;
+  const gavInfoLink = cardEl.querySelector('.merchantCardGavInfo') as HTMLAnchorElement;
+  gavInfoLink.hidden = merchant.is_locked;
 
   cardEl.querySelector('.merchantCardDesc')!.textContent = merchant.description ?? '';
   (cardEl.querySelector('.merchantCardDesc') as HTMLElement).hidden = !merchant.description;

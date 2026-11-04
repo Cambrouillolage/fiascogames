@@ -318,7 +318,8 @@ export type LandmarkCategory =
   | 'sports_pitch'
   | 'sports_tennis'
   | 'sports_track'
-  | 'sports_hall';
+  | 'sports_hall'
+  | 'sports_rugby';
 
 interface OutLandmark {
   c: LandmarkCategory;
@@ -472,6 +473,7 @@ const DEFAULT_LANDMARK_NAME: Record<LandmarkCategory, string> = {
   sports_tennis: 'Court de tennis',
   sports_track: "Piste d'athlétisme",
   sports_hall: 'Gymnase',
+  sports_rugby: 'Terrain de rugby',
 };
 
 const LANDMARK_BADGE_CLEARANCE_M = 8;
@@ -854,6 +856,11 @@ out geom;
       // sur OSM, pas une valeur `leisure` à part — d'où ce sous-tri par
       // `sport` plutôt qu'une branche `leisure` dédiée.
       if (tags.sport === 'tennis') {
+        // Court de tennis – Avenue du Docteur Calmette (centroïde ≈ 1343,
+        // 1768) : signalé comme n'existant pas réellement — exclu
+        // explicitement plutôt que de supprimer toute la branche tennis.
+        const c = centroid(points);
+        if (Math.hypot(c[0] - 1343.6, c[1] - 1768.4) < 20) continue;
         tennisCourts.push({ p: points });
         pushLandmark('sports_tennis', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
       } else {
@@ -941,6 +948,34 @@ out geom;
       ring.push([round(cx + Math.cos(angle) * radiusM), round(cy + Math.sin(angle) * radiusM)]);
     }
     water.push({ p: ring });
+  }
+
+  // Terrain de rugby du complexe sportif Jules Hunebelle : confirmé réel
+  // (projet régional Île-de-France, terrain 95x68m, rénovation du
+  // complexe), mais absent d'OSM — probablement postérieur au dernier
+  // relevé utilisé ici. Pas de contour exact disponible : rectangle aux
+  // dimensions réelles standard, positionné dans l'espace vert ouvert le
+  // plus proche du reste du complexe (tennis/gymnase déjà repérés vers
+  // 540,510) plutôt qu'une position inventée au hasard — à corriger si un
+  // relevé précis devient disponible.
+  {
+    const cx = 610;
+    const cy = 352;
+    const halfW = 47.5; // 95m
+    const halfH = 34; // 68m
+    const rugbyRect: [number, number][] = [
+      [cx - halfW, cy - halfH],
+      [cx + halfW, cy - halfH],
+      [cx + halfW, cy + halfH],
+      [cx - halfW, cy + halfH],
+    ];
+    sportsPitches.push({ p: rugbyRect });
+    landmarks.push({
+      c: 'sports_rugby',
+      n: 'Terrain de rugby – Hunebelle',
+      pos: [cx, cy],
+      h: DEFAULT_BADGE_HEIGHT_M,
+    });
   }
 
   const streets: OutStreet[] = Array.from(streetPoints.entries()).map(([n, pts]) => ({

@@ -18,6 +18,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   sports_tennis: 'Tennis',
   sports_track: "Piste d'athlétisme",
   sports_hall: 'Gymnase',
+  sports_rugby: 'Terrain de rugby',
 };
 
 let sheetEl: HTMLDivElement;

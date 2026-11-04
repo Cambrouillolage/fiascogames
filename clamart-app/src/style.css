@@ -117,7 +117,6 @@ html, body {
 #bottom-sheet-backdrop { z-index: 49; }
 #merchant-card-backdrop { z-index: 59; }
 #filters-sheet-backdrop { z-index: 54; }
-#unlock-info-backdrop { z-index: 64; }
 
 #bottom-sheet {
   position: fixed;
@@ -279,9 +278,8 @@ html, body {
   border-radius: 999px;
   margin-top: 4px;
 }
-.merchantCardStatus.isLocked {
-  background: #f1dcdc;
-  color: #b3261e;
+.merchantCardStatus[hidden] {
+  display: none;
 }
 .merchantCardStatus.isUnlocked {
   background: #dcf1e4;
@@ -298,6 +296,9 @@ html, body {
   border-radius: 999px;
   background: #fde8cf;
   color: #a85d00;
+}
+.merchantCardStock[hidden] {
+  display: none;
 }
 
 .merchantCardDesc {
@@ -328,6 +329,9 @@ html, body {
   border-radius: 10px;
   text-decoration: none;
 }
+.merchantCardGo[hidden] {
+  display: none;
+}
 .merchantCardGo:hover {
   filter: brightness(1.05);
 }
@@ -350,7 +354,7 @@ html, body {
   display: none;
 }
 
-.merchantCardUnlockBtn {
+.merchantCardGavInfo {
   display: inline-block;
   text-align: center;
   background: #f1efe9;
@@ -359,10 +363,12 @@ html, body {
   font-size: 14px;
   padding: 10px 14px;
   border-radius: 10px;
-  border: none;
-  cursor: pointer;
+  text-decoration: none;
 }
-.merchantCardUnlockBtn[hidden] {
+.merchantCardGavInfo:hover {
+  filter: brightness(0.97);
+}
+.merchantCardGavInfo[hidden] {
   display: none;
 }
 
@@ -811,9 +817,9 @@ html, body {
   border-radius: 999px;
   width: fit-content;
 }
-.resultRowStatus--locked {
-  background: #f1dcdc;
-  color: #b3261e;
+.resultRowStatus--unlocked {
+  background: #dcf1e4;
+  color: #2f8f6a;
 }
 
 .resultRowStock {
@@ -826,20 +832,6 @@ html, body {
   width: fit-content;
   background: #fde8cf;
   color: #a85d00;
-}
-
-.resultRowUnlockBtn {
-  display: inline-block;
-  margin-top: 4px;
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 5px 10px;
-  border-radius: 999px;
-  width: fit-content;
-  border: none;
-  background: #1a1a1a;
-  color: #fff;
-  cursor: pointer;
 }
 
 .resultRowCtas {
@@ -883,108 +875,3 @@ html, body {
   display: none;
 }
 
-/* ===== Modale "Comment débloquer ce commerce ?" ===== */
-#unlock-info-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 65;
-  max-height: min(80vh, 560px);
-  overflow-y: auto;
-  background: #fff;
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.25);
-  padding: 10px 20px calc(22px + env(safe-area-inset-bottom));
-  transform: translateY(100%);
-  transition: transform 0.25s ease;
-}
-#unlock-info-sheet.isOpen {
-  transform: translateY(0);
-}
-
-.unlockInfoClose {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  border: none;
-  background: none;
-  font-size: 22px;
-  line-height: 1;
-  color: #999;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.unlockInfoHandle {
-  width: 36px;
-  height: 4px;
-  border-radius: 2px;
-  background: #ddd;
-  margin: 0 auto 14px;
-}
-
-.unlockInfoTitle {
-  margin: 0 0 8px;
-  font-size: 18px;
-  color: #1a1a1a;
-  padding-right: 24px;
-}
-
-.unlockInfoText {
-  margin: 0 0 14px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #444;
-}
-
-.unlockInfoBox {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #f7f5ef;
-  border-radius: 14px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-}
-.unlockInfoBoxImg {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.unlockInfoBoxLink {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ea6f11;
-  text-decoration: none;
-}
-
-.unlockInfoSocial {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.unlockInfoSocialLabel {
-  font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.unlockInfoSocialLinks {
-  display: flex;
-  gap: 8px;
-}
-.unlockInfoSocialLink {
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #f1efe9;
-  color: #1a1a1a;
-  text-decoration: none;
-}
-.unlockInfoSocialLink[hidden] {
-  display: none;
-}

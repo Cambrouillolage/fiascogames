@@ -3,7 +3,6 @@ import { googleMapsDirectionsUrl, merchantSearchUrl, latLonToLocalMeters } from 
 import type { IsoCameraRig } from './cameraRig.ts';
 import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
 import { applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
-import { showUnlockInfo } from './unlockInfo.ts';
 import type { QuartierFeature } from './quartiersData.ts';
 import { quartierIdForLatLon } from './quartiers.ts';
 
@@ -261,6 +260,9 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     const webHref = m.website || merchantSearchUrl(m);
     const webLabel = m.website ? 'Voir le site' : 'Voir sur internet';
 
+    // Plus aucune mention de verrouillage/déverrouillage ici (demande
+    // explicite) : seuls les revendeurs GAV (non verrouillés) affichent une
+    // information, avec un lien vers la page GAV pour en savoir plus.
     if (m.is_locked) {
       return `
         <div class="resultRow resultRow--locked" data-id="${m.id}">
@@ -268,11 +270,9 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
           <span class="resultRowBody">
             <span class="resultRowName">${m.name}</span>
             <span class="resultRowMeta">${label}</span>
-            <span class="resultRowStatus resultRowStatus--locked">Commerce verrouillé</span>
             <span class="resultRowCtas">
               <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             </span>
-            <button type="button" class="resultRowUnlockBtn" data-unlock-id="${m.id}">Déverrouiller ce commerce</button>
           </span>
         </div>`;
     }
@@ -284,10 +284,12 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         <span class="resultRowBody">
           <span class="resultRowName">${m.name}</span>
           <span class="resultRowMeta">${label}${m.address ? ' · ' + m.address : ''}</span>
+          <span class="resultRowStatus resultRowStatus--unlocked">✅ Revendeur GAV</span>
           ${m.gav_stock_quantity != null ? `<span class="resultRowStock">📦 ${m.gav_stock_quantity} GAV</span>` : ''}
           <span class="resultRowCtas">
             <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
+            <a class="resultRowCta" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">En savoir plus</a>
           </span>
         </span>
       </div>`;
@@ -313,13 +315,6 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         }
       });
     });
-    listEl.querySelectorAll<HTMLButtonElement>('.resultRowUnlockBtn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showUnlockInfo();
-      });
-    });
-
     if (filtered.length && isOpen) {
       stickyBtn.textContent = `Voir sur la carte (${filtered.length})`;
       stickyBtn.hidden = false;
