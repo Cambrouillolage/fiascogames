@@ -105,7 +105,7 @@ export interface PedestrianSystem {
   dispose(): void;
 }
 
-const MAX_PEDESTRIANS = 28;
+const MAX_PEDESTRIANS = 50;
 
 /**
  * Même principe de zone pilote que src/traffic.ts (voir ce fichier et le

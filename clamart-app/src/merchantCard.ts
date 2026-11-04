@@ -120,19 +120,15 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
     goLink.hidden = true;
   }
 
-  // Commerce verrouillé : pas de nom/adresse exploitables (masqués par la
-  // vue publique), donc pas de CTA web du tout — cohérent avec l'absence
-  // de CTA "Voir l'itinéraire" dans ce cas (merchantCardGo masqué ci-dessus,
-  // car googleMapsDirectionsUrl ne dépend lui que de lat/lon, jamais masqué
-  // — seul ce CTA-ci dépend du nom, donc testé séparément ici).
+  // Le nom n'est plus jamais masqué (migration 0015), donc ce CTA reste
+  // pertinent même verrouillé — seuls les CTA qui dépendent de champs
+  // encore masqués pour un commerce verrouillé (site officiel réel,
+  // adresse) ne s'affichent pas ici par eux-mêmes : `merchantSearchUrl`
+  // retombe sur nom + ville quand l'adresse est masquée.
   const webLink = cardEl.querySelector('.merchantCardWeb') as HTMLAnchorElement;
-  if (merchant.is_locked) {
-    webLink.hidden = true;
-  } else {
-    webLink.href = merchant.website || merchantSearchUrl(merchant);
-    webLink.textContent = merchant.website ? 'Voir le site' : 'Voir sur internet';
-    webLink.hidden = false;
-  }
+  webLink.href = merchant.website || merchantSearchUrl(merchant);
+  webLink.textContent = merchant.website ? 'Voir le site' : 'Voir sur internet';
+  webLink.hidden = false;
 
   const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
   cardEl.classList.toggle('isDesktop', isDesktop);

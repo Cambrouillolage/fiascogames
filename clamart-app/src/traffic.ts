@@ -135,7 +135,7 @@ export interface TrafficSystem {
   dispose(): void;
 }
 
-const MAX_VEHICLES = 18;
+const MAX_VEHICLES = 32;
 
 /**
  * Construit le système de voitures, restreint aux routes du quartier
