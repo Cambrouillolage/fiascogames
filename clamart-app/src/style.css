@@ -6,15 +6,6 @@
   box-sizing: border-box;
 }
 
-/* Badge d'un commerce verrouillé dans un contexte DOM (liste de résultats,
-   fiche, dropdown de recherche) : même logo, en gris. Le pin 3D sur la carte
-   a son propre traitement (conversion pixel réelle, voir
-   grayscaleBadgeTexture dans merchantPins.ts — un filtre CSS ne s'applique
-   pas à une texture WebGL). */
-.isLockedBadge {
-  filter: grayscale(1);
-}
-
 html, body {
   margin: 0;
   padding: 0;
@@ -341,6 +332,24 @@ html, body {
   filter: brightness(1.05);
 }
 
+.merchantCardWeb {
+  display: inline-block;
+  text-align: center;
+  background: #f1efe9;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+.merchantCardWeb:hover {
+  filter: brightness(0.97);
+}
+.merchantCardWeb[hidden] {
+  display: none;
+}
+
 .merchantCardUnlockBtn {
   display: inline-block;
   text-align: center;
@@ -616,6 +625,8 @@ html, body {
 
 .filtersCounters {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-top: 12px;
   flex: 0 0 auto;
@@ -633,6 +644,24 @@ html, body {
 .filtersCounter--locked {
   background: #f1dcdc;
   color: #b3261e;
+}
+.filtersQuartierSelect {
+  margin-left: auto;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #444;
+  background: #f0eee9;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 26px 5px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  max-width: 50%;
 }
 
 .filtersChipsSlider {
@@ -683,6 +712,39 @@ html, body {
   color: #fff;
 }
 
+/* Sous-menu de familles (ex. Caviste/Boulangerie sous "Alimentation"),
+   visible seulement avec 1 ou 2 catégories actives — voir renderSubChips
+   dans filtersSheet.ts. Même mécanique de slider/fondu que .filtersChipsSlider,
+   juste un peu plus compact pour marquer qu'il s'agit d'un niveau secondaire. */
+.filtersSubChipsSlider {
+  margin-top: 8px;
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+}
+.filtersSubChipsSlider::-webkit-scrollbar {
+  display: none;
+}
+.filtersSubChipsSlider[hidden] {
+  display: none;
+}
+.catChip.subChip {
+  padding: 5px 11px;
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #ece8de;
+  border-left: 3px solid var(--chip-color, #9ca3af);
+}
+.catChip.subChip.isActive {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fff;
+}
+
 .filtersResultsList {
   margin-top: 14px;
   overflow-y: auto;
@@ -720,24 +782,6 @@ html, body {
   width: 40px;
   height: 40px;
   flex: 0 0 auto;
-}
-.resultRowBadgeWrap {
-  position: relative;
-  flex: 0 0 auto;
-}
-.resultRowLock {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  font-size: 11px;
-  background: #1f2937;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .resultRowBody {

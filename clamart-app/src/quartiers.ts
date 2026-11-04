@@ -88,6 +88,41 @@ export interface QuartiersLayer {
   setVisible(visible: boolean): void;
 }
 
+/**
+ * Point dans un polygone (ray-casting), mêmes unités (mètres locaux) des
+ * deux côtés. Exportée : aussi utilisée par src/traffic.ts et
+ * src/pedestrians.ts pour restreindre voitures/piétons au quartier pilote.
+ */
+export function pointInRing(x: number, y: number, ring: [number, number][]): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/**
+ * Identifiant du quartier contenant (lat, lon), ou `null` si aucun (filtre
+ * "par quartier", voir src/filtersSheet.ts — pas de champ quartier stocké en
+ * base, un commerce est rattaché à un quartier par simple test géométrique).
+ */
+export function quartierIdForLatLon(
+  lat: number,
+  lon: number,
+  features: QuartierFeature[],
+  center: { lat: number; lon: number }
+): string | null {
+  const [x, y] = latLonToLocalMeters(lat, lon, center);
+  for (const f of features) {
+    const ring = f.ring.map(([flon, flat]) => latLonToLocalMeters(flat, flon, center));
+    if (pointInRing(x, y, ring)) return f.id;
+  }
+  return null;
+}
+
 const ZONE_Y = 0.6; // juste au-dessus du sol/parcs ; depthTest désactivé, donc toujours visible par-dessus les bâtiments
 const LABEL_Y = 40;
 // Taille en unités-monde (pas en pixels) : ce mode n'est visible qu'à un

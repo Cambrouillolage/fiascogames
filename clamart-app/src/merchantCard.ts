@@ -1,5 +1,5 @@
 import type { Category, Merchant } from './merchants.ts';
-import { googleMapsDirectionsUrl } from './merchants.ts';
+import { googleMapsDirectionsUrl, merchantSearchUrl } from './merchants.ts';
 import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
 import { showUnlockInfo } from './unlockInfo.ts';
 
@@ -55,6 +55,7 @@ function ensureCard() {
     </div>
     <div class="merchantCardAddress"></div>
     <div class="merchantCardActions">
+      <a class="merchantCardWeb" target="_blank" rel="noopener"></a>
       <a class="merchantCardGo" target="_blank" rel="noopener">S'y rendre</a>
       <button type="button" class="merchantCardUnlockBtn">🔓 Déverrouiller ce commerce</button>
     </div>
@@ -77,7 +78,6 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
   const badgeEl = cardEl.querySelector('.merchantCardBadge') as HTMLImageElement;
   badgeEl.src = `${import.meta.env.BASE_URL}${badge.png}`;
   badgeEl.alt = badge.nom;
-  badgeEl.classList.toggle('isLockedBadge', merchant.is_locked);
 
   cardEl.querySelector('.merchantCardTitle')!.textContent = merchant.name;
 
@@ -118,6 +118,20 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
     goLink.hidden = false;
   } else {
     goLink.hidden = true;
+  }
+
+  // Commerce verrouillé : pas de nom/adresse exploitables (masqués par la
+  // vue publique), donc pas de CTA web du tout — cohérent avec l'absence
+  // de CTA "Voir l'itinéraire" dans ce cas (merchantCardGo masqué ci-dessus,
+  // car googleMapsDirectionsUrl ne dépend lui que de lat/lon, jamais masqué
+  // — seul ce CTA-ci dépend du nom, donc testé séparément ici).
+  const webLink = cardEl.querySelector('.merchantCardWeb') as HTMLAnchorElement;
+  if (merchant.is_locked) {
+    webLink.hidden = true;
+  } else {
+    webLink.href = merchant.website || merchantSearchUrl(merchant);
+    webLink.textContent = merchant.website ? 'Voir le site' : 'Voir sur internet';
+    webLink.hidden = false;
   }
 
   const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;

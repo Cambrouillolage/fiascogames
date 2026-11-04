@@ -1,9 +1,11 @@
 import type { Category, Merchant } from './merchants.ts';
-import { googleMapsDirectionsUrl, latLonToLocalMeters } from './merchants.ts';
+import { googleMapsDirectionsUrl, merchantSearchUrl, latLonToLocalMeters } from './merchants.ts';
 import type { IsoCameraRig } from './cameraRig.ts';
 import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
 import { applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
 import { showUnlockInfo } from './unlockInfo.ts';
+import type { QuartierFeature } from './quartiersData.ts';
+import { quartierIdForLatLon } from './quartiers.ts';
 
 // Bottom sheet "Filtres" : catégories (tri alphabétique, multi-sélection),
 // compteurs déverrouillé/verrouillé, liste de résultats, bouton sticky
@@ -18,6 +20,7 @@ export interface FiltersSheetDeps {
   merchantPins: MerchantPin[];
   rig: IsoCameraRig;
   center: { lat: number; lon: number };
+  quartiers: QuartierFeature[];
   onSelectMerchant: (merchant: Merchant) => void;
   onFilterCountChange: (n: number) => void;
   onResetSearch: () => void;
@@ -30,6 +33,8 @@ export interface FiltersSheet {
   stickyBtn: HTMLElement;
   open(): void;
   getActiveCategories(): Set<string> | null;
+  /** Commerces respectant le quartier + la sous-catégorie actuellement sélectionnés (voir applyQuartierMode, main.ts), ou `null` si aucun des deux n'est restreint. */
+  getExtraFilterMerchantIds(): Set<string> | null;
 }
 
 function categoryLabel(categories: Category[], id: string | null): string {
@@ -49,11 +54,25 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     merchantPins,
     rig,
     center,
+    quartiers,
     onSelectMerchant,
     onFilterCountChange,
     onResetSearch,
     onCameraSettled,
   } = deps;
+
+  // Un commerce n'a pas de champ "quartier" en base (voir merchants.ts) :
+  // son quartier est déterminé une seule fois ici par test géométrique
+  // (point dans le polygone du quartier, voir quartiers.ts), pas recalculé
+  // à chaque rendu — ni les commerces ni les polygones de quartier ne
+  // changent après le chargement initial.
+  const merchantQuartierId = new Map<string, string | null>(
+    merchants.map((m) => [
+      m.id,
+      m.lat != null && m.lon != null ? quartierIdForLatLon(m.lat, m.lon, quartiers, center) : null,
+    ])
+  );
+  const quartiersSorted = [...quartiers].sort((a, b) => a.name.localeCompare(b.name, 'fr'));
 
   // Seulement les catégories qui ont au moins un commerce : la taxonomie en
   // base contient encore d'anciennes catégories orphelines (ex. "Éducation
@@ -64,6 +83,19 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   const mainCats = categories
     .filter((c) => !c.parent_id && categoryIdsInUse.has(c.id))
     .sort((a, b) => a.label.localeCompare(b.label, 'fr'));
+
+  // Sous-catégories ("familles", ex. Caviste/Boulangerie sous Alimentation),
+  // regroupées par parent — même filtre "au moins un commerce" que les
+  // catégories principales.
+  const subcategoryIdsInUse = new Set(merchants.map((m) => m.subcategory_id).filter((id): id is string => !!id));
+  const subCatsByParent = new Map<string, Category[]>();
+  for (const c of categories) {
+    if (!c.parent_id || !subcategoryIdsInUse.has(c.id)) continue;
+    const list = subCatsByParent.get(c.parent_id) ?? [];
+    list.push(c);
+    subCatsByParent.set(c.parent_id, list);
+  }
+  for (const list of subCatsByParent.values()) list.sort((a, b) => a.label.localeCompare(b.label, 'fr'));
 
   const backdrop = document.createElement('div');
   backdrop.id = 'filters-sheet-backdrop';
@@ -84,18 +116,28 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     <div class="filtersCounters">
       <span class="filtersCounter filtersCounter--unlocked" id="filtersCountUnlocked"></span>
       <span class="filtersCounter filtersCounter--locked" id="filtersCountLocked"></span>
+      <select class="filtersQuartierSelect" id="filtersQuartierSelect" aria-label="Filtrer par quartier">
+        <option value="">Tous les quartiers</option>
+        ${quartiersSorted.map((q) => `<option value="${q.id}">${q.name}</option>`).join('')}
+      </select>
     </div>
     <div class="filtersChipsSlider">
       <div class="filtersChips" id="filtersChips"></div>
+    </div>
+    <div class="filtersSubChipsSlider" id="filtersSubChipsSlider" hidden>
+      <div class="filtersChips filtersSubChips" id="filtersSubChips"></div>
     </div>
     <div class="filtersResultsList" id="filtersResultsList"></div>
   `;
   document.body.appendChild(root);
 
   const chipsEl = root.querySelector<HTMLDivElement>('#filtersChips')!;
+  const subChipsSliderEl = root.querySelector<HTMLDivElement>('#filtersSubChipsSlider')!;
+  const subChipsEl = root.querySelector<HTMLDivElement>('#filtersSubChips')!;
   const listEl = root.querySelector<HTMLDivElement>('#filtersResultsList')!;
   const countUnlockedEl = root.querySelector<HTMLElement>('#filtersCountUnlocked')!;
   const countLockedEl = root.querySelector<HTMLElement>('#filtersCountLocked')!;
+  const quartierSelectEl = root.querySelector<HTMLSelectElement>('#filtersQuartierSelect')!;
   const categoryCountEl = root.querySelector<HTMLElement>('#filtersCategoryCount')!;
   const closeBtn = root.querySelector<HTMLButtonElement>('#filtersCloseBtn')!;
   const resetBtn = root.querySelector<HTMLButtonElement>('#filtersResetBtn')!;
@@ -106,14 +148,44 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   document.body.appendChild(stickyBtn);
 
   let active: Set<string> | null = null;
+  let activeSub: Set<string> | null = null;
+  let activeQuartierId: string | null = null;
   let isOpen = false;
+
+  function activeQuartierMerchantIds(): Set<string> | null {
+    if (!activeQuartierId) return null;
+    const ids = new Set<string>();
+    for (const [id, qId] of merchantQuartierId) if (qId === activeQuartierId) ids.add(id);
+    return ids;
+  }
+
+  // Combine quartier + sous-catégorie en un seul allowlist de commerces (voir
+  // applyCategoryFilter dans merchantPins.ts, qui n'accepte qu'un seul filtre
+  // additionnel "par id" en plus du filtre catégorie) : `null` = aucune
+  // restriction sur ces deux filtres-là.
+  function extraFilterMerchantIds(): Set<string> | null {
+    const quartierIds = activeQuartierMerchantIds();
+    const subIds = activeSub ? merchants.filter((m) => m.subcategory_id && activeSub!.has(m.subcategory_id)).map((m) => m.id) : null;
+    if (!quartierIds && !subIds) return null;
+    if (!quartierIds) return new Set(subIds);
+    if (!subIds) return quartierIds;
+    const subIdSet = new Set(subIds);
+    const out = new Set<string>();
+    for (const id of quartierIds) if (subIdSet.has(id)) out.add(id);
+    return out;
+  }
 
   function filteredMerchants(): Merchant[] {
     // Débloqués en priorité (règle produit : les commerces débloqués sont
     // affichés en premier dans la liste), tri stable donc l'ordre de la base
     // est conservé à l'intérieur de chaque groupe.
     return merchants
-      .filter((m) => !active || active.has(m.category_id))
+      .filter(
+        (m) =>
+          (!active || active.has(m.category_id)) &&
+          (!activeSub || (m.subcategory_id != null && activeSub.has(m.subcategory_id))) &&
+          (!activeQuartierId || merchantQuartierId.get(m.id) === activeQuartierId)
+      )
       .sort((a, b) => Number(a.is_locked) - Number(b.is_locked));
   }
 
@@ -135,7 +207,47 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       else el.classList.toggle('isActive', active !== null && active.has(el.dataset.id!));
     });
     categoryCountEl.textContent = `(${active ? active.size : 0}/${mainCats.length})`;
-    applyCategoryFilter(merchantPins, active);
+    applyCategoryFilter(merchantPins, active, extraFilterMerchantIds());
+  }
+
+  // Sous-menu de familles (ex. Caviste/Boulangerie sous "Alimentation") :
+  // seulement pertinent avec 1 ou 2 catégories actives à la fois — au-delà,
+  // ce serait trop de familles mélangées pour rester lisible, et à 0 il n'y
+  // a rien à détailler ("Toutes" catégories confondues).
+  function renderSubChips() {
+    const parents = active && active.size >= 1 && active.size <= 2 ? [...active] : [];
+    const subs = parents.flatMap((p) => subCatsByParent.get(p) ?? []).sort((a, b) => a.label.localeCompare(b.label, 'fr'));
+
+    // Les sous-catégories sélectionnées ne survivent que si leur catégorie
+    // parente est toujours active ; sinon on repart de "Toutes" les familles.
+    if (activeSub) {
+      const stillValid = new Set([...activeSub].filter((id) => subs.some((s) => s.id === id)));
+      activeSub = stillValid.size ? stillValid : null;
+    }
+
+    if (!subs.length) {
+      subChipsSliderEl.hidden = true;
+      subChipsEl.innerHTML = '';
+      return;
+    }
+    subChipsSliderEl.hidden = false;
+    subChipsEl.innerHTML =
+      '<button type="button" class="catChip subChip isAll" data-all="true">Toutes les familles</button>' +
+      subs
+        .map(
+          (c) =>
+            `<button type="button" class="catChip subChip" data-id="${c.id}" style="--chip-color:${c.color}">${c.emoji} ${c.label}</button>`
+        )
+        .join('');
+    updateSubChipStates();
+  }
+
+  function updateSubChipStates() {
+    subChipsEl.querySelectorAll<HTMLButtonElement>('.subChip').forEach((el) => {
+      if (el.dataset.all) el.classList.toggle('isActive', activeSub === null);
+      else el.classList.toggle('isActive', activeSub !== null && activeSub.has(el.dataset.id!));
+    });
+    applyCategoryFilter(merchantPins, active, extraFilterMerchantIds());
   }
 
   function renderRow(m: Merchant): string {
@@ -146,10 +258,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     if (m.is_locked) {
       return `
         <div class="resultRow resultRow--locked" data-id="${m.id}">
-          <span class="resultRowBadgeWrap">
-            <img class="resultRowBadge isLockedBadge" src="${badgeSrc}" alt="" />
-            <span class="resultRowLock">🔒</span>
-          </span>
+          <img class="resultRowBadge" src="${badgeSrc}" alt="" />
           <span class="resultRowBody">
             <span class="resultRowName">${m.name}</span>
             <span class="resultRowMeta">${label}</span>
@@ -160,6 +269,10 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     }
 
     const url = googleMapsDirectionsUrl(m);
+    // Site connu -> lien direct ("Voir le site") ; sinon on ne laisse jamais
+    // ce CTA absent, on lance plutôt une recherche ("Voir sur internet").
+    const webHref = m.website || merchantSearchUrl(m);
+    const webLabel = m.website ? 'Voir le site' : 'Voir sur internet';
     return `
       <div class="resultRow resultRow--unlocked" data-id="${m.id}">
         <img class="resultRowBadge" src="${badgeSrc}" alt="" />
@@ -168,7 +281,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
           <span class="resultRowMeta">${label}${m.address ? ' · ' + m.address : ''}</span>
           ${m.gav_stock_quantity != null ? `<span class="resultRowStock">📦 ${m.gav_stock_quantity} GAV</span>` : ''}
           <span class="resultRowCtas">
-            ${m.website ? `<a class="resultRowCta" href="${m.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir sur internet</a>` : ''}
+            <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
           </span>
         </span>
@@ -231,7 +344,30 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       }
       active = next.size ? next : null;
     }
+    renderSubChips();
     updateChipStates();
+    render();
+  });
+
+  subChipsEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.subChip');
+    if (!btn) return;
+    if (btn.dataset.all) {
+      activeSub = null;
+    } else {
+      const id = btn.dataset.id!;
+      const next = new Set(activeSub ?? []);
+      if (activeSub === null) {
+        next.clear();
+        next.add(id);
+      } else if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      activeSub = next.size ? next : null;
+    }
+    updateSubChipStates();
     render();
   });
 
@@ -248,11 +384,21 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     stickyBtn.hidden = true;
   }
 
+  quartierSelectEl.addEventListener('change', () => {
+    activeQuartierId = quartierSelectEl.value || null;
+    updateChipStates();
+    render();
+  });
+
   backdrop.addEventListener('click', close);
   closeBtn.addEventListener('click', close);
   resetBtn.addEventListener('click', () => {
     active = null;
+    activeSub = null;
+    activeQuartierId = null;
+    quartierSelectEl.value = '';
     onResetSearch();
+    renderSubChips();
     updateChipStates();
     render();
   });
@@ -269,7 +415,14 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   });
 
   renderChips();
+  renderSubChips();
   render();
 
-  return { root, stickyBtn, open, getActiveCategories: () => active };
+  return {
+    root,
+    stickyBtn,
+    open,
+    getActiveCategories: () => active,
+    getExtraFilterMerchantIds: extraFilterMerchantIds,
+  };
 }

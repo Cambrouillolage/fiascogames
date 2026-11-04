@@ -22,90 +22,64 @@ function badgeWebpTexture(webpPath: string): THREE.Texture {
   return tex;
 }
 
-// Badge d'un commerce verrouillé : même image, en gris (règle produit :
-// "garder le logo mais le mettre en gris"). Une SpriteMaterial.color ne
-// désature pas (simple multiplication RGB), il faut une vraie conversion
-// pixel — faite une fois par badge sur un canvas hors-écran, avec
-// ctx.filter, et mise en cache comme la texture couleur ci-dessus. La
-// texture est retournée tout de suite (canvas vide, transparent) et se
-// peuple dès que l'image source a fini de charger — même latence qu'un
-// THREE.Texture normal, pas de flash supplémentaire perceptible.
-const grayscaleTextureCache = new Map<string, THREE.Texture>();
+// Anneau doré derrière le badge d'un commerce GAV (déverrouillé) uniquement
+// — règle produit : la bordure colorée ne doit distinguer QUE les
+// revendeurs GAV, pas de couleur de catégorie pour les autres (retiré après
+// coup, ça surchargeait la lecture de la carte). Un simple disque plein,
+// légèrement plus grand que le badge posé par-dessus — comme le badge est
+// lui-même un rond sur fond transparent, le disque ne dépasse que sur son
+// pourtour, ce qui se lit comme une bordure, pas un second badge.
+const GOLD_COLOR = '#F2C438';
+export const RING_SIZE_FACTOR = 1.4;
+let goldRingTexture: THREE.CanvasTexture | null = null;
 
-function grayscaleBadgeTexture(webpPath: string): THREE.Texture {
-  let tex = grayscaleTextureCache.get(webpPath);
-  if (tex) return tex;
-
-  const canvas = document.createElement('canvas');
-  tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  grayscaleTextureCache.set(webpPath, tex);
-
-  const img = new Image();
-  img.onload = () => {
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    const ctx = canvas.getContext('2d')!;
-    ctx.filter = 'grayscale(1)';
-    ctx.drawImage(img, 0, 0);
-    tex!.needsUpdate = true;
-  };
-  img.src = `${import.meta.env.BASE_URL}${webpPath}`;
-
-  return tex;
-}
-
-// Petit cadenas superposé au badge d'un commerce verrouillé (règle 5 :
-// "badge cartoon éventuellement surmonté d'un petit cadenas") : un second
-// Sprite minuscule décalé en coin, pas un second badge complet.
-let lockTexture: THREE.CanvasTexture | null = null;
-function lockIconTexture(): THREE.CanvasTexture {
-  if (lockTexture) return lockTexture;
+function ringTexture(): THREE.CanvasTexture {
+  if (goldRingTexture) return goldRingTexture;
   const size = 64;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext('2d')!;
   ctx.beginPath();
-  ctx.arc(size / 2, size / 2, size / 2 - 3, 0, Math.PI * 2);
-  ctx.fillStyle = '#1f2937';
+  ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+  ctx.fillStyle = GOLD_COLOR;
   ctx.fill();
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = '#fff';
-  ctx.stroke();
-  ctx.font = `${size * 0.52}px sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('🔒', size / 2, size / 2 + 2);
-  lockTexture = new THREE.CanvasTexture(canvas);
-  lockTexture.colorSpace = THREE.SRGBColorSpace;
-  return lockTexture;
+  goldRingTexture = new THREE.CanvasTexture(canvas);
+  goldRingTexture.colorSpace = THREE.SRGBColorSpace;
+  return goldRingTexture;
 }
 
 export interface MerchantPin {
   sprite: THREE.Sprite;
-  lockSprite: THREE.Sprite | null;
+  ringSprite: THREE.Sprite | null;
   merchant: Merchant;
   // Résultat du filtre catégories/mode-quartier (src/main.ts), indépendant
-  // de `sprite.visible` : le clustering (src/clusterLayer.ts) masque aussi
-  // des pins (absorbés dans une bulle) sans changer ce statut de filtre, il
-  // doit donc rester lisible séparément à chaque recalcul de clusters.
+  // de `sprite.visible` : c'est la seule source de vérité pour la visibilité
+  // (plus de clustering qui masquerait en plus des pins absorbés dans une
+  // bulle, voir src/pinDeclutter.ts qui ne fait que redimensionner/décaler).
   matchesFilter: boolean;
+  // Vraie position (immuable, posée une fois ici) : src/pinDeclutter.ts
+  // décale sprite.position pour désamorcer les collisions à l'écran, il lui
+  // faut donc une référence stable pour toujours repartir de la bonne place
+  // plutôt que de dériver d'un décalage précédent.
+  homeX: number;
+  homeZ: number;
 }
 
 // Hiérarchie visuelle voulue : les commerces GAV (déverrouillés) doivent
 // être "plus visibles et reconnaissables", les autres "plus discrets" — en
 // plus du niveau de gris déjà appliqué aux verrouillés, un badge GAV est
 // légèrement plus grand et dessiné par-dessus (renderOrder) tout le reste.
-const PIN_SIZE_GAV = 26;
-const PIN_SIZE_LOCKED = 18;
+export const PIN_SIZE_GAV = 26;
+export const PIN_SIZE_LOCKED = 18;
 const PIN_SIZE_SELECTED = 32;
-const LOCK_SIZE = 10;
-const LOCK_SIZE_SELECTED = 13;
-const LOCK_OFFSET_FACTOR = 0.42; // fraction du badge, pour que le cadenas reste au coin en se redimensionnant avec lui
 export const PIN_RENDER_ORDER_GAV = 1002;
 export const PIN_RENDER_ORDER_LOCKED = 998;
 export const PIN_RENDER_ORDER_SELECTED = 1010;
+// Hauteur (monde) commune à tous les badges — centralisée ici plutôt que
+// dupliquée en dur, src/pinDeclutter.ts en a aussi besoin pour ses calculs
+// écran <-> monde.
+export const PIN_WORLD_Y = 18;
 
 export function buildMerchantPins(
   merchants: Merchant[],
@@ -117,35 +91,38 @@ export function buildMerchantPins(
   for (const m of merchants) {
     if (m.lat == null || m.lon == null) continue;
     const badge = (m.badge_id && badgesParId[m.badge_id]) || badgesParId[BADGE_DEFAULT_ID];
-    const tex = m.is_locked ? grayscaleBadgeTexture(badge.webp) : badgeWebpTexture(badge.webp);
+    const tex = badgeWebpTexture(badge.webp);
 
     const pinSize = m.is_locked ? PIN_SIZE_LOCKED : PIN_SIZE_GAV;
-    const material = new THREE.SpriteMaterial({ map: tex, depthTest: false, depthWrite: false, transparent: true });
-    const sprite = new THREE.Sprite(material);
-    sprite.scale.set(pinSize, pinSize, 1);
+    const renderOrder = m.is_locked ? PIN_RENDER_ORDER_LOCKED : PIN_RENDER_ORDER_GAV;
     const [x, y] = latLonToLocalMeters(m.lat, m.lon, center);
-    sprite.position.set(x, 18, -y);
-    sprite.renderOrder = m.is_locked ? PIN_RENDER_ORDER_LOCKED : PIN_RENDER_ORDER_GAV;
-    sprite.userData = { merchantId: m.id };
-    scene.add(sprite);
+    const homeX = x;
+    const homeZ = -y;
 
-    let lockSprite: THREE.Sprite | null = null;
-    if (m.is_locked) {
-      const lockMat = new THREE.SpriteMaterial({
-        map: lockIconTexture(),
+    let ringSprite: THREE.Sprite | null = null;
+    if (!m.is_locked) {
+      const ringMat = new THREE.SpriteMaterial({
+        map: ringTexture(),
         depthTest: false,
         depthWrite: false,
         transparent: true,
       });
-      lockSprite = new THREE.Sprite(lockMat);
-      lockSprite.scale.set(LOCK_SIZE, LOCK_SIZE, 1);
-      const offset = (pinSize * LOCK_OFFSET_FACTOR) / 2;
-      lockSprite.position.set(x + offset, 18 + offset, -y);
-      lockSprite.renderOrder = PIN_RENDER_ORDER_LOCKED + 1;
-      scene.add(lockSprite);
+      ringSprite = new THREE.Sprite(ringMat);
+      ringSprite.scale.set(pinSize * RING_SIZE_FACTOR, pinSize * RING_SIZE_FACTOR, 1);
+      ringSprite.position.set(homeX, PIN_WORLD_Y, homeZ);
+      ringSprite.renderOrder = renderOrder - 0.5; // juste sous son badge, jamais sous un badge d'un AUTRE commerce (voir PIN_RENDER_ORDER_*)
+      scene.add(ringSprite);
     }
 
-    pins.push({ sprite, lockSprite, merchant: m, matchesFilter: true });
+    const material = new THREE.SpriteMaterial({ map: tex, depthTest: false, depthWrite: false, transparent: true });
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(pinSize, pinSize, 1);
+    sprite.position.set(homeX, PIN_WORLD_Y, homeZ);
+    sprite.renderOrder = renderOrder;
+    sprite.userData = { merchantId: m.id };
+    scene.add(sprite);
+
+    pins.push({ sprite, ringSprite, merchant: m, matchesFilter: true, homeX, homeZ });
   }
 
   return pins;
@@ -162,12 +139,9 @@ export function setSelectedPin(pins: MerchantPin[], merchantId: string | null) {
       : p.merchant.is_locked
         ? PIN_RENDER_ORDER_LOCKED
         : PIN_RENDER_ORDER_GAV;
-    if (p.lockSprite) {
-      const lockSize = selected ? LOCK_SIZE_SELECTED : LOCK_SIZE;
-      p.lockSprite.scale.set(lockSize, lockSize, 1);
-      const offset = (size * LOCK_OFFSET_FACTOR) / 2;
-      p.lockSprite.position.set(p.sprite.position.x + offset, p.sprite.position.y + offset, p.sprite.position.z);
-      p.lockSprite.renderOrder = p.sprite.renderOrder + 1;
+    if (p.ringSprite) {
+      p.ringSprite.scale.set(size * RING_SIZE_FACTOR, size * RING_SIZE_FACTOR, 1);
+      p.ringSprite.renderOrder = p.sprite.renderOrder - 0.5;
     }
   }
 }
@@ -190,15 +164,21 @@ export function pickMerchantPin(
   return hit?.merchant ?? null;
 }
 
-export function applyCategoryFilter(pins: MerchantPin[], activeCategoryIds: Set<string> | null) {
+// `allowedMerchantIds` : filtre additionnel optionnel (ex. quartier
+// sélectionné, voir src/filtersSheet.ts) — un commerce doit satisfaire LES
+// DEUX filtres (catégorie ET quartier) pour rester visible. `null` = pas de
+// restriction sur ce filtre-là.
+export function applyCategoryFilter(
+  pins: MerchantPin[],
+  activeCategoryIds: Set<string> | null,
+  allowedMerchantIds: Set<string> | null = null
+) {
   for (const p of pins) {
-    const visible = !activeCategoryIds || activeCategoryIds.has(p.merchant.category_id);
+    const matchesCategory = !activeCategoryIds || activeCategoryIds.has(p.merchant.category_id);
+    const matchesQuartier = !allowedMerchantIds || allowedMerchantIds.has(p.merchant.id);
+    const visible = matchesCategory && matchesQuartier;
     p.matchesFilter = visible;
-    // Valeur par défaut tout de suite (corrigée par le clustering juste
-    // après, voir main.ts#recomputeClusters, qui masque en plus les pins
-    // absorbés dans une bulle) : évite un flash "tout visible" entre les
-    // deux passes.
     p.sprite.visible = visible;
-    if (p.lockSprite) p.lockSprite.visible = visible;
+    if (p.ringSprite) p.ringSprite.visible = visible;
   }
 }

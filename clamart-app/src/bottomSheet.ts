@@ -5,12 +5,19 @@
 const CATEGORY_LABEL: Record<string, string> = {
   townhall: 'Mairie',
   church: 'Église',
+  mosque: 'Mosquée',
   school: 'École',
+  college: 'Collège / lycée',
   post_office: 'Poste',
   park: 'Parc',
   station: 'Gare',
-  parking: 'Parking',
   hospital: 'Hôpital',
+  police: 'Commissariat',
+  fire_station: 'Caserne de pompiers',
+  sports_pitch: 'Terrain de sport',
+  sports_tennis: 'Tennis',
+  sports_track: "Piste d'athlétisme",
+  sports_hall: 'Gymnase',
 };
 
 let sheetEl: HTMLDivElement;

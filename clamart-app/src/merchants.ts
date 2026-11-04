@@ -82,6 +82,18 @@ export function googleMapsDirectionsUrl(merchant: Merchant): string | null {
   return `https://www.google.com/maps/dir/?api=1&destination=${merchant.lat},${merchant.lon}`;
 }
 
+/**
+ * CTA "Voir sur internet" d'un commerce sans site web connu : lance une
+ * recherche (nom + ville, adresse si connue pour désambiguïser) plutôt que
+ * de n'afficher aucun lien — un commerce verrouillé/masqué n'a de toute
+ * façon pas de nom exploitable ici (voir Merchant, `name` vient déjà masqué
+ * de la vue publique), donc réservé aux commerces déverrouillés.
+ */
+export function merchantSearchUrl(merchant: Merchant): string {
+  const query = [merchant.name, merchant.address, merchant.city ?? 'Clamart'].filter(Boolean).join(' ');
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+}
+
 // Même projection équirectangulaire que scripts/fetch-osm.ts (toLocalMeters),
 // reparamétrée par un centre passé en argument : les commerçants viennent
 // de Supabase en lat/lon, pas déjà en mètres locaux comme les données OSM

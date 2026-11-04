@@ -6,8 +6,11 @@ export type BuildingType =
   | 'apartment'
   | 'commerce'
   | 'church'
+  | 'mosque'
   | 'school'
-  | 'townhall';
+  | 'townhall'
+  | 'police'
+  | 'fire_station';
 
 export interface MapBuilding {
   t: BuildingType;
@@ -27,12 +30,19 @@ export interface MapArea {
 export type LandmarkCategory =
   | 'townhall'
   | 'church'
+  | 'mosque'
   | 'school'
+  | 'college'
   | 'post_office'
   | 'park'
   | 'station'
-  | 'parking'
-  | 'hospital';
+  | 'hospital'
+  | 'police'
+  | 'fire_station'
+  | 'sports_pitch'
+  | 'sports_tennis'
+  | 'sports_track'
+  | 'sports_hall';
 
 export interface MapLandmark {
   c: LandmarkCategory;
@@ -57,6 +67,9 @@ export interface MapData {
   railways: MapArea[];
   tramways: MapArea[];
   hospitals: MapArea[];
+  sportsPitches: MapArea[];
+  tennisCourts: MapArea[];
+  athleticsTracks: MapArea[];
   landmarks: MapLandmark[];
   streets: MapStreet[];
 }

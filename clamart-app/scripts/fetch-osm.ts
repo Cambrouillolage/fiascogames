@@ -282,8 +282,11 @@ type BuildingType =
   | 'apartment'
   | 'commerce'
   | 'church'
+  | 'mosque'
   | 'school'
-  | 'townhall';
+  | 'townhall'
+  | 'police'
+  | 'fire_station';
 
 interface OutBuilding {
   t: BuildingType;
@@ -303,12 +306,19 @@ interface OutArea {
 export type LandmarkCategory =
   | 'townhall'
   | 'church'
+  | 'mosque'
   | 'school'
+  | 'college'
   | 'post_office'
   | 'park'
   | 'station'
-  | 'parking'
-  | 'hospital';
+  | 'hospital'
+  | 'police'
+  | 'fire_station'
+  | 'sports_pitch'
+  | 'sports_tennis'
+  | 'sports_track'
+  | 'sports_hall';
 
 interface OutLandmark {
   c: LandmarkCategory;
@@ -338,6 +348,9 @@ interface OutputData {
   railways: OutArea[];
   tramways: OutArea[];
   hospitals: OutArea[];
+  sportsPitches: OutArea[];
+  tennisCourts: OutArea[];
+  athleticsTracks: OutArea[];
   landmarks: OutLandmark[];
   streets: OutStreet[];
 }
@@ -369,6 +382,13 @@ function classifyBuilding(
   const building = tags.building;
 
   if (amenity === 'townhall' || building === 'townhall') return 'townhall';
+  if (amenity === 'police' || building === 'police') return 'police';
+  if (amenity === 'fire_station' || building === 'fire_station') return 'fire_station';
+  if (
+    (amenity === 'place_of_worship' || building === 'church') &&
+    tags.religion === 'muslim'
+  )
+    return 'mosque';
   if (amenity === 'place_of_worship' || building === 'church')
     return 'church';
   if (amenity === 'school' || building === 'school') return 'school';
@@ -399,8 +419,11 @@ const DEFAULT_HEIGHT_BY_TYPE: Record<BuildingType, number> = {
   apartment: 15,
   commerce: 5,
   church: 18,
+  mosque: 14,
   school: 9,
   townhall: 12,
+  police: 9,
+  fire_station: 10,
 };
 
 function resolveHeight(
@@ -436,17 +459,23 @@ function centroid(points: [number, number][]): [number, number] {
 const DEFAULT_LANDMARK_NAME: Record<LandmarkCategory, string> = {
   townhall: 'Mairie',
   church: 'Église',
+  mosque: 'Mosquée',
   school: 'École',
+  college: 'Collège',
   post_office: 'Poste',
   park: 'Parc',
   station: 'Gare',
-  parking: 'Parking',
   hospital: 'Hôpital',
+  police: 'Commissariat',
+  fire_station: 'Caserne de pompiers',
+  sports_pitch: 'Terrain de sport',
+  sports_tennis: 'Court de tennis',
+  sports_track: "Piste d'athlétisme",
+  sports_hall: 'Gymnase',
 };
 
 const LANDMARK_BADGE_CLEARANCE_M = 8;
 const DEFAULT_BADGE_HEIGHT_M = 15;
-const PARKING_MIN_AREA_M2 = 400; // ~20 places ; exclut les allées/places privées
 const NEAREST_STREET_MAX_DIST_M = 150;
 
 // Nom le plus précis possible : au-delà du tag `name` (souvent absent pour
@@ -473,6 +502,73 @@ function pointToSegmentDist(p: [number, number], a: [number, number], b: [number
   if (lenSq === 0) return Math.hypot(px - ax, py - ay);
   const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lenSq));
   return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+}
+
+function polylineLength(points: [number, number][]): number {
+  let total = 0;
+  for (let i = 0; i < points.length - 1; i++) {
+    total += Math.hypot(points[i + 1][0] - points[i][0], points[i + 1][1] - points[i][1]);
+  }
+  return total;
+}
+
+function minDistToPolyline(p: [number, number], poly: [number, number][]): number {
+  let best = Infinity;
+  for (let i = 0; i < poly.length - 1; i++) {
+    const d = pointToSegmentDist(p, poly[i], poly[i + 1]);
+    if (d < best) best = d;
+  }
+  return best;
+}
+
+// Une avenue à chaussées séparées est souvent mappée sur OSM comme DEUX
+// `way["highway"]` parallèles (une par sens de circulation, terre-plein
+// central entre les deux) — correct dans la réalité, mais rendu ici comme
+// deux routes pleine largeur côte à côte, ce qui se lit comme "deux routes"
+// plutôt qu'une seule avenue (signalé par capture d'écran). Détection
+// volontairement stricte (longues ET constamment proches sur toute leur
+// longueur, même type, longueurs comparables) pour ne jamais toucher aux
+// vraies bretelles/raccords courts près d'un carrefour, qui sont proches
+// d'une route principale par nature sans être un doublon. Garde la plus
+// longue des deux, retire l'autre (pas de fusion géométrique point-par-point
+// plus fragile — juste "une seule route visible" demandé).
+const DUPLICATE_CARRIAGEWAY_TYPES = new Set(['motorway', 'trunk', 'primary', 'secondary', 'tertiary']);
+const DUPLICATE_MIN_LENGTH_M = 150;
+const DUPLICATE_MAX_AVG_DIST_M = 14;
+const DUPLICATE_MAX_SAMPLE_DIST_M = 25;
+const DUPLICATE_LENGTH_RATIO_RANGE: [number, number] = [0.5, 2];
+
+function dedupeParallelCarriageways(roads: OutRoad[]): OutRoad[] {
+  const lengths = roads.map((r) => polylineLength(r.p));
+  const toDrop = new Set<number>();
+
+  for (let i = 0; i < roads.length; i++) {
+    if (!DUPLICATE_CARRIAGEWAY_TYPES.has(roads[i].hw) || lengths[i] < DUPLICATE_MIN_LENGTH_M) continue;
+    for (let j = i + 1; j < roads.length; j++) {
+      if (roads[j].hw !== roads[i].hw || lengths[j] < DUPLICATE_MIN_LENGTH_M) continue;
+      const ratio = lengths[i] / lengths[j];
+      if (ratio < DUPLICATE_LENGTH_RATIO_RANGE[0] || ratio > DUPLICATE_LENGTH_RATIO_RANGE[1]) continue;
+
+      const samples = 8;
+      let total = 0;
+      let maxDist = 0;
+      for (let s = 0; s <= samples; s++) {
+        const idx = Math.min(roads[i].p.length - 1, Math.round((s / samples) * (roads[i].p.length - 1)));
+        const d = minDistToPolyline(roads[i].p[idx], roads[j].p);
+        total += d;
+        maxDist = Math.max(maxDist, d);
+      }
+      const avg = total / (samples + 1);
+      if (avg < DUPLICATE_MAX_AVG_DIST_M && maxDist < DUPLICATE_MAX_SAMPLE_DIST_M) {
+        toDrop.add(lengths[i] >= lengths[j] ? j : i);
+      }
+    }
+  }
+
+  if (toDrop.size) {
+    console.log(`${toDrop.size} chaussée(s) en double (avenue à 2 sens mappée en 2 ways) retirée(s).`);
+  }
+  return roads.filter((_, idx) => !toDrop.has(idx));
 }
 
 async function main() {
@@ -525,18 +621,42 @@ async function main() {
   relation["leisure"="park"](${BBOX});
   node["amenity"="post_office"](${BBOX});
   way["amenity"="post_office"](${BBOX});
-  node["amenity"="parking"](${BBOX});
-  way["amenity"="parking"](${BBOX});
   node["railway"="station"](${BBOX});
   node["amenity"="townhall"](${BBOX});
   node["amenity"="hospital"](${BBOX});
   way["amenity"="hospital"](${BBOX});
+  node["amenity"="police"](${BBOX});
+  way["amenity"="police"](${BBOX});
+  node["amenity"="fire_station"](${BBOX});
+  way["amenity"="fire_station"](${BBOX});
 );
 out geom;
 `.trim();
 
   const data = await cachedFetch('main', QUERY);
   console.log(`${data.elements.length} éléments reçus d'Overpass.`);
+
+  // Requête à part pour les terrains/salles de sport : dans la requête
+  // principale ci-dessus, ces clauses étaient placées en dernier dans
+  // l'union et Overpass semble épuiser son budget temps sur les clauses
+  // coûteuses (building/highway sur toute la commune) avant de les
+  // atteindre — elles revenaient silencieusement vides (pas de remark
+  // d'erreur, juste absentes du résultat, vérifié en isolant cette requête
+  // seule). Une requête séparée, légère, évite ce problème.
+  const SPORTS_QUERY = `
+[out:json][timeout:60];
+(
+  way["leisure"="pitch"](${BBOX});
+  way["leisure"="stadium"](${BBOX});
+  way["leisure"="track"](${BBOX});
+  node["leisure"="sports_centre"](${BBOX});
+  way["leisure"="sports_centre"](${BBOX});
+);
+out geom;
+`.trim();
+
+  const sportsData = await cachedFetch('sports', SPORTS_QUERY);
+  console.log(`${sportsData.elements.length} éléments sport reçus d'Overpass.`);
 
   const buildings: OutBuilding[] = [];
   const roads: OutRoad[] = [];
@@ -545,6 +665,9 @@ out geom;
   const railways: OutArea[] = [];
   const tramways: OutArea[] = [];
   const hospitals: OutArea[] = [];
+  const sportsPitches: OutArea[] = [];
+  const tennisCourts: OutArea[] = [];
+  const athleticsTracks: OutArea[] = [];
   const landmarks: OutLandmark[] = [];
   // Une rue OSM est découpée en plusieurs tronçons (un par intersection) :
   // on accumule tous les points de tous les tronçons partageant le même
@@ -594,8 +717,6 @@ out geom;
     const tags = el.tags;
 
     // ----- Nœuds isolés (pas de géométrie de way) : gare, poste, mairie -----
-    // (le parking en nœud isolé est quasi toujours une place/entrée privée
-    // mineure, pas un vrai parking public — on ne le badge pas.)
     // La mairie de Clamart elle-même n'est taguée que sur un nœud
     // (amenity=townhall), pas sur le bâtiment — vérifié via Overpass, d'où
     // ce cas à part (church/school sont eux bien présents comme bâtiments).
@@ -609,6 +730,10 @@ out geom;
         pushLandmark('townhall', tags, pos, DEFAULT_BADGE_HEIGHT_M);
       } else if (tags.amenity === 'hospital') {
         pushLandmark('hospital', tags, pos, DEFAULT_BADGE_HEIGHT_M);
+      } else if (tags.amenity === 'police') {
+        pushLandmark('police', tags, pos, DEFAULT_BADGE_HEIGHT_M);
+      } else if (tags.amenity === 'fire_station') {
+        pushLandmark('fire_station', tags, pos, DEFAULT_BADGE_HEIGHT_M);
       }
       continue;
     }
@@ -629,8 +754,26 @@ out geom;
       const heightM = resolveHeight(tags, type, levels);
       buildings.push({ t: type, h: heightM, f: points });
 
-      if (type === 'townhall' || type === 'church' || type === 'school') {
+      if (
+        type === 'townhall' ||
+        type === 'church' ||
+        type === 'mosque' ||
+        type === 'school' ||
+        type === 'police' ||
+        type === 'fire_station'
+      ) {
+        // `type` (BuildingType) sert directement de LandmarkCategory ici :
+        // les deux énumérations partagent les mêmes noms pour ces
+        // catégories (voir classifyBuilding plus haut, qui distingue déjà
+        // mosquée/église par `religion=muslim`).
         pushLandmark(type, tags, centroid(points), heightM + LANDMARK_BADGE_CLEARANCE_M);
+      } else if (tags.building === 'sports_hall' && tags.leisure !== 'sports_centre') {
+        // Un gymnase garde le gabarit générique de `type` (pas de rendu
+        // spécifique pour ce type de bâtiment, contrairement à
+        // église/école/mairie) — juste un badge en plus pour le repérer.
+        // `leisure=sports_centre` exclu ici : ce cas est traité par la
+        // requête sport séparée plus bas (évite un badge en double).
+        pushLandmark('sports_hall', tags, centroid(points), heightM + LANDMARK_BADGE_CLEARANCE_M);
       }
     } else if (tags.highway) {
       roads.push({ hw: tags.highway, p: points });
@@ -664,14 +807,6 @@ out geom;
 
     if (tags.amenity === 'post_office') {
       pushLandmark('post_office', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
-    } else if (tags.amenity === 'parking') {
-      // La plupart des `amenity=parking` d'OSM sont de toutes petites
-      // places privées (allée, 2-3 places) : sans filtre on se retrouve
-      // avec >1000 badges "Parking". Seuil pour ne garder que les vrais
-      // parkings publics (~20+ places).
-      if (polygonAreaM2(points) >= PARKING_MIN_AREA_M2) {
-        pushLandmark('parking', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
-      }
     } else if (tags.amenity === 'hospital') {
       pushLandmark('hospital', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
       // Beaucoup d'hôpitaux sont tagués `amenity=hospital` sur le contour de
@@ -681,6 +816,61 @@ out geom;
       // vraie forme via buildings[] plus haut — pas besoin de doublon.
       if (!tags.building) {
         hospitals.push({ p: points });
+      }
+    } else if (tags.amenity === 'police' && !tags.building) {
+      // `tags.building` exclu : déjà poussé comme landmark (avec sa vraie
+      // géométrie de bâtiment) par la branche `if (tags.building)` plus
+      // haut — sans ce garde-fou, un commissariat tagué à la fois
+      // `building=*` et `amenity=police` aurait deux badges superposés.
+      pushLandmark('police', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+    } else if (tags.amenity === 'fire_station' && !tags.building) {
+      pushLandmark('fire_station', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+    }
+  }
+
+  // Traitement de la requête sport séparée (voir SPORTS_QUERY plus haut) :
+  // un gymnase/complexe peut être à la fois un `way["building"]` (déjà
+  // classé dans buildings[] par la boucle principale ci-dessus) ET un
+  // `way["leisure"="sports_centre"]` ici — seul le badge vient de cette
+  // boucle, pas de doublon de bâtiment.
+  for (const el of sportsData.elements) {
+    if (!el.tags) continue;
+    const tags = el.tags;
+
+    if (el.type === 'node') {
+      if (tags.leisure === 'sports_centre') {
+        pushLandmark('sports_hall', tags, toLocalMeters(el.lat, el.lon), DEFAULT_BADGE_HEIGHT_M);
+      }
+      continue;
+    }
+
+    if (!el.geometry || el.geometry.length < 2) continue;
+    const points = wayPoints(el);
+    if (points.length < 2) continue;
+    if (!points.some((p) => pointInPolygon(p, boundaryLocal))) continue;
+
+    if (tags.leisure === 'pitch' || tags.leisure === 'stadium') {
+      // Un terrain de tennis est aussi tagué `leisure=pitch` (+ `sport=tennis`)
+      // sur OSM, pas une valeur `leisure` à part — d'où ce sous-tri par
+      // `sport` plutôt qu'une branche `leisure` dédiée.
+      if (tags.sport === 'tennis') {
+        tennisCourts.push({ p: points });
+        pushLandmark('sports_tennis', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+      } else {
+        sportsPitches.push({ p: points });
+        pushLandmark('sports_pitch', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+      }
+    } else if (tags.leisure === 'track') {
+      athleticsTracks.push({ p: points });
+      pushLandmark('sports_track', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+    } else if (tags.leisure === 'sports_centre') {
+      // `leisure=sports_centre` est aussi utilisé pour un club de tennis
+      // entier (ex. "Tennis Club de Beauvoir", sport=tennis) sans `pitch`
+      // individuel mappé à part — mérite le badge tennis plutôt que gymnase.
+      if (tags.sport === 'tennis') {
+        pushLandmark('sports_tennis', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+      } else {
+        pushLandmark('sports_hall', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
       }
     }
   }
@@ -701,22 +891,79 @@ out geom;
     }
   }
 
+  // Ajouts manuels : lieux réels mais absents/mal tagués côté OSM à ce jour
+  // (vérifié — voir commentaires ci-dessous). Rester ici, après la boucle
+  // principale, plutôt que directement dans public/data/clamart.json : ce
+  // fichier est régénéré à chaque `npm run fetch-data` et écraserait un
+  // ajout fait à la main directement dedans.
+  //
+  // Collège des Petits Ponts (7 rue de Vendée) : pas présent dans les
+  // bâtiments renvoyés par la requête Overpass actuelle (building scolaire
+  // non tagué/non repéré). Position approximée au centre de la rue de
+  // Vendée (déjà dans la même projection mètres-locaux que tout le reste).
+  const rueDeVendee = streetPoints.get('Rue de Vendée');
+  if (rueDeVendee && rueDeVendee.length) {
+    landmarks.push({
+      c: 'college',
+      n: 'Collège des Petits Ponts',
+      pos: centroid(rueDeVendee),
+      h: DEFAULT_BADGE_HEIGHT_M,
+    });
+  }
+
+  // Lycée Jacques Monod (46 rue du Fort) : le bâtiment est bien présent côté
+  // OSM (une vraie forme de bâtiment, pas un point ajouté à la main comme le
+  // collège ci-dessus), mais sans tag `name` — il est donc classé comme une
+  // "École" générique par classifyBuilding puis nommé par défaut d'après la
+  // rue la plus proche (voir la boucle de nommage plus haut), ce qui donne
+  // exactement "École – Rue du Fort". On corrige cette seule entrée-là après
+  // coup plutôt que d'ajouter un doublon.
+  const lyceeMonod = landmarks.find((l) => l.c === 'school' && l.n === 'École – Rue du Fort');
+  if (lyceeMonod) {
+    lyceeMonod.c = 'college';
+    lyceeMonod.n = 'Lycée Jacques Monod';
+  }
+
+  // Lac du Panorama : étang du parc urbain du Panorama, mappé sur OSM via
+  // une relation qui n'est pas (encore) reconnue par la requête Overpass
+  // actuelle (natural=water sans tag attrapé par le filtre, voir le
+  // commentaire sur la requête plus haut) — polygone approximatif en
+  // attendant un vrai contour OSM, centré sur "Allée du Tour du Lac" (le
+  // chemin qui en fait le tour).
+  const tourDuLac = streetPoints.get('Allée du Tour du Lac');
+  if (tourDuLac && tourDuLac.length) {
+    const [cx, cy] = centroid(tourDuLac);
+    const radiusM = 45;
+    const ring: [number, number][] = [];
+    const sides = 20;
+    for (let i = 0; i < sides; i++) {
+      const angle = (i / sides) * Math.PI * 2;
+      ring.push([round(cx + Math.cos(angle) * radiusM), round(cy + Math.sin(angle) * radiusM)]);
+    }
+    water.push({ p: ring });
+  }
+
   const streets: OutStreet[] = Array.from(streetPoints.entries()).map(([n, pts]) => ({
     n,
     center: centroid(pts),
   }));
+
+  const dedupedRoads = dedupeParallelCarriageways(roads);
 
   const output: OutputData = {
     center: { lat: CENTER_LAT, lon: CENTER_LON },
     halfSizeM,
     boundary: simplify(boundaryLocal, 2), // contour simplifié un peu plus fort : juste la forme du sol, pas besoin du cm près
     buildings,
-    roads,
+    roads: dedupedRoads,
     parks,
     water,
     railways,
     tramways,
     hospitals,
+    sportsPitches,
+    tennisCourts,
+    athleticsTracks,
     landmarks,
     streets,
   };
@@ -728,7 +975,7 @@ out geom;
 
   const sizeKb = Buffer.byteLength(json) / 1024;
   console.log(
-    `Écrit ${outPath} (${sizeKb.toFixed(0)} Ko) — ${buildings.length} bâtiments, ${roads.length} routes, ${parks.length} parcs, ${water.length} plans d'eau, ${railways.length} voies ferrées, ${tramways.length} voies de tram, ${hospitals.length} sites hospitaliers, ${landmarks.length} lieux emblématiques, ${streets.length} rues nommées.`
+    `Écrit ${outPath} (${sizeKb.toFixed(0)} Ko) — ${buildings.length} bâtiments, ${dedupedRoads.length} routes, ${parks.length} parcs, ${water.length} plans d'eau, ${railways.length} voies ferrées, ${tramways.length} voies de tram, ${hospitals.length} sites hospitaliers, ${sportsPitches.length} terrains de sport, ${tennisCourts.length} courts de tennis, ${athleticsTracks.length} pistes d'athlétisme, ${landmarks.length} lieux emblématiques, ${streets.length} rues nommées.`
   );
   for (const l of landmarks) {
     console.log(`  badge [${l.c}] ${l.n} @ (${l.pos[0]}, ${l.pos[1]})`);

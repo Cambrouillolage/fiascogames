@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import type { BuildingType, MapArea, MapData, MapRoad } from './mapData.ts';
+import type { BuildingType, MapArea, MapData, MapLandmark, MapRoad } from './mapData.ts';
 import { toonMaterial } from './toonShading.ts';
 import { buildOutlineMesh } from './outline.ts';
 
@@ -77,7 +77,10 @@ function paintVertexColors(geom: THREE.BufferGeometry, color: THREE.Color) {
   geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 }
 
-const ROAD_WIDTH_BY_TYPE: Record<string, number> = {
+// Exportées : largeur de voirie réutilisée par src/traffic.ts et
+// src/pedestrians.ts pour décaler voitures/piétons du bon côté de la route
+// (même convention de largeur que le rendu de la route elle-même).
+export const ROAD_WIDTH_BY_TYPE: Record<string, number> = {
   primary: 8,
   secondary: 6,
   tertiary: 5,
@@ -92,7 +95,7 @@ const ROAD_WIDTH_BY_TYPE: Record<string, number> = {
   steps: 1.2,
   track: 2.5,
 };
-const DEFAULT_ROAD_WIDTH = 4;
+export const DEFAULT_ROAD_WIDTH = 4;
 
 function quadGeometry(a: THREE.Vector2, b: THREE.Vector2, width: number, y: number): THREE.BufferGeometry {
   const dir = new THREE.Vector2().subVectors(b, a);
@@ -192,7 +195,7 @@ function buildRoadDashes(roads: MapRoad[], y: number): THREE.Mesh | null {
   }
   if (!geoms.length) return null;
   const merged = mergeGeometries(geoms, false);
-  const material = toonMaterial({ color: 0xffffff });
+  const material = toonMaterial({ color: 0xf7f2e4 }); // blanc cassé chaud plutôt que blanc pur, cohérent avec la palette adoucie
   return new THREE.Mesh(merged, material);
 }
 
@@ -246,22 +249,47 @@ interface RoofParams {
 // de même contour que les murs = simple bloc rectangulaire), pour bien les
 // distinguer visuellement des maisons/immeubles/commerces à toit pentu.
 const ROOF_PARAMS: Record<BuildingType, RoofParams> = {
-  house: { wallFraction: 0.62, shrink: 0.5, roofColor: 0xa8553a },
-  apartment: { wallFraction: 0.94, shrink: 0.9, roofColor: 0x8d8d86 },
+  house: { wallFraction: 0.62, shrink: 0.5, roofColor: 0xa8553a }, // terre cuite conservée telle quelle (demande explicite)
+  apartment: { wallFraction: 0.94, shrink: 0.9, roofColor: 0x9c9080 }, // réchauffé (était un gris froid plat 0x8d8d86)
   commerce: { wallFraction: 0.84, shrink: 0.82, roofColor: 0x6e6659 },
   church: { wallFraction: 1, shrink: 1, roofColor: 0x463a5c },
+  mosque: { wallFraction: 1, shrink: 1, roofColor: 0x8a7550 }, // toit plat, le dôme (buildMosqueDome) vient par-dessus
   school: { wallFraction: 1, shrink: 1, roofColor: 0x3f6b74 },
   townhall: { wallFraction: 1, shrink: 1, roofColor: 0x7a3f3f },
+  police: { wallFraction: 1, shrink: 1, roofColor: 0x3f5068 },
+  fire_station: { wallFraction: 1, shrink: 1, roofColor: 0x8a2f2f },
 };
 
 const WALL_COLOR_BY_TYPE: Record<BuildingType, number> = {
-  house: 0xe3d2ab,
-  apartment: 0xcfc6b8,
+  house: 0xe6d6b2,
+  apartment: 0xd6ccba, // greige chaud (était un gris plus froid 0xcfc6b8) — "immeubles moins sévères"
   commerce: 0xe0a35c,
   church: 0xcbbfe0,
+  mosque: 0xe8d9b5, // pierre chaude, distincte de l'église (violet) et de la mairie (rose)
   school: 0xb9dbe3,
   townhall: 0xe3b0b0,
+  police: 0xb7c4d6,
+  fire_station: 0xe3c9a0,
 };
+
+// Variation légère de teinte/luminosité par bâtiment (murs uniquement) pour
+// éviter l'effet "un seul bloc monotone" sur les maisons/immeubles/commerces
+// — règle produit explicite. Les bâtiments civics (église/école/mairie), peu
+// nombreux et déjà pensés comme des repères visuels distincts, gardent leur
+// teinte exacte de type.
+const JITTERED_WALL_TYPES = new Set<BuildingType>(['house', 'apartment', 'commerce']);
+const WALL_HUE_JITTER_DEG = 5;
+const WALL_LIGHTNESS_JITTER = 0.045;
+
+function jitterColor(hex: number, lightnessJitter: number, hueJitterDeg: number): THREE.Color {
+  const color = new THREE.Color(hex);
+  const hsl = { h: 0, s: 0, l: 0 };
+  color.getHSL(hsl);
+  const dh = ((Math.random() - 0.5) * 2 * hueJitterDeg) / 360;
+  const dl = (Math.random() - 0.5) * 2 * lightnessJitter;
+  color.setHSL((hsl.h + dh + 1) % 1, hsl.s, THREE.MathUtils.clamp(hsl.l + dl, 0, 1));
+  return color;
+}
 
 // ===== Détails de façade (porte/fenêtres) pour maisons et immeubles =====
 // Le sens de sortie (normale) d'une arête de contour n'est pas fiable
@@ -438,7 +466,10 @@ function buildProceduralBuilding(
   const wallsGeom = nonIndexed(new THREE.ExtrudeGeometry(shape, { depth: wallH, bevelEnabled: false }));
   wallsGeom.rotateX(-Math.PI / 2);
   wallsGeom.deleteAttribute('uv'); // pas de texture ; doit matcher les attributs des pans de toit pour mergeGeometries
-  paintVertexColors(wallsGeom, new THREE.Color(WALL_COLOR_BY_TYPE[type]));
+  const wallColor = JITTERED_WALL_TYPES.has(type)
+    ? jitterColor(WALL_COLOR_BY_TYPE[type], WALL_LIGHTNESS_JITTER, WALL_HUE_JITTER_DEG)
+    : new THREE.Color(WALL_COLOR_BY_TYPE[type]);
+  paintVertexColors(wallsGeom, wallColor);
 
   // --- Toit : frustum (contour rétréci relié par des pans), + plafond plat ---
   const shrunk = shrinkTowardCentroid(pts, shrink);
@@ -473,13 +504,23 @@ function buildProceduralBuilding(
     roofGeoms.push(capGeom);
   }
 
-  // --- Porte/fenêtres : juste pour maison et immeuble (demande explicite,
-  // et ce sont les deux types les plus nombreux donc les plus visibles) ---
+  // --- Détails de façade : maison/immeuble (porte/fenêtres, demande
+  // explicite d'origine) + les 5 catégories de bâtiments publics (mairie,
+  // écoles, églises, mosquée, casernes, commissariats — demande SimCity) ---
   let detailGeoms: THREE.BufferGeometry[] = [];
   if (type === 'house') {
     detailGeoms = buildHouseDetails(pts, wallH);
-  } else if (type === 'apartment') {
+  } else if (type === 'apartment' || type === 'school') {
+    // École : même bande de fenêtres que les immeubles (réutilisée telle
+    // quelle), juste sur un gabarit bloc avec sa propre couleur de façade.
     detailGeoms = buildApartmentDetails(pts, wallH);
+  } else if (type === 'church') {
+    detailGeoms = buildChurchWindows(pts, wallH);
+  } else if (type === 'fire_station') {
+    detailGeoms = buildFireStationDoors(pts, wallH);
+  } else if (type === 'townhall') {
+    const steps = buildTownhallSteps(pts);
+    if (steps) detailGeoms = [steps];
   }
 
   return mergeGeometries([wallsGeom, ...roofGeoms, ...detailGeoms], false);
@@ -591,6 +632,171 @@ function buildFlagpole(footprint: [number, number][], totalHeight: number): THRE
   return mergeGeometries([poleGeom, flagGeom], false)!;
 }
 
+// Mosquée : dôme (demi-sphère posée sur le toit plat) + minaret excentré
+// vers un coin du bâtiment (même principe que buildFlagpole). Traitement
+// générique assumé (aucune source fiable trouvée décrivant l'architecture
+// réelle de la mosquée de Clamart — ni base Mérimée, ni inventaire IDF),
+// couleur pierre chaude distincte des autres civics (église/mairie/école).
+function buildMosqueDome(footprint: [number, number][], totalHeight: number): THREE.BufferGeometry {
+  const pts = dedupeClosed(footprint);
+  const [cx, cy] = footprintCentroid(pts);
+  const { minX, maxX, minY, maxY } = polygonBBox(pts);
+  const radius = Math.max(2, Math.min(maxX - minX, maxY - minY) * 0.28);
+
+  const domeGeom = nonIndexed(new THREE.SphereGeometry(radius, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2));
+  domeGeom.translate(cx, totalHeight, -cy);
+  domeGeom.deleteAttribute('uv');
+
+  const mx = pts[0][0] * 0.25 + cx * 0.75;
+  const my = pts[0][1] * 0.25 + cy * 0.75;
+  const towerH = totalHeight * 1.6;
+  const towerGeom = nonIndexed(new THREE.CylinderGeometry(0.9, 1.1, towerH, 8));
+  towerGeom.translate(mx, towerH / 2, -my);
+  towerGeom.deleteAttribute('uv');
+
+  const capGeom = nonIndexed(new THREE.ConeGeometry(1.3, 2.2, 8));
+  capGeom.translate(mx, towerH + 1.1, -my);
+  capGeom.deleteAttribute('uv');
+
+  return mergeGeometries([domeGeom, towerGeom, capGeom], false)!;
+}
+
+// Caserne de pompiers : 2 portes de garage sombres sur la plus longue
+// façade (même technique que buildHouseDetails/buildApartmentDetails —
+// quads orientés vers l'extérieur), fusionnées dans le mesh PRINCIPAL
+// (elles ont déjà leurs propres couleurs par sommet, comme porte/fenêtres
+// de maison) plutôt que le mesh civic.
+const GARAGE_DOOR_COLOR = new THREE.Color(0x2b2b2b);
+
+function buildFireStationDoors(pts: [number, number][], wallH: number): THREE.BufferGeometry[] {
+  const centroid = footprintCentroid(pts);
+  const n = pts.length;
+  let longestIdx = 0;
+  let longestLen = 0;
+  for (let i = 0; i < n; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % n];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (len > longestLen) {
+      longestLen = len;
+      longestIdx = i;
+    }
+  }
+  const a = pts[longestIdx];
+  const b = pts[(longestIdx + 1) % n];
+  const outward = edgeOutwardNormal(centroid, a, b);
+  const doorH = Math.min(wallH * 0.78, 4.4);
+  const doorW = Math.min(longestLen * 0.28, 3.6);
+  const geoms: THREE.BufferGeometry[] = [];
+  const door1 = facadeQuad(a, b, outward, 0.32, doorW, 0, doorH, 0.07, GARAGE_DOOR_COLOR);
+  if (door1) geoms.push(door1);
+  const door2 = facadeQuad(a, b, outward, 0.68, doorW, 0, doorH, 0.07, GARAGE_DOOR_COLOR);
+  if (door2) geoms.push(door2);
+  return geoms;
+}
+
+// Petit camion de pompier STATIQUE (boîtes simples), posé devant la
+// caserne — aucune animation, coût identique à n'importe quel autre détail
+// civic fusionné dans le même mesh (clocher, drapeau...).
+const TRUCK_RED = new THREE.Color(0xb23a2e);
+const TRUCK_CAB = new THREE.Color(0xe8e4da);
+
+function buildFireTruck(footprint: [number, number][]): THREE.BufferGeometry {
+  const pts = dedupeClosed(footprint);
+  const centroid = footprintCentroid(pts);
+  const a = pts[0];
+  const b = pts[1 % pts.length];
+  const outward = edgeOutwardNormal(centroid, a, b);
+  const mx = (a[0] + b[0]) / 2;
+  const my = (a[1] + b[1]) / 2;
+  const standoff = 7; // devant la façade, pas collé au mur
+  const tx = mx + outward[0] * standoff;
+  const ty = my + outward[1] * standoff;
+  const angle = Math.atan2(outward[1], outward[0]);
+
+  const bodyGeom = nonIndexed(new THREE.BoxGeometry(5.2, 2.2, 2.1));
+  paintVertexColors(bodyGeom, TRUCK_RED);
+  bodyGeom.translate(0, 1.1, 0);
+
+  const cabGeom = nonIndexed(new THREE.BoxGeometry(1.8, 1.8, 2.1));
+  paintVertexColors(cabGeom, TRUCK_CAB);
+  cabGeom.translate(1.9, 1.9, 0);
+
+  const merged = mergeGeometries([bodyGeom, cabGeom], false)!;
+  merged.rotateY(-angle);
+  merged.translate(tx, 0, -ty);
+  merged.deleteAttribute('uv');
+  return merged;
+}
+
+// Église : vitraux colorés sur la plus longue façade (même technique que
+// les fenêtres de maison/immeuble), palette "vitrail" plutôt que le bleu
+// vitré des fenêtres résidentielles.
+const STAINED_GLASS_COLORS = [0x7a5ca8, 0xc46b4e, 0x4e8ab0];
+
+function buildChurchWindows(pts: [number, number][], wallH: number): THREE.BufferGeometry[] {
+  const centroid = footprintCentroid(pts);
+  const n = pts.length;
+  let longestIdx = 0;
+  let longestLen = 0;
+  for (let i = 0; i < n; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % n];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (len > longestLen) {
+      longestLen = len;
+      longestIdx = i;
+    }
+  }
+  const a = pts[longestIdx];
+  const b = pts[(longestIdx + 1) % n];
+  const outward = edgeOutwardNormal(centroid, a, b);
+  const count = Math.max(1, Math.min(3, Math.floor(longestLen / 6)));
+  const winH = Math.min(wallH * 0.5, 3.2);
+  const geoms: THREE.BufferGeometry[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = (i + 0.5) / count;
+    const color = new THREE.Color(STAINED_GLASS_COLORS[i % STAINED_GLASS_COLORS.length]);
+    const win = facadeQuad(a, b, outward, t, 0.9, wallH * 0.3, wallH * 0.3 + winH, 0.06, color);
+    if (win) geoms.push(win);
+  }
+  return geoms;
+}
+
+// Mairie : léger perron devant l'entrée (une marche basse, même technique
+// de quad orienté) — reste discret, le gabarit bloc + drapeau fait déjà
+// l'essentiel de la distinction visuelle.
+const STEP_COLOR = new THREE.Color(0xd8d2c4);
+
+function buildTownhallSteps(pts: [number, number][]): THREE.BufferGeometry | null {
+  const centroid = footprintCentroid(pts);
+  const n = pts.length;
+  let longestIdx = 0;
+  let longestLen = 0;
+  for (let i = 0; i < n; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % n];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (len > longestLen) {
+      longestLen = len;
+      longestIdx = i;
+    }
+  }
+  const a = pts[longestIdx];
+  const b = pts[(longestIdx + 1) % n];
+  const outward = edgeOutwardNormal(centroid, a, b);
+  const mx = (a[0] + b[0]) / 2 + outward[0] * 1.2;
+  const my = (a[1] + b[1]) / 2 + outward[1] * 1.2;
+  const stepW = Math.min(longestLen * 0.25, 6);
+  const stepGeom = nonIndexed(new THREE.BoxGeometry(stepW, 0.4, 2.4));
+  paintVertexColors(stepGeom, STEP_COLOR);
+  const angle = Math.atan2(outward[1], outward[0]);
+  stepGeom.rotateY(-angle);
+  stepGeom.translate(mx, 0.2, -my);
+  stepGeom.deleteAttribute('uv');
+  return stepGeom;
+}
+
 function buildBuildingsMesh(data: MapData): { main: THREE.Mesh | null; civic: THREE.Mesh | null; outline: THREE.Mesh | null } {
   const mainGeoms: THREE.BufferGeometry[] = [];
   const civicGeoms: THREE.BufferGeometry[] = [];
@@ -605,6 +811,13 @@ function buildBuildingsMesh(data: MapData): { main: THREE.Mesh | null; civic: TH
     } else if (b.t === 'townhall') {
       const pole = buildFlagpole(b.f, b.h);
       civicGeoms.push(paintColored(pole, 0xdedede));
+    } else if (b.t === 'mosque') {
+      civicGeoms.push(paintColored(buildMosqueDome(b.f, b.h), 0xcdb46a));
+    } else if (b.t === 'police') {
+      const pole = buildFlagpole(b.f, b.h);
+      civicGeoms.push(paintColored(pole, 0x2c5f99));
+    } else if (b.t === 'fire_station') {
+      civicGeoms.push(buildFireTruck(b.f)); // déjà coloré par sommet (voir buildFireTruck)
     }
   }
 
@@ -627,7 +840,17 @@ function paintColored(geom: THREE.BufferGeometry, color: number): THREE.BufferGe
   return geom;
 }
 
-// ===== Arbres "boules" dans les parcs (InstancedMesh) =====
+// ===== Végétation (arbres + buissons, InstancedMesh) =====
+// Ville plus vivante, moins vide visuellement (règle produit) : des arbres
+// en petits GROUPES dans les parcs (pas un semis uniforme — on veut lire
+// "quelques arbres rassemblés", pas une distribution régulière artificielle),
+// le long de certaines rues (résidentielles/secondaires, pas sur les grands
+// axes ni les chemins piétons), et autour des lieux emblématiques (sauf les
+// parkings, où des arbres au milieu du bitume n'auraient pas de sens). Des
+// buissons, plus petits et plus denses, complètent les parcs comme un sous-
+// bois léger. Tout reste en InstancedMesh (2 mesh pour les arbres + 1 pour
+// les buissons, quel que soit le nombre d'instances) : coût de rendu
+// négligeable même avec plusieurs centaines d'éléments.
 function pointInPolygon(x: number, y: number, poly: [number, number][]): boolean {
   let inside = false;
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
@@ -639,7 +862,7 @@ function pointInPolygon(x: number, y: number, poly: [number, number][]): boolean
   return inside;
 }
 
-function scatterInPolygon(poly: [number, number][], density: number, max: number): [number, number][] {
+function polygonBBox(poly: [number, number][]) {
   let minX = Infinity;
   let maxX = -Infinity;
   let minY = Infinity;
@@ -650,60 +873,197 @@ function scatterInPolygon(poly: [number, number][], density: number, max: number
     if (y < minY) minY = y;
     if (y > maxY) maxY = y;
   }
-  const area = (maxX - minX) * (maxY - minY);
-  const target = Math.min(max, Math.max(1, Math.round(area * density)));
-  const points: [number, number][] = [];
+  return { minX, maxX, minY, maxY };
+}
+
+// Quelques foyers de végétation par polygone (pas un point par foyer isolé),
+// puis quelques éléments dispersés autour de chaque foyer — lit comme "des
+// petits groupes d'arbres", pas comme une grille/un semis régulier.
+function clusteredScatterInPolygon(
+  poly: [number, number][],
+  targetCount: number,
+  clusterRadiusM: number
+): [number, number][] {
+  if (targetCount <= 0) return [];
+  const { minX, maxX, minY, maxY } = polygonBBox(poly);
+  const clusterCount = Math.max(1, Math.round(targetCount / 4));
+  const centers: [number, number][] = [];
   let attempts = 0;
-  while (points.length < target && attempts < target * 20) {
+  while (centers.length < clusterCount && attempts < clusterCount * 30) {
     attempts++;
     const x = minX + Math.random() * (maxX - minX);
     const y = minY + Math.random() * (maxY - minY);
-    if (pointInPolygon(x, y, poly)) points.push([x, y]);
+    if (pointInPolygon(x, y, poly)) centers.push([x, y]);
+  }
+  if (!centers.length) return [];
+
+  const perCluster = Math.max(1, Math.round(targetCount / centers.length));
+  const points: [number, number][] = [];
+  for (const [cx, cy] of centers) {
+    for (let i = 0; i < perCluster; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.random() * clusterRadiusM;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      if (pointInPolygon(x, y, poly)) points.push([x, y]);
+    }
   }
   return points;
 }
 
-function buildTrees(parks: MapArea[]): THREE.Group | null {
-  const positions: [number, number][] = [];
-  for (const park of parks) {
+const TREE_ROAD_TYPES = new Set(['residential', 'tertiary', 'secondary', 'living_street']);
+const STREET_TREE_SPACING_M = 16;
+// Volontairement < 1 : un arbre à CHAQUE emplacement espacé régulièrement
+// ferait une rangée trop régulière/artificielle ; ce tirage casse
+// l'alignement parfait sans perdre l'idée de rangée d'arbres le long de la
+// rue (règle produit : "ne pas surcharger").
+const STREET_TREE_PROBABILITY = 0.4;
+const STREET_TREE_SIDE_OFFSET_M = 3;
+
+function streetTreePositions(roads: MapRoad[]): [number, number][] {
+  const points: [number, number][] = [];
+  for (const road of roads) {
+    if (!TREE_ROAD_TYPES.has(road.hw)) continue;
+    const halfWidth = (ROAD_WIDTH_BY_TYPE[road.hw] ?? DEFAULT_ROAD_WIDTH) / 2;
+    const offset = halfWidth + STREET_TREE_SIDE_OFFSET_M;
+    for (let i = 0; i < road.p.length - 1; i++) {
+      const [ax, ay] = road.p[i];
+      const [bx, by] = road.p[i + 1];
+      const segLen = Math.hypot(bx - ax, by - ay);
+      if (segLen < 1) continue;
+      const dirX = (bx - ax) / segLen;
+      const dirY = (by - ay) / segLen;
+      const normalX = -dirY;
+      const normalY = dirX;
+      const steps = Math.floor(segLen / STREET_TREE_SPACING_M);
+      for (let s = 1; s <= steps; s++) {
+        if (Math.random() > STREET_TREE_PROBABILITY) continue;
+        const t = s * STREET_TREE_SPACING_M;
+        const px = ax + dirX * t;
+        const py = ay + dirY * t;
+        const side = Math.random() < 0.5 ? 1 : -1;
+        points.push([px + normalX * offset * side, py + normalY * offset * side]);
+      }
+    }
+  }
+  return points;
+}
+
+function landmarkTreePositions(landmarks: MapLandmark[]): [number, number][] {
+  const points: [number, number][] = [];
+  for (const lm of landmarks) {
+    const count = 2 + Math.floor(Math.random() * 2); // 2-3
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = 5 + Math.random() * 5;
+      points.push([lm.pos[0] + Math.cos(angle) * r, lm.pos[1] + Math.sin(angle) * r]);
+    }
+  }
+  return points;
+}
+
+const TREE_TRUNK_COLOR = 0x7a5a3a;
+// Petite palette (pas une seule teinte figée) pour casser l'effet "copier-
+// coller" sur un grand nombre d'instances — assigné aléatoirement par arbre
+// via InstancedMesh#setColorAt (aucun coût de géométrie supplémentaire).
+const TREE_FOLIAGE_COLORS = [0x6fae5f, 0x5c9b52, 0x7ab468];
+const BUSH_FOLIAGE_COLORS = [0x7fb568, 0x6fa85c, 0x74ad5e];
+
+function buildInstancedBlobs(
+  positions: [number, number][],
+  geometry: THREE.BufferGeometry,
+  material: THREE.Material,
+  colors: number[],
+  baseScale: [number, number],
+  heightOffsetFactor: number
+): THREE.InstancedMesh {
+  const mesh = new THREE.InstancedMesh(geometry, material, positions.length);
+  const m = new THREE.Matrix4();
+  const color = new THREE.Color();
+  positions.forEach(([x, y], i) => {
+    const scale = baseScale[0] + Math.random() * (baseScale[1] - baseScale[0]);
+    m.compose(
+      new THREE.Vector3(x, heightOffsetFactor * scale, -y),
+      new THREE.Quaternion(),
+      new THREE.Vector3(scale, scale, scale)
+    );
+    mesh.setMatrixAt(i, m);
+    mesh.setColorAt(i, color.setHex(colors[Math.floor(Math.random() * colors.length)]));
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  return mesh;
+}
+
+function buildVegetation(data: MapData): THREE.Group | null {
+  const treePositions: [number, number][] = [];
+  for (const park of data.parks) {
     const pts = dedupeClosed(park.p);
     if (pts.length < 3) continue;
-    positions.push(...scatterInPolygon(pts, 1 / 220, 60));
+    const { minX, maxX, minY, maxY } = polygonBBox(pts);
+    const area = (maxX - minX) * (maxY - minY);
+    const target = Math.min(55, Math.max(1, Math.round(area / 260)));
+    treePositions.push(...clusteredScatterInPolygon(pts, target, 6));
   }
-  if (!positions.length) return null;
+  treePositions.push(...streetTreePositions(data.roads));
+  treePositions.push(...landmarkTreePositions(data.landmarks));
 
+  const bushPositions: [number, number][] = [];
+  for (const park of data.parks) {
+    const pts = dedupeClosed(park.p);
+    if (pts.length < 3) continue;
+    const { minX, maxX, minY, maxY } = polygonBBox(pts);
+    const area = (maxX - minX) * (maxY - minY);
+    const target = Math.min(40, Math.max(1, Math.round(area / 340)));
+    bushPositions.push(...clusteredScatterInPolygon(pts, target, 4));
+  }
+
+  if (!treePositions.length && !bushPositions.length) return null;
   const group = new THREE.Group();
-  const trunkGeom = new THREE.CylinderGeometry(0.25, 0.3, 2.2, 6);
-  trunkGeom.translate(0, 1.1, 0);
-  const trunkMat = toonMaterial({ color: 0x6b4a2f });
-  const trunks = new THREE.InstancedMesh(trunkGeom, trunkMat, positions.length);
 
-  const foliageGeom = new THREE.IcosahedronGeometry(1.6, 0);
-  const foliageMat = toonMaterial({ color: 0x5fa85a });
-  const foliage = new THREE.InstancedMesh(foliageGeom, foliageMat, positions.length);
-
-  const m = new THREE.Matrix4();
-  positions.forEach(([x, y], i) => {
-    const wx = x;
-    const wz = -y;
-    const scale = 0.8 + Math.random() * 0.6;
-    m.compose(
-      new THREE.Vector3(wx, 0, wz),
-      new THREE.Quaternion(),
-      new THREE.Vector3(scale, scale, scale)
+  if (treePositions.length) {
+    const trunkGeom = new THREE.CylinderGeometry(0.25, 0.3, 2.2, 6);
+    trunkGeom.translate(0, 1.1, 0);
+    // Matériau par défaut (blanc, pas `vertexColors`) : la couleur finale
+    // vient entièrement de `instanceColor` via setColorAt (voir
+    // buildInstancedBlobs) — un mécanisme par INSTANCE, indépendant de
+    // `material.vertexColors` qui lit lui une couleur par SOMMET sur la
+    // géométrie (absente ici). Mettre `vertexColors:true` sans attribut
+    // `color` sur la géométrie fait lire au shader un attribut inexistant
+    // -> rendu noir (déjà vu à l'écran, corrigé).
+    const trunks = buildInstancedBlobs(
+      treePositions,
+      trunkGeom,
+      toonMaterial(),
+      [TREE_TRUNK_COLOR],
+      [0.8, 1.4],
+      0
     );
-    trunks.setMatrixAt(i, m);
-    m.compose(
-      new THREE.Vector3(wx, 2.2 * scale, wz),
-      new THREE.Quaternion(),
-      new THREE.Vector3(scale, scale, scale)
+    const foliageGeom = new THREE.IcosahedronGeometry(1.6, 0);
+    const foliage = buildInstancedBlobs(
+      treePositions,
+      foliageGeom,
+      toonMaterial(),
+      TREE_FOLIAGE_COLORS,
+      [0.8, 1.4],
+      2.2
     );
-    foliage.setMatrixAt(i, m);
-  });
-  trunks.instanceMatrix.needsUpdate = true;
-  foliage.instanceMatrix.needsUpdate = true;
+    group.add(trunks, foliage);
+  }
 
-  group.add(trunks, foliage);
+  if (bushPositions.length) {
+    const bushGeom = new THREE.IcosahedronGeometry(0.9, 0);
+    const bushes = buildInstancedBlobs(
+      bushPositions,
+      bushGeom,
+      toonMaterial(),
+      BUSH_FOLIAGE_COLORS,
+      [0.7, 1.2],
+      0.7
+    );
+    group.add(bushes);
+  }
+
   return group;
 }
 
@@ -713,10 +1073,16 @@ export function buildCity(data: MapData, scene: THREE.Scene): void {
   // ce qui fait que seule Clamart s'affiche, pas les communes voisines
   // tombées dans la bbox de requête (déjà filtrées côté données, mais le
   // sol rectangulaire les aurait quand même laissé deviner en silhouette).
+  // Palette réchauffée (direction artistique "ville miniature chaleureuse",
+  // moins froide/austère) : sol en sauge claire plutôt que vert-menthe
+  // froid, parcs un ton plus soutenu pour bien se détacher du sol (lecture
+  // des zones vertes), gris de voirie adouci/réchauffé. Les toits en terre
+  // cuite des maisons (ROOF_PARAMS.house) et la couleur de l'eau ne
+  // changent pas — ils fonctionnaient déjà bien.
   const groundGeom = areaShapeGeometry(data.boundary, 0);
   const ground = new THREE.Mesh(
     groundGeom ?? new THREE.PlaneGeometry(data.halfSizeM.x * 2, data.halfSizeM.y * 2),
-    toonMaterial({ color: 0xcfe8d8, side: THREE.DoubleSide })
+    toonMaterial({ color: 0xd9ddbf, side: THREE.DoubleSide })
   );
   if (!groundGeom) ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
@@ -724,17 +1090,29 @@ export function buildCity(data: MapData, scene: THREE.Scene): void {
   const water = buildAreaMesh(data.water, 0.03, 0x6fa8d6);
   if (water) scene.add(water);
 
-  const parks = buildAreaMesh(data.parks, 0.02, 0x8fc77a);
+  const parks = buildAreaMesh(data.parks, 0.02, 0xa3c17f);
   if (parks) scene.add(parks);
 
   // Site d'hôpital tagué `amenity=hospital` sans `building` propre (contour
   // de tout le campus, pas une simple bâtisse) : sans cette forme au sol,
   // seul le badge flottait au-dessus de rien de visible.
-  const hospitals = buildAreaMesh(data.hospitals, 0.025, 0xdce7ef);
+  const hospitals = buildAreaMesh(data.hospitals, 0.025, 0xe3e2d6);
   if (hospitals) scene.add(hospitals);
 
-  const trees = buildTrees(data.parks);
-  if (trees) scene.add(trees);
+  // Équipements sportifs "dessinés au sol" (règle produit), une couleur
+  // distincte par type pour rester lisible à côté des parcs : vert plus
+  // franc pour un terrain engazonné, bleu pour un court de tennis (plutôt
+  // qu'une terre battue orange, moins lisible juste à côté de la piste),
+  // terre cuite/ocre pour une piste d'athlétisme.
+  const sportsPitches = buildAreaMesh(data.sportsPitches, 0.022, 0x5fbf4a);
+  if (sportsPitches) scene.add(sportsPitches);
+  const tennisCourts = buildAreaMesh(data.tennisCourts, 0.022, 0x4aa8c9);
+  if (tennisCourts) scene.add(tennisCourts);
+  const athleticsTracks = buildAreaMesh(data.athleticsTracks, 0.022, 0xcc6b3f);
+  if (athleticsTracks) scene.add(athleticsTracks);
+
+  const vegetation = buildVegetation(data);
+  if (vegetation) scene.add(vegetation);
 
   const railways = buildRibbonMesh(
     data.railways.map((r) => ({ hw: 'rail', p: r.p })),
@@ -758,7 +1136,7 @@ export function buildCity(data: MapData, scene: THREE.Scene): void {
     data.roads,
     0.1,
     (hw) => ROAD_WIDTH_BY_TYPE[hw] ?? DEFAULT_ROAD_WIDTH,
-    0x8a8a84
+    0x9c9488
   );
   if (roads) scene.add(roads);
 

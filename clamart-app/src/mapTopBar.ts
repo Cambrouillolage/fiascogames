@@ -168,7 +168,7 @@ export function setupMapTopBar(deps: MapTopBarDeps): MapTopBar {
             </button>`;
           }
           return `<button type="button" class="topSearchItem topSearchItem--merchant" data-index="${i}">
-            <img class="topSearchItemIcon topSearchItemBadge${s.merchant.is_locked ? ' isLockedBadge' : ''}" src="${badgeIconFor(s.merchant)}" alt="" />
+            <img class="topSearchItemIcon topSearchItemBadge" src="${badgeIconFor(s.merchant)}" alt="" />
             <span class="topSearchItemLabel">${s.merchant.name}</span>
           </button>`;
         })

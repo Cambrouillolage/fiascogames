@@ -12,12 +12,32 @@ import { badgesParId } from './data/badgesClamart.ts';
 const CATEGORY_BADGE_ID: Record<LandmarkCategory, string> = {
   townhall: 'mairie',
   church: 'eglise',
+  mosque: 'mosquee',
   school: 'ecole',
+  college: 'college_lycee',
   post_office: 'poste',
   park: 'parc',
   station: 'gare',
-  parking: 'parking',
   hospital: 'hopital',
+  police: 'commissariat',
+  fire_station: 'pompier',
+  sports_hall: 'salle_sport',
+  // sports_pitch/sports_tennis/sports_track : pas d'asset webp dédié dans le
+  // catalogue (badgesClamart.ts) pour l'instant — voir EMOJI_BADGE plus bas,
+  // ces 3-là sont dessinés directement plutôt que de retomber sur l'icône
+  // générique "boutique", trompeuse pour un terrain de sport.
+  sports_pitch: '',
+  sports_tennis: '',
+  sports_track: '',
+};
+
+// Badge "rond + emoji" dessiné sur canvas pour les catégories sans asset
+// webp dédié — même esprit visuel que les badges fournis (rond + icône),
+// sans attendre un nouvel asset pour ces 3-là.
+const EMOJI_BADGE: Partial<Record<LandmarkCategory, { emoji: string; color: string }>> = {
+  sports_pitch: { emoji: '⚽', color: '#5FBF4A' },
+  sports_tennis: { emoji: '🎾', color: '#4AA8C9' },
+  sports_track: { emoji: '🏃', color: '#CC6B3F' },
 };
 
 const textureLoader = new THREE.TextureLoader();
@@ -33,6 +53,34 @@ function badgeWebpTexture(webpPath: string): THREE.Texture {
   return tex;
 }
 
+const emojiTextureCache = new Map<string, THREE.CanvasTexture>();
+
+function emojiBadgeTexture(emoji: string, bgColor: string): THREE.CanvasTexture {
+  const key = `${emoji}:${bgColor}`;
+  let tex = emojiTextureCache.get(key);
+  if (tex) return tex;
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2 - 4, 0, Math.PI * 2);
+  ctx.fillStyle = bgColor;
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#fff';
+  ctx.stroke();
+  ctx.font = `${size * 0.52}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(emoji, size / 2, size / 2 + 4);
+  tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  emojiTextureCache.set(key, tex);
+  return tex;
+}
+
 export interface BadgeHit {
   name: string;
   category: LandmarkCategory;
@@ -42,8 +90,10 @@ export function buildBadges(landmarks: MapLandmark[], scene: THREE.Scene): THREE
   const sprites: THREE.Sprite[] = [];
 
   for (const l of landmarks) {
-    const badge = badgesParId[CATEGORY_BADGE_ID[l.c]] ?? badgesParId['boutique'];
-    const tex = badgeWebpTexture(badge.webp);
+    const emojiSpec = EMOJI_BADGE[l.c];
+    const tex = emojiSpec
+      ? emojiBadgeTexture(emojiSpec.emoji, emojiSpec.color)
+      : badgeWebpTexture((badgesParId[CATEGORY_BADGE_ID[l.c]] ?? badgesParId['boutique']).webp);
     // depthTest désactivé + renderOrder élevé : le badge doit rester un
     // repère toujours visible (comme un pin de carte), pas se faire
     // "manger" derrière un immeuble plus proche de la caméra.
@@ -52,7 +102,11 @@ export function buildBadges(landmarks: MapLandmark[], scene: THREE.Scene): THREE
     const size = 22;
     sprite.scale.set(size, size, 1);
     sprite.position.set(l.pos[0], l.h, -l.pos[1]);
-    sprite.renderOrder = 999;
+    // Sous tout pin commerce (PIN_RENDER_ORDER_LOCKED=998, voir
+    // merchantPins.ts) : un lieu non-commerçant (mairie, école, parking...)
+    // ne doit jamais passer devant un commerce qui se trouverait au même
+    // endroit à l'écran — règle produit.
+    sprite.renderOrder = 997;
     sprite.userData = { name: l.n, category: l.c } satisfies BadgeHit;
     scene.add(sprite);
     sprites.push(sprite);

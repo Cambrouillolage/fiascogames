@@ -14,15 +14,10 @@ import { setupFiltersSheet } from './filtersSheet.ts';
 import { createAutoHide } from './autoHide.ts';
 import { loadQuartiers } from './quartiersData.ts';
 import { buildQuartiers, type QuartiersLayer } from './quartiers.ts';
-import {
-  createClusterLayer,
-  type ClusterLayer,
-  type MapCluster,
-  CLUSTER_PIXEL_RADIUS,
-  GAV_CLUSTER_PIXEL_RADIUS,
-  PIN_WORLD_Y,
-} from './clusterLayer.ts';
-import { computeHalfSplitZoom, projectAll, clusterKey } from './clustering.ts';
+import { createPinDeclutter, type PinDeclutter } from './pinDeclutter.ts';
+import { createTraffic, type TrafficSystem } from './traffic.ts';
+import { createPedestrians, type PedestrianSystem } from './pedestrians.ts';
+import { createLodFader, type LodFader } from './lod.ts';
 
 // Seuil de "zoom fraction" (0 = dézoomé au max, 1 = zoomé au max, voir
 // IsoCameraRig#getZoomFraction) sous lequel on bascule des badges/pins vers
@@ -74,6 +69,12 @@ function viewportSize() {
   return { w: app.clientWidth, h: app.clientHeight };
 }
 
+// Adaptation perf grossière (demande explicite) : un petit écran ou peu de
+// coeurs CPU indique un appareil modeste -> moitié moins de voitures/piétons
+// simulés. Juste une heuristique (pas de vrai profilage FPS), évaluée une
+// fois au chargement comme reducedMotion ci-dessous.
+const isLowPowerDevice = viewportSize().w < 768 || (navigator.hardwareConcurrency ?? 8) <= 4;
+
 const { w: initW, h: initH } = viewportSize();
 let rig = new IsoCameraRig(initW / initH, 450);
 renderer.setSize(initW, initH);
@@ -93,13 +94,40 @@ let autoHide: ReturnType<typeof createAutoHide> | null = null;
 // animate() tourne déjà avant que badges/pins/quartiers n'existent, donc ce
 // pont en portée externe évite de complexifier la boucle de rendu elle-même.
 let zoomModeTick: (() => void) | null = null;
-let recomputeClusters: ((spiderfyKey?: string | null) => void) | null = null;
-let pickCluster: ((clientX: number, clientY: number, w: number, h: number) => MapCluster | null) | null = null;
-let handleClusterClick: ((cluster: MapCluster) => void) | null = null;
+let declutterPins: (() => void) | null = null;
+let trafficSystem: TrafficSystem | null = null;
+let pedestrianSystem: PedestrianSystem | null = null;
+let trafficFader: LodFader | null = null;
+let pedestrianFader: LodFader | null = null;
 
+// Respecté une fois pour toutes au chargement (comme gav/index.html pour la
+// vidéo) : pas de ré-évaluation en continu, un changement de préférence en
+// cours de session nécessiterait de toute façon un rechargement de la carte.
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let pageVisible = !document.hidden;
+document.addEventListener('visibilitychange', () => {
+  pageVisible = !document.hidden;
+});
+
+const animationStartTime = performance.now();
+let lastFrameTime = animationStartTime;
 function animate() {
   requestAnimationFrame(animate);
+  const now = performance.now();
+  const deltaSeconds = Math.min(0.1, (now - lastFrameTime) / 1000); // plafonné : évite un grand bond après un onglet mis en veille puis réactivé
+  lastFrameTime = now;
   zoomModeTick?.();
+  // Même seuil que le mode quartier (zoomé à 30% de la plage dispo) : en
+  // dessous, voitures/piétons n'apportent rien (illisibles à cette échelle,
+  // comme les badges/pins) et coûtent une simulation + un rendu pour rien —
+  // fondu court plutôt qu'une disparition brutale (voir src/lod.ts).
+  const trafficTarget: 0 | 1 = rig.getZoomFraction() > QUARTIER_MODE_ZOOM_THRESHOLD ? 1 : 0;
+  trafficFader?.tick(trafficTarget, deltaSeconds);
+  pedestrianFader?.tick(trafficTarget, deltaSeconds);
+  if (!reducedMotion && pageVisible) {
+    trafficSystem?.update(deltaSeconds);
+    pedestrianSystem?.update(deltaSeconds, (now - animationStartTime) / 1000);
+  }
   renderer.render(scene, rig.camera);
 }
 animate();
@@ -107,6 +135,7 @@ animate();
 onMerchantCardClose(() => {
   selectedMerchantId = null;
   setSelectedPin(merchantPins, null);
+  declutterPins?.();
 });
 
 loadMapData()
@@ -130,31 +159,38 @@ loadMapData()
     merchantPins = buildMerchantPins(merchants, data.center, scene);
     initMerchantCard(categories);
     const quartiersLayer: QuartiersLayer = buildQuartiers(quartiers, data.center, scene);
-    const clusterLayer: ClusterLayer = createClusterLayer(scene);
+    const pinDeclutter: PinDeclutter = createPinDeclutter(scene);
 
-    function doRecomputeClusters(spiderfyKey: string | null = null) {
-      const { w, h } = viewportSize();
-      clusterLayer.recompute(merchantPins, rig, w, h, spiderfyKey);
+    // Quartier pilote (voir le plan SimCity) : voitures/piétons restreints
+    // au quartier "Centre" le temps de valider rendu/perf, avant une
+    // généralisation à toute la ville (changer ce filtre suffira, pas de
+    // réécriture — voir src/traffic.ts et src/pedestrians.ts).
+    const pilotQuartier = quartiers.find((q) => q.id === 'centre');
+    if (pilotQuartier) {
+      const pilotRingLocal: [number, number][] = pilotQuartier.ring.map(([lon, lat]) => {
+        const [x, y] = latLonToLocalMeters(lat, lon, data.center);
+        return [x, y];
+      });
+      trafficSystem = createTraffic(data.roads, pilotRingLocal, scene, isLowPowerDevice ? 8 : undefined);
+      pedestrianSystem = createPedestrians(data.roads, pilotRingLocal, scene, isLowPowerDevice ? 14 : undefined);
+      // Position initiale posée une fois immédiatement (delta=0), y compris
+      // sous `prefers-reduced-motion` : sinon chaque instance reste à
+      // l'origine (0,0,0) tant que animate() ne les a jamais mises à jour —
+      // "restent visibles mais immobiles" suppose qu'elles soient déjà à
+      // leur place, pas regroupées au centre de la carte (bug détecté en
+      // testant l'émulation `prefers-reduced-motion` via CDP).
+      trafficSystem.update(0);
+      pedestrianSystem.update(0, 0);
+      const initialOpacity: 0 | 1 = rig.getZoomFraction() > QUARTIER_MODE_ZOOM_THRESHOLD ? 1 : 0;
+      trafficFader = createLodFader(trafficSystem, initialOpacity);
+      pedestrianFader = createLodFader(pedestrianSystem, initialOpacity);
     }
-    recomputeClusters = doRecomputeClusters;
-    pickCluster = (x, y, w, h) => clusterLayer.pick(rig.camera, x, y, w, h);
-    handleClusterClick = (cluster) => {
+
+    function doDeclutter() {
       const { w, h } = viewportSize();
-      const screenPositions = projectAll(cluster.members, rig, PIN_WORLD_Y, w, h);
-      const radius = cluster.isGav ? GAV_CLUSTER_PIXEL_RADIUS : CLUSTER_PIXEL_RADIUS;
-      const result = computeHalfSplitZoom(cluster, screenPositions, rig, radius);
-      if (result.kind === 'zoom') {
-        rig.flyTo(result.worldX, -result.worldZ, result.zoom, 700, () => doRecomputeClusters());
-      } else {
-        // Coordonnées confondues : zoomer ne séparera jamais ces membres,
-        // on vole dessus (au moins au zoom "rapproché") puis on les
-        // affiche en éventail plutôt qu'en bulle (voir clusterLayer.ts).
-        const key = clusterKey(cluster.members.map((m) => m.id));
-        rig.flyTo(cluster.worldX, -cluster.worldZ, Math.max(rig.currentZoom, rig.closeZoom), 700, () =>
-          doRecomputeClusters(key)
-        );
-      }
-    };
+      pinDeclutter.update(merchantPins, rig, w, h, selectedMerchantId);
+    }
+    declutterPins = doDeclutter;
 
     // Centralise "sélectionner un commerçant" (surbrillance du pin + vol de
     // la caméra + ouverture de la fiche) : utilisé aussi bien par le clic
@@ -165,7 +201,7 @@ loadMapData()
       selectedMerchantId = merchant.id;
       setSelectedPin(merchantPins, merchant.id);
       const [x, y] = latLonToLocalMeters(merchant.lat, merchant.lon, data.center);
-      rig.flyTo(x, -y, rig.closeZoom, 700, () => doRecomputeClusters());
+      rig.flyTo(x, -y, rig.closeZoom, 700, () => doDeclutter());
       const { w, h } = viewportSize();
       showMerchantCard(merchant, { x: w / 2, y: h / 2 });
     }
@@ -177,7 +213,7 @@ loadMapData()
       scene,
       onOpenFilters: () => filtersSheet.open(),
       onSelectMerchant: selectMerchant,
-      onCameraSettled: () => doRecomputeClusters(),
+      onCameraSettled: () => doDeclutter(),
     });
     const progressEl = setupUnlockProgress(merchants);
     const filtersSheet = setupFiltersSheet({
@@ -186,13 +222,14 @@ loadMapData()
       merchantPins,
       rig,
       center: data.center,
+      quartiers,
       onSelectMerchant: selectMerchant,
       onFilterCountChange: (n) => {
         topBar.setFilterCount(n);
-        doRecomputeClusters();
+        doDeclutter();
       },
       onResetSearch: () => topBar.clearSearch(),
-      onCameraSettled: () => doRecomputeClusters(),
+      onCameraSettled: () => doDeclutter(),
     });
 
     autoHide = createAutoHide([topBar.root, progressEl, filtersSheet.stickyBtn]);
@@ -210,8 +247,12 @@ loadMapData()
       quartiersLayer.setVisible(inQuartierMode);
       quartiersDisclaimerEl.hidden = !inQuartierMode;
       setBadgesVisible(badges, !inQuartierMode);
-      applyCategoryFilter(merchantPins, inQuartierMode ? new Set<string>() : filtersSheet.getActiveCategories());
-      doRecomputeClusters();
+      applyCategoryFilter(
+        merchantPins,
+        inQuartierMode ? new Set<string>() : filtersSheet.getActiveCategories(),
+        inQuartierMode ? null : filtersSheet.getExtraFilterMerchantIds()
+      );
+      doDeclutter();
     }
     zoomModeTick = applyQuartierMode;
     applyQuartierMode();
@@ -245,15 +286,16 @@ function setupInteraction() {
   let becameMultiTouch = false;
   const TAP_THRESHOLD_PX = 12;
 
-  // Les clusters ne se recalculent qu'une fois le geste terminé (débounce),
-  // jamais à chaque pointermove : recalculer en continu pendant un
-  // pan/pincement ferait clignoter/sauter les bulles (règle produit :
+  // Le désamorçage de collisions (taille/décalage des badges, voir
+  // pinDeclutter.ts) ne se recalcule qu'une fois le geste terminé
+  // (débounce), jamais à chaque pointermove : recalculer en continu pendant
+  // un pan/pincement ferait clignoter/sauter les badges (règle produit :
   // "éviter les recalculs inutiles pendant les déplacements", "éviter les
-  // changements brusques de position des clusters").
-  let clusterRecomputeTimer: number | null = null;
-  function scheduleClusterRecompute() {
-    if (clusterRecomputeTimer != null) window.clearTimeout(clusterRecomputeTimer);
-    clusterRecomputeTimer = window.setTimeout(() => recomputeClusters?.(), 180);
+  // changements brusques de position").
+  let declutterTimer: number | null = null;
+  function scheduleDeclutter() {
+    if (declutterTimer != null) window.clearTimeout(declutterTimer);
+    declutterTimer = window.setTimeout(() => declutterPins?.(), 180);
   }
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -280,7 +322,7 @@ function setupInteraction() {
       rig.panByScreenDelta(dx, dy, w, h);
       lastPanPoint = { x: e.clientX, y: e.clientY };
       autoHide?.markMoving();
-      scheduleClusterRecompute();
+      scheduleDeclutter();
     } else if (pointers.size === 2 && lastPinchDist !== null) {
       const dist = currentPinchDistance();
       if (dist && dist > 0) {
@@ -288,7 +330,7 @@ function setupInteraction() {
         lastPinchDist = dist;
       }
       autoHide?.markMoving();
-      scheduleClusterRecompute();
+      scheduleDeclutter();
     }
   });
 
@@ -303,18 +345,14 @@ function setupInteraction() {
       if (merchantHit) {
         selectedMerchantId = merchantHit.id;
         setSelectedPin(merchantPins, merchantHit.id);
+        declutterPins?.();
         showMerchantCard(merchantHit, { x: e.clientX, y: e.clientY });
       } else {
-        const clusterHit = pickCluster?.(e.clientX, e.clientY, w, h);
-        if (clusterHit) {
-          handleClusterClick?.(clusterHit);
-        } else {
-          const badgeHit = pickBadge(badges, rig.camera, e.clientX, e.clientY, w, h);
-          if (badgeHit) {
-            showBottomSheet(badgeHit.name, badgeHit.category);
-          } else if (selectedMerchantId) {
-            hideMerchantCard();
-          }
+        const badgeHit = pickBadge(badges, rig.camera, e.clientX, e.clientY, w, h);
+        if (badgeHit) {
+          showBottomSheet(badgeHit.name, badgeHit.category);
+        } else if (selectedMerchantId) {
+          hideMerchantCard();
         }
       }
     }
@@ -349,17 +387,17 @@ function setupInteraction() {
       rig.zoomBy(factor);
       autoHide?.markMoving();
       autoHide?.markIdle();
-      scheduleClusterRecompute();
+      scheduleDeclutter();
     },
     { passive: false }
   );
 
   document.querySelector('#zoom-in')!.addEventListener('click', () => {
     rig.zoomBy(1.25);
-    scheduleClusterRecompute();
+    scheduleDeclutter();
   });
   document.querySelector('#zoom-out')!.addEventListener('click', () => {
     rig.zoomBy(0.8);
-    scheduleClusterRecompute();
+    scheduleDeclutter();
   });
 }
