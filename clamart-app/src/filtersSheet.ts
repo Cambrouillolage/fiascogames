@@ -290,12 +290,14 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         <span class="resultRowBody">
           <span class="resultRowName">${m.name}</span>
           <span class="resultRowMeta">${label}${m.address ? ' · ' + m.address : ''}</span>
-          <span class="resultRowStatus resultRowStatus--unlocked">✅ Revendeur GAV</span>
+          <a class="resultRowStatus resultRowStatus--unlocked" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+            <span class="resultRowStatusMain">✅ Revendeur GAV</span>
+            <span class="resultRowStatusMore">En savoir plus ›</span>
+          </a>
           ${m.gav_stock_quantity != null ? `<span class="resultRowStock">📦 ${m.gav_stock_quantity} GAV</span>` : ''}
           <span class="resultRowCtas">
             <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
-            <a class="resultRowCta resultRowCta--gavInfo" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">En savoir plus</a>
           </span>
         </span>
       </div>`;
