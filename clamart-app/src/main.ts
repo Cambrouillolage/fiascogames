@@ -52,6 +52,7 @@ app.innerHTML = `
     </button>
   </div>
   <div class="quartiersDisclaimer" id="quartiers-disclaimer" hidden>Quartiers provisoires, non officiels</div>
+  <div class="mapFooter">Cette carte est proposée par le jeu <a href="/gav/" target="_blank" rel="noopener">GAV</a> · <a href="/gav/" target="_blank" rel="noopener">En savoir plus</a></div>
 `;
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene-canvas')!;

@@ -5,6 +5,7 @@ import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
 import { applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
 import type { QuartierFeature } from './quartiersData.ts';
 import { quartierIdForLatLon } from './quartiers.ts';
+import { showMissingShopInfo } from './missingShopInfo.ts';
 
 // Bottom sheet "Filtres" : catégories (tri alphabétique, multi-sélection),
 // compteurs déverrouillé/verrouillé, liste de résultats, bouton sticky
@@ -127,6 +128,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       <div class="filtersChips filtersSubChips" id="filtersSubChips"></div>
     </div>
     <div class="filtersResultsList" id="filtersResultsList"></div>
+    <button type="button" class="filtersMissingShopBtn" id="filtersMissingShopBtn">Il manque une boutique ?</button>
   `;
   document.body.appendChild(root);
 
@@ -140,6 +142,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   const categoryCountEl = root.querySelector<HTMLElement>('#filtersCategoryCount')!;
   const closeBtn = root.querySelector<HTMLButtonElement>('#filtersCloseBtn')!;
   const resetBtn = root.querySelector<HTMLButtonElement>('#filtersResetBtn')!;
+  root.querySelector<HTMLButtonElement>('#filtersMissingShopBtn')!.addEventListener('click', showMissingShopInfo);
 
   const stickyBtn = document.createElement('button');
   stickyBtn.type = 'button';
@@ -289,7 +292,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
           <span class="resultRowCtas">
             <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
-            <a class="resultRowCta" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">En savoir plus</a>
+            <a class="resultRowCta resultRowCta--gavInfo" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">En savoir plus</a>
           </span>
         </span>
       </div>`;
