@@ -192,33 +192,28 @@
       height:100dvh;
       background:var(--orange);
     }
+    /* Certains WebKit (Safari iOS) n'appliquent pas tout de suite object-fit
+       à la <video> avant que la lecture ne soit réellement démarrée : le
+       premier rendu affiche alors la vidéo/poster à sa taille intrinsèque,
+       collée en haut à gauche, puis "saute" à la bonne taille pile au
+       moment où elle commence à jouer. Plutôt que de recouvrir la vidéo
+       d'une image (qui peut rester sujette au même type de rendu
+       approximatif selon les moteurs), on la garde simplement invisible
+       (opacity:0) tant qu'elle n'est pas confirmée en lecture — seul le
+       fond uni de .heroStage (var(--orange)) est visible en attendant,
+       aucune image ne peut donc jamais s'afficher mal cadrée. Révélée dès
+       l'évènement `playing` (voir le script en bas de page), sans
+       transition : un fondu serait lui-même un changement visuel, l'objectif
+       est qu'il n'y en ait aucun. */
     .heroVideo{
       display:block;
       width:100%;
       height:100%;
       object-fit:cover;
       object-position:center top;
+      opacity:0;
     }
-    /* Certains WebKit (Safari iOS) n'appliquent pas tout de suite object-fit
-       à la <video> avant que la lecture ne soit réellement démarrée : le
-       premier rendu affiche alors la vidéo/poster à sa taille intrinsèque,
-       collée en haut à gauche, puis "saute" à la bonne taille pile au
-       moment où elle commence à jouer. Plutôt que de dépendre du rendu
-       natif du poster pendant cette fenêtre, un <img> recouvre la vidéo
-       avec exactement le même object-fit/object-position — lui est fiable
-       partout — et se masque dès l'évènement `playing` (voir le script en
-       bas de page), au moment précis où la vidéo est enfin correctement
-       composée. Le spectateur ne voit donc jamais l'état cassé. */
-    .heroVideoPoster{
-      position:absolute;
-      inset:0;
-      z-index:10;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:center top;
-    }
-    .heroVideoPoster.isHidden{ display:none; }
+    .heroVideo.isReady{ opacity:1; }
     @media (min-width:720px){
       .heroStageBg{ background:var(--orange); }
       .heroStage{
@@ -257,22 +252,17 @@
       background:#111;
       box-shadow:0 20px 44px rgba(0,0,0,.22);
     }
+    /* Même principe fond-uni-puis-révélation que .heroVideo, voir son
+       commentaire — ici c'est le fond sombre de .gavVideoStage qui tient
+       lieu de "fond uni" en attendant. */
     .gavVideoEl{
       display:block;
       width:100%;
       height:100%;
       object-fit:cover;
+      opacity:0;
     }
-    /* Même recouvrement fiable que .heroVideoPoster, voir son commentaire. */
-    .gavVideoPoster{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-    .gavVideoPoster.isHidden{ display:none; }
+    .gavVideoEl.isReady{ opacity:1; }
     .gavVideoBadge{
       position:absolute;
       z-index:2;
@@ -1113,7 +1103,6 @@
           preload="auto"
           aria-hidden="true"
         ></video>
-        <img class="heroVideoPoster" id="heroVideoPoster" src="../assets/hero-video-poster.jpg" alt="" aria-hidden="true" />
         <a class="btn btnPrimary heroNavBuy" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" data-ga-id="gav_nav_acheter">DÉCOUVRIR SUR AMAZON</a>
       </div>
     </div>
@@ -1185,7 +1174,6 @@
         preload="auto"
         aria-hidden="true"
       ></video>
-      <img class="gavVideoPoster" id="gavVideoPoster" src="../assets/gav-video-poster.jpg" alt="" aria-hidden="true" />
       <img class="gavVideoBadge" src="../assets/macaron-famille-2026.png" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
       <button type="button" class="gavVideoSoundBtn" id="gavVideoSoundBtn" aria-label="Activer le son de la vidéo" aria-pressed="false">🔇</button>
     </div>
@@ -1505,10 +1493,43 @@
   <a class="stickyBuyBtn" id="stickyBuyBtn" href="https://www.amazon.fr/dp/B0HK561XB1" target="_blank" rel="noopener noreferrer" data-ga-id="gav_sticky_buy">Acheter sur Amazon</a>
 
   <script>
-    // Vidéos en autoplay (hero + "GAV en pleine partie") : coupe
-    // l'autoplay si l'utilisateur a demandé moins de mouvement, avant
-    // même que la lecture ne démarre — le poster reste alors affiché,
-    // statique, au lieu de jouer la vidéo.
+    // Vidéos en autoplay (hero + "GAV en pleine partie") : par défaut
+    // invisibles (voir .heroVideo/.gavVideoEl, opacity:0) tant qu'elles ne
+    // sont pas confirmées en lecture — seul le fond uni de leur conteneur
+    // est visible en attendant, ce qui évite tout rendu mal cadré pendant
+    // le chargement (certains WebKit, notamment Safari iOS, n'appliquent
+    // object-fit à une <video> qu'une fois la lecture réellement démarrée).
+    // Révélées (.isReady) dès l'évènement `playing`, sans transition — un
+    // fondu serait lui-même un changement visuel, l'objectif est qu'il n'y
+    // en ait aucun.
+    //
+    // Ce script s'exécute en bas de page, après le <video> plus haut dans
+    // le HTML : sur un rechargement à cache chaud, le décodage peut être
+    // quasi instantané et l'évènement `playing` se déclencher AVANT que le
+    // parseur n'atteigne ce script (constaté : le bug "miniature" persistait
+    // spécifiquement au rechargement). Un simple addEventListener raterait
+    // alors cet évènement pour toujours, laissant la vidéo invisible en
+    // permanence. On vérifie donc d'abord si la vidéo est déjà en train de
+    // jouer à ce moment-là, et on ne s'appuie sur l'évènement que si ce
+    // n'est pas encore le cas.
+    (function initVideoReveal(){
+      ['heroVideo', 'gavVideoEl'].forEach((videoId) => {
+        const video = document.getElementById(videoId);
+        if (!video) return;
+        const reveal = () => video.classList.add('isReady');
+        if (!video.paused && video.readyState >= 2) reveal();
+        else video.addEventListener('playing', reveal, { once: true });
+        // Exposée pour initAutoplayVideos ci-dessous : si l'autoplay est
+        // coupé (prefers-reduced-motion), `playing` ne se déclenchera
+        // jamais — il faut alors révéler la vidéo explicitement, sans quoi
+        // elle resterait invisible indéfiniment derrière le fond uni.
+        video.__reveal = reveal;
+      });
+    })();
+
+    // Coupe l'autoplay si l'utilisateur a demandé moins de mouvement, avant
+    // même que la lecture ne démarre, et révèle quand même la vidéo (elle
+    // affichera alors son poster natif, statique, au lieu de jouer).
     (function initAutoplayVideos(){
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       ['heroVideo', 'gavVideoEl'].forEach((id) => {
@@ -1516,36 +1537,7 @@
         if (!video) return;
         video.removeAttribute('autoplay');
         video.pause();
-      });
-    })();
-
-    // Recouvrement <img> fiable par-dessus chaque vidéo (voir le commentaire
-    // sur .heroVideoPoster) : masqué dès que la vidéo correspondante
-    // commence réellement à jouer, pile au moment où son rendu devient
-    // correct. Si la vidéo ne joue jamais (prefers-reduced-motion, voir
-    // initAutoplayVideos ci-dessus), le poster reste affiché — c'est déjà
-    // le comportement voulu dans ce cas.
-    //
-    // Ce script s'exécute en bas de page, après le <video> plus haut dans
-    // le HTML : sur un rechargement à cache chaud, le décodage peut être
-    // quasi instantané et l'évènement `playing` se déclencher AVANT que le
-    // parseur n'atteigne ce script (constaté : le bug "miniature" persistait
-    // spécifiquement au rechargement). Un simple addEventListener raterait
-    // alors cet évènement pour toujours, laissant le poster recouvrir la
-    // vidéo en permanence. On vérifie donc d'abord si la vidéo est déjà en
-    // train de jouer à ce moment-là, et on ne s'appuie sur l'évènement que
-    // si ce n'est pas encore le cas.
-    (function initVideoPosterOverlays(){
-      [
-        ['heroVideo', 'heroVideoPoster'],
-        ['gavVideoEl', 'gavVideoPoster'],
-      ].forEach(([videoId, posterId]) => {
-        const video = document.getElementById(videoId);
-        const poster = document.getElementById(posterId);
-        if (!video || !poster) return;
-        const hide = () => poster.classList.add('isHidden');
-        if (!video.paused && video.readyState >= 2) hide();
-        else video.addEventListener('playing', hide, { once: true });
+        video.__reveal?.();
       });
     })();
 
