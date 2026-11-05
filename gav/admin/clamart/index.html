@@ -594,6 +594,10 @@
               <label>Stock</label>
               <input type="number" min="0" step="1" class="mStockInput" value="${m.gav_stock_quantity ?? ""}" style="width:56px" />
             </div>
+            <div class="stockRow" title="Date d'un événement de présentation GAV chez ce commerce (affiché dans un encart sur la carte publique tant que l'événement n'est pas passé)">
+              <label>Événement GAV</label>
+              <input type="date" class="mEventDateInput" value="${m.gav_event_date ?? ""}" />
+            </div>
           </td>
           <td>
             <button type="button" class="btn btnGhost btnSmall mEdit">Modifier</button>
@@ -652,17 +656,31 @@
     cancelFormBtn.addEventListener("click", closeForm);
 
     merchantTableBody.addEventListener("change", async (e) => {
-      if (!e.target.closest(".mStockInput")) return;
-      const tr = e.target.closest("tr");
-      const id = tr.dataset.id;
-      const raw = e.target.value.trim();
-      const value = raw === "" ? null : Math.max(0, parseInt(raw, 10) || 0);
-      const { error } = await supabase.from("clamart_merchants")
-        .update({ gav_stock_quantity: value, updated_at: new Date().toISOString() })
-        .eq("id", id);
-      if (error) { alert("Erreur : " + error.message); return; }
-      const merchant = merchants.find((m) => m.id === id);
-      if (merchant) merchant.gav_stock_quantity = value;
+      if (e.target.closest(".mStockInput")) {
+        const tr = e.target.closest("tr");
+        const id = tr.dataset.id;
+        const raw = e.target.value.trim();
+        const value = raw === "" ? null : Math.max(0, parseInt(raw, 10) || 0);
+        const { error } = await supabase.from("clamart_merchants")
+          .update({ gav_stock_quantity: value, updated_at: new Date().toISOString() })
+          .eq("id", id);
+        if (error) { alert("Erreur : " + error.message); return; }
+        const merchant = merchants.find((m) => m.id === id);
+        if (merchant) merchant.gav_stock_quantity = value;
+        return;
+      }
+      if (e.target.closest(".mEventDateInput")) {
+        const tr = e.target.closest("tr");
+        const id = tr.dataset.id;
+        const value = e.target.value.trim() || null;
+        const { error } = await supabase.from("clamart_merchants")
+          .update({ gav_event_date: value, updated_at: new Date().toISOString() })
+          .eq("id", id);
+        if (error) { alert("Erreur : " + error.message); return; }
+        const merchant = merchants.find((m) => m.id === id);
+        if (merchant) merchant.gav_event_date = value;
+        return;
+      }
     });
 
     merchantTableBody.addEventListener("click", async (e) => {

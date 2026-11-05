@@ -113,6 +113,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         <button type="button" id="filtersCloseBtn" class="filtersCloseBtn" aria-label="Fermer">×</button>
       </div>
     </div>
+    <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
       <a class="filtersGavTag" id="filtersGavTag" href="/gav/" target="_blank" rel="noopener">
         <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeur GAV</span>
@@ -140,6 +141,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   const subChipsSliderEl = root.querySelector<HTMLDivElement>('#filtersSubChipsSlider')!;
   const subChipsEl = root.querySelector<HTMLDivElement>('#filtersSubChips')!;
   const listEl = root.querySelector<HTMLDivElement>('#filtersResultsList')!;
+  const eventsBannerEl = root.querySelector<HTMLDivElement>('#filtersEventsBanner')!;
   const gavCountEl = root.querySelector<HTMLElement>('#filtersGavCount')!;
   root.querySelector<HTMLButtonElement>('#filtersMissingShopTag')!.addEventListener('click', showMissingShopInfo);
   const quartierSelectEl = root.querySelector<HTMLSelectElement>('#filtersQuartierSelect')!;
@@ -303,6 +305,55 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       </div>`;
   }
 
+  // Encart "prochains événements" : statique pour la session (les
+  // commerçants ne changent pas après le chargement initial, voir plus haut
+  // pour le même raisonnement sur merchantQuartierId) — calculé une seule
+  // fois à l'ouverture plutôt qu'à chaque render(), indépendant des filtres
+  // catégorie/quartier actifs (une annonce d'événement reste visible même
+  // si l'utilisateur a filtré sur une autre catégorie).
+  function renderEventsBanner() {
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const upcoming = merchants
+      .filter((m) => m.gav_event_date && m.gav_event_date >= todayIso)
+      .sort((a, b) => a.gav_event_date!.localeCompare(b.gav_event_date!));
+
+    if (!upcoming.length) {
+      eventsBannerEl.hidden = true;
+      eventsBannerEl.innerHTML = '';
+      return;
+    }
+
+    const formatDate = (iso: string) => {
+      const d = new Date(`${iso}T00:00:00`);
+      return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    };
+
+    eventsBannerEl.hidden = false;
+    eventsBannerEl.innerHTML = upcoming
+      .map(
+        (m) => `
+          <button type="button" class="filtersEventRow" data-id="${m.id}">
+            <span class="filtersEventIcon">📅</span>
+            <span class="filtersEventText">
+              <span class="filtersEventDate">${formatDate(m.gav_event_date!)}</span>
+              <span class="filtersEventName">Événement GAV chez ${m.name}</span>
+            </span>
+          </button>
+        `
+      )
+      .join('');
+
+    eventsBannerEl.querySelectorAll<HTMLButtonElement>('.filtersEventRow').forEach((rowEl) => {
+      rowEl.addEventListener('click', () => {
+        const merchant = merchants.find((m) => m.id === rowEl.dataset.id);
+        if (merchant) {
+          onSelectMerchant(merchant);
+          close();
+        }
+      });
+    });
+  }
+
   function render() {
     const filtered = filteredMerchants();
     const unlockedCount = filtered.filter((m) => !m.is_locked).length;
@@ -422,6 +473,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
 
   renderChips();
   renderSubChips();
+  renderEventsBanner();
   render();
 
   return {

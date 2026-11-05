@@ -50,6 +50,7 @@ export interface MapLandmark {
   n: string;
   pos: [number, number];
   h: number;
+  addr?: string;
 }
 
 export interface MapStreet {

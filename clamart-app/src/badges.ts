@@ -108,6 +108,7 @@ function emojiBadgeTexture(emoji: string, bgColor: string): THREE.CanvasTexture 
 export interface BadgeHit {
   name: string;
   category: LandmarkCategory;
+  addr?: string;
 }
 
 export function buildBadges(landmarks: MapLandmark[], scene: THREE.Scene): THREE.Sprite[] {
@@ -131,7 +132,7 @@ export function buildBadges(landmarks: MapLandmark[], scene: THREE.Scene): THREE
     // ne doit jamais passer devant un commerce qui se trouverait au même
     // endroit à l'écran — règle produit.
     sprite.renderOrder = 997;
-    sprite.userData = { name: l.n, category: l.c } satisfies BadgeHit;
+    sprite.userData = { name: l.n, category: l.c, addr: l.addr } satisfies BadgeHit;
     scene.add(sprite);
     sprites.push(sprite);
   }

@@ -326,6 +326,7 @@ interface OutLandmark {
   n: string; // nom affiché
   pos: [number, number];
   h: number; // hauteur du badge (sommet du bâtiment + marge, ou valeur par défaut)
+  addr?: string; // adresse affichée (tag OSM addr:* si présent, sinon rue la plus proche — voir resolveLandmarkAddress)
 }
 
 // Index pour la recherche de rue côté client : une rue OSM est presque
@@ -492,6 +493,19 @@ function resolveLandmarkName(tags: OverpassTags, category: LandmarkCategory): st
     tags.brand ??
     DEFAULT_LANDMARK_NAME[category]
   );
+}
+
+// Adresse précise directement depuis les tags OSM `addr:*` (numéro + rue,
+// + code postal si présent) quand ils existent sur l'élément lui-même —
+// avant de retomber sur la rue la plus proche (voir la passe après la
+// boucle principale, même mécanisme que le nommage par défaut ci-dessus).
+function resolveLandmarkAddress(tags: OverpassTags): string | undefined {
+  const num = tags['addr:housenumber'];
+  const street = tags['addr:street'];
+  if (!street) return undefined;
+  const postcode = tags['addr:postcode'];
+  const base = num ? `${num} ${street}` : street;
+  return postcode ? `${base}, ${postcode}` : base;
 }
 
 function pointToSegmentDist(p: [number, number], a: [number, number], b: [number, number]): number {
@@ -687,6 +701,7 @@ out geom;
       n: resolveLandmarkName(tags, category),
       pos,
       h: heightM,
+      addr: resolveLandmarkAddress(tags),
     });
   }
 
@@ -905,6 +920,23 @@ out geom;
     }
   }
 
+  // Adresse de repli pour tout lieu sans tags `addr:*` exploitables (la
+  // majorité des bâtiments publics à Clamart) : la rue la plus proche, SANS
+  // numéro (on ne le connaît pas) — reste honnête sur la précision plutôt
+  // que d'inventer un numéro, même mécanisme de recherche que le nommage
+  // par défaut ci-dessus.
+  for (const lm of landmarks) {
+    if (lm.addr) continue;
+    let best: { name: string; dist: number } | null = null;
+    for (const seg of namedSegments) {
+      const d = pointToSegmentDist(lm.pos, seg.a, seg.b);
+      if (!best || d < best.dist) best = { name: seg.name, dist: d };
+    }
+    if (best && best.dist <= NEAREST_STREET_MAX_DIST_M) {
+      lm.addr = best.name;
+    }
+  }
+
   // Ajouts manuels : lieux réels mais absents/mal tagués côté OSM à ce jour
   // (vérifié — voir commentaires ci-dessous). Rester ici, après la boucle
   // principale, plutôt que directement dans public/data/clamart.json : ce
@@ -922,6 +954,7 @@ out geom;
       n: 'Collège des Petits Ponts',
       pos: centroid(rueDeVendee),
       h: DEFAULT_BADGE_HEIGHT_M,
+      addr: '7 Rue de Vendée',
     });
   }
 
@@ -936,6 +969,7 @@ out geom;
   if (lyceeMonod) {
     lyceeMonod.c = 'college';
     lyceeMonod.n = 'Lycée Jacques Monod';
+    lyceeMonod.addr = '46 Rue du Fort';
   }
 
   // Lac du Panorama : étang du parc urbain du Panorama, mappé sur OSM via

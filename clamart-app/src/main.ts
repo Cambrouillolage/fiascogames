@@ -6,7 +6,7 @@ import { IsoCameraRig } from './cameraRig.ts';
 import { buildBadges, pickBadge, setBadgesVisible } from './badges.ts';
 import { showBottomSheet } from './bottomSheet.ts';
 import { loadCategories, loadActiveMerchants, latLonToLocalMeters, type Merchant } from './merchants.ts';
-import { buildMerchantPins, pickMerchantPin, setSelectedPin, applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
+import { buildMerchantPins, pickMerchantPin, setSelectedPin, applyCategoryFilter, tickRingShimmer, type MerchantPin } from './merchantPins.ts';
 import { showMerchantCard, hideMerchantCard, onMerchantCardClose, initMerchantCard } from './merchantCard.ts';
 import { setupMapTopBar } from './mapTopBar.ts';
 import { setupFiltersSheet } from './filtersSheet.ts';
@@ -187,6 +187,7 @@ function animate() {
     trafficSystem?.update(deltaSeconds);
     pedestrianSystem?.update(deltaSeconds, (now - animationStartTime) / 1000);
     transitSystem?.update(deltaSeconds);
+    tickRingShimmer((now - animationStartTime) / 1000);
   }
   renderer.render(scene, rig.camera);
 }
@@ -432,7 +433,7 @@ function setupInteraction() {
       } else {
         const badgeHit = pickBadge(badges, rig.camera, e.clientX, e.clientY, w, h);
         if (badgeHit) {
-          showBottomSheet(badgeHit.name, badgeHit.category);
+          showBottomSheet(badgeHit.name, badgeHit.category, badgeHit.addr);
         } else if (selectedMerchantId) {
           hideMerchantCard();
         }

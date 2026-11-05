@@ -50,23 +50,91 @@ function badgeWebpTexture(webpPath: string): THREE.Texture {
 // lui-même un rond sur fond transparent, le disque ne dépasse que sur son
 // pourtour, ce qui se lit comme une bordure, pas un second badge.
 const GOLD_COLOR = '#F2C438';
+const GOLD_SHINE_COLOR = '#FFF6D8';
 export const RING_SIZE_FACTOR = 1.4;
+const RING_CANVAS_SIZE = 64;
+let goldRingCanvas: HTMLCanvasElement | null = null;
+let goldRingCtx: CanvasRenderingContext2D | null = null;
 let goldRingTexture: THREE.CanvasTexture | null = null;
 
+// Anneau partagé par TOUS les pins GAV (un seul canvas/texture, redessiné
+// chaque frame) plutôt qu'un par pin : un bandeau de lumière tourne autour
+// de l'anneau pour un effet "scintillant" (demande produit), sans coût par
+// instance — redessiner un canvas 64x64 est négligeable, et comme la
+// texture est partagée, la mise à jour se fait une seule fois par frame
+// quel que soit le nombre de commerces GAV affichés.
 function ringTexture(): THREE.CanvasTexture {
   if (goldRingTexture) return goldRingTexture;
-  const size = 64;
+  const size = RING_CANVAS_SIZE;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
-  const ctx = canvas.getContext('2d')!;
-  ctx.beginPath();
-  ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
-  ctx.fillStyle = GOLD_COLOR;
-  ctx.fill();
+  goldRingCanvas = canvas;
+  goldRingCtx = canvas.getContext('2d')!;
   goldRingTexture = new THREE.CanvasTexture(canvas);
   goldRingTexture.colorSpace = THREE.SRGBColorSpace;
+  drawRingShimmer(0);
   return goldRingTexture;
+}
+
+const RING_SHIMMER_PERIOD_S = 2.6;
+
+function drawRingShimmer(elapsedSec: number) {
+  if (!goldRingCtx || !goldRingCanvas) return;
+  const size = RING_CANVAS_SIZE;
+  const r = size / 2 - 2;
+  const cx = size / 2;
+  const cy = size / 2;
+  const ctx = goldRingCtx;
+  ctx.clearRect(0, 0, size, size);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = GOLD_COLOR;
+  ctx.fill();
+
+  // Bandeau lumineux : un dégradé angulaire étroit qui tourne en continu
+  // (un seul tour toutes les RING_SHIMMER_PERIOD_S secondes), superposé en
+  // "lighter" pour éclaircir plutôt que remplacer la couleur or dessous.
+  const phase = (elapsedSec % RING_SHIMMER_PERIOD_S) / RING_SHIMMER_PERIOD_S;
+  const sweepAngle = phase * Math.PI * 2;
+  const sweepWidth = Math.PI / 4;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.clip();
+  const grad = ctx.createConicGradient
+    ? ctx.createConicGradient(sweepAngle - sweepWidth / 2, cx, cy)
+    : null;
+  if (grad) {
+    grad.addColorStop(0, 'rgba(255,246,216,0)');
+    grad.addColorStop(0.5, GOLD_SHINE_COLOR);
+    grad.addColorStop(1, 'rgba(255,246,216,0)');
+    // Restreint le dégradé conique (0..2π) à la largeur voulue en
+    // dupliquant la couleur transparente sur le reste du cercle.
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = 0.85;
+    ctx.fillRect(0, 0, size, size);
+  } else {
+    // Secours (navigateur sans createConicGradient) : un simple arc plein
+    // plus clair à la position du balayage, moins fin mais même principe.
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, sweepAngle - sweepWidth / 2, sweepAngle + sweepWidth / 2);
+    ctx.closePath();
+    ctx.fillStyle = GOLD_SHINE_COLOR;
+    ctx.globalAlpha = 0.85;
+    ctx.fill();
+  }
+  ctx.restore();
+
+  goldRingTexture!.needsUpdate = true;
+}
+
+/** À appeler une fois par frame (voir animate() dans main.ts) pour faire tourner le reflet. */
+export function tickRingShimmer(elapsedSec: number) {
+  if (!goldRingTexture) return; // pas encore créé (aucun pin GAV construit) : rien à animer
+  drawRingShimmer(elapsedSec);
 }
 
 export interface MerchantPin {

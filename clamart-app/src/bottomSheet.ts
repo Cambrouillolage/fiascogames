@@ -25,6 +25,7 @@ let sheetEl: HTMLDivElement;
 let backdropEl: HTMLDivElement;
 let titleEl: HTMLDivElement;
 let subtitleEl: HTMLDivElement;
+let addrEl: HTMLDivElement;
 
 function ensureSheet() {
   if (sheetEl) return;
@@ -41,10 +42,12 @@ function ensureSheet() {
     <div class="bottomSheetHandle"></div>
     <div class="bottomSheetTitle"></div>
     <div class="bottomSheetSubtitle"></div>
+    <div class="bottomSheetAddr"></div>
   `;
   document.body.appendChild(sheetEl);
   titleEl = sheetEl.querySelector('.bottomSheetTitle')!;
   subtitleEl = sheetEl.querySelector('.bottomSheetSubtitle')!;
+  addrEl = sheetEl.querySelector('.bottomSheetAddr')!;
   sheetEl.querySelector('.bottomSheetClose')!.addEventListener('click', hideBottomSheet);
 
   document.addEventListener('keydown', (e) => {
@@ -52,10 +55,12 @@ function ensureSheet() {
   });
 }
 
-export function showBottomSheet(name: string, category: string) {
+export function showBottomSheet(name: string, category: string, addr?: string) {
   ensureSheet();
   titleEl.textContent = name;
   subtitleEl.textContent = CATEGORY_LABEL[category] ?? category;
+  addrEl.textContent = addr ?? '';
+  addrEl.hidden = !addr;
   sheetEl.classList.add('isOpen');
   backdropEl.classList.add('isOpen');
 }

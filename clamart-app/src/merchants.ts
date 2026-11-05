@@ -41,6 +41,8 @@ export interface Merchant {
   opening_hours: string | null;
   is_locked: boolean;
   gav_stock_quantity: number | null;
+  /** Date (YYYY-MM-DD) d'un événement de présentation GAV chez ce commerce, ou `null`. Voir filtersSheet.ts pour l'encart "prochains événements". */
+  gav_event_date: string | null;
 }
 
 export async function loadCategories(): Promise<Category[]> {
@@ -66,7 +68,7 @@ export async function loadActiveMerchants(): Promise<Merchant[]> {
   const { data, error } = await supabase
     .from('clamart_merchants_public')
     .select(
-      'id, name, category_id, subcategory_id, description, address, postal_code, city, lat, lon, photo_url, status, pointer_type, badge_icon, badge_color, badge_id, website, phone, opening_hours, is_locked, gav_stock_quantity'
+      'id, name, category_id, subcategory_id, description, address, postal_code, city, lat, lon, photo_url, status, pointer_type, badge_icon, badge_color, badge_id, website, phone, opening_hours, is_locked, gav_stock_quantity, gav_event_date'
     )
     .not('lat', 'is', null)
     .not('lon', 'is', null);
