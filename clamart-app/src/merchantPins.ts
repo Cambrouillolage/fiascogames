@@ -19,6 +19,12 @@ function badgeWebpTexture(webpPath: string): THREE.Texture {
   let tex = textureCache.get(webpPath);
   if (!tex) {
     const canvas = document.createElement('canvas');
+    // Carré dès la création (pas 300x150, la taille par défaut d'un
+    // <canvas>) : voir le commentaire détaillé dans badges.ts — un rendu
+    // pris avant la fin du chargement de l'image fige sinon une texture
+    // non carrée côté GPU, aplatissant le pin en ovale.
+    canvas.width = 128;
+    canvas.height = 128;
     const canvasTex = new THREE.CanvasTexture(canvas);
     canvasTex.colorSpace = THREE.SRGBColorSpace;
     const img = new Image();

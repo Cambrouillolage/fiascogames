@@ -106,6 +106,14 @@ function resize() {
   rig.setAspect(w / h);
 }
 window.addEventListener('resize', resize);
+// Filet de sécurité en plus de l'évènement "resize" de la fenêtre : #app
+// est en `height: 100dvh` (voir style.css), qui peut se stabiliser/changer
+// après le premier rendu (barre d'adresse mobile, polices qui chargent...)
+// sans déclencher "resize" sur certains navigateurs — sans ça, caméra et
+// canvas resteraient désynchronisés indéfiniment (étirement visuel global,
+// pas la cause du bug "badges ovales" signalé — voir badges.ts/
+// merchantPins.ts pour celle-là — mais un vrai trou de robustesse distinct).
+new ResizeObserver(resize).observe(app);
 
 let badges: THREE.Sprite[] = [];
 let merchantPins: MerchantPin[] = [];
@@ -204,7 +212,17 @@ loadMapData()
     buildCity(data, scene);
     badges = buildBadges(data.landmarks, scene);
     const worldHalf = Math.max(data.halfSizeM.x, data.halfSizeM.y);
-    rig = new IsoCameraRig(viewportSize().w / viewportSize().h, worldHalf);
+    // Resynchronise aussi le canvas du renderer ici, pas seulement la
+    // caméra : entre le tout premier rendu (taille prise avant même le
+    // fetch des données) et ce point, la taille réelle de la page a pu
+    // changer (ex. 100dvh qui se stabilise, polices qui chargent) sans
+    // qu'aucun évènement "resize" ne se déclenche — sans ce renderer.setSize,
+    // la caméra se recalcule aux bonnes proportions mais le canvas garde
+    // l'ancienne taille, désynchronisant les deux (étirement global, distinct
+    // du bug "badges ovales" — voir badges.ts/merchantPins.ts).
+    const { w: freshW, h: freshH } = viewportSize();
+    renderer.setSize(freshW, freshH);
+    rig = new IsoCameraRig(freshW / freshH, worldHalf);
     loadingEl.style.display = 'none';
     hudEl.style.display = 'flex';
 

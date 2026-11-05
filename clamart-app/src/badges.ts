@@ -54,6 +54,16 @@ function badgeWebpTexture(webpPath: string): THREE.Texture {
   let tex = textureCache.get(webpPath);
   if (!tex) {
     const canvas = document.createElement('canvas');
+    // Carré dès la création, PAS la taille par défaut d'un <canvas>
+    // (300x150, un rectangle 2:1) : un badge est ajouté à la scène et peut
+    // être rendu dès la frame suivante, bien avant que `img.onload`
+    // n'ait eu le temps de redimensionner le canvas — un rendu pris entre
+    // les deux fige une texture 300x150 côté GPU, aplatissant le sprite en
+    // ovale même une fois le canvas redessiné en carré ensuite (signalé par
+    // l'utilisateur : église/mosquée/poste écrasés, de façon intermittente
+    // selon qui gagne la course au chargement).
+    canvas.width = 128;
+    canvas.height = 128;
     const canvasTex = new THREE.CanvasTexture(canvas);
     canvasTex.colorSpace = THREE.SRGBColorSpace;
     const img = new Image();
