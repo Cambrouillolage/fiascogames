@@ -674,24 +674,31 @@ html, body {
 
 .filtersCounters {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-top: 12px;
   flex: 0 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filtersCounters::-webkit-scrollbar {
+  display: none;
 }
 .filtersGavTag {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  padding: 4px 10px;
+  gap: 5px;
+  flex: 0 0 auto;
+  font-size: 11px;
+  padding: 4px 8px;
   border-radius: 999px;
   border: none;
   background: #dcf1e4;
   text-decoration: none;
   font: inherit;
   cursor: pointer;
+  white-space: nowrap;
 }
 .filtersGavTagMain {
   font-weight: 700;
@@ -703,40 +710,38 @@ html, body {
   text-decoration: underline;
 }
 .filtersMissingShopTag {
-  font-size: 12px;
+  flex: 0 0 auto;
+  font-size: 11px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: 999px;
   border: none;
   background: #f1efe9;
   color: #444;
   cursor: pointer;
+  white-space: nowrap;
 }
 .filtersMissingShopTag:hover {
   filter: brightness(0.97);
 }
-.filtersQuartierRow {
-  display: flex;
-  margin-top: 8px;
-  flex: 0 0 auto;
-}
 .filtersQuartierSelect {
+  flex: 0 1 auto;
+  min-width: 0;
   margin-left: auto;
   font: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #444;
   background: #f0eee9;
   border: none;
   border-radius: 999px;
-  padding: 5px 26px 5px 12px;
+  padding: 5px 22px 5px 10px;
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-position: right 8px center;
   cursor: pointer;
-  max-width: 50%;
 }
 
 .filtersChipsSlider {

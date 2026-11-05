@@ -118,14 +118,12 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
       <button type="button" class="filtersGavTag" id="filtersGavTag">
-        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeur GAV</span>
-        <span class="filtersGavTagMore">En savoir plus ›</span>
+        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeurs</span>
+        <span class="filtersGavTagMore">Détails ›</span>
       </button>
-    </div>
-    <div class="filtersQuartierRow">
-      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Il manque une boutique ?</button>
+      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Boutique manquante ?</button>
       <select class="filtersQuartierSelect" id="filtersQuartierSelect" aria-label="Filtrer par quartier">
-        <option value="">Tous les quartiers</option>
+        <option value="">Quartier</option>
         ${quartiersSorted.map((q) => `<option value="${q.id}">${q.name}</option>`).join('')}
       </select>
     </div>

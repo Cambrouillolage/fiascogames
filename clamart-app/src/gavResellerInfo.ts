@@ -24,6 +24,9 @@ function ensureSheet() {
         <a class="infoSheetSocialLink" href="${AUTHORS_SOCIAL.instagram}" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
+    <div class="infoSheetActions">
+      <a class="infoSheetActionBtn infoSheetActionBtn--primary" href="/gav/" target="_blank" rel="noopener">Voir GAV</a>
+    </div>
   `);
   return sheet;
 }

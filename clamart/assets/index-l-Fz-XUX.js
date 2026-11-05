@@ -4251,6 +4251,9 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
         <a class="infoSheetSocialLink" href="${hy.instagram}" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
+    <div class="infoSheetActions">
+      <a class="infoSheetActionBtn infoSheetActionBtn--primary" href="/gav/" target="_blank" rel="noopener">Voir GAV</a>
+    </div>
   `),gy)}function vy(){_y().show()}var yy=[];function by(e){yy=e}function xy(e){return e?yy.find(t=>t.id===e)?.label??e:``}var Sy=700,Cy,wy;function Ty(){Cy||(wy=document.createElement(`div`),wy.id=`merchant-card-backdrop`,wy.className=`sheetBackdrop`,wy.addEventListener(`click`,Dy),document.body.appendChild(wy),Cy=document.createElement(`div`),Cy.id=`merchant-card`,Cy.innerHTML=`
     <button type="button" class="merchantCardClose" aria-label="Fermer">×</button>
     <div class="merchantCardHandle"></div>
@@ -4333,14 +4336,12 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
       <button type="button" class="filtersGavTag" id="filtersGavTag">
-        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeur GAV</span>
-        <span class="filtersGavTagMore">En savoir plus ›</span>
+        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeurs</span>
+        <span class="filtersGavTagMore">Détails ›</span>
       </button>
-    </div>
-    <div class="filtersQuartierRow">
-      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Il manque une boutique ?</button>
+      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Boutique manquante ?</button>
       <select class="filtersQuartierSelect" id="filtersQuartierSelect" aria-label="Filtrer par quartier">
-        <option value="">Tous les quartiers</option>
+        <option value="">Quartier</option>
         ${f.map(e=>`<option value="${e.id}">${e.name}</option>`).join(``)}
       </select>
     </div>
