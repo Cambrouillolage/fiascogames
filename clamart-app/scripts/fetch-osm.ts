@@ -863,6 +863,13 @@ out geom;
         if (Math.hypot(c[0] - 1343.6, c[1] - 1768.4) < 20) continue;
         tennisCourts.push({ p: points });
         pushLandmark('sports_tennis', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
+      } else if (tags.sport === 'rugby' || tags.sport === 'rugby_union' || tags.sport === 'rugby_league') {
+        // Stade de la Plaine (Chemin du Parc) : deux terrains `sport=rugby`
+        // confirmés sur OSM (étaient jusqu'ici rendus avec le badge ballon
+        // de foot générique faute de branche dédiée — signalé par
+        // l'utilisateur via une capture d'écran).
+        sportsPitches.push({ p: points });
+        pushLandmark('sports_rugby', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
       } else {
         sportsPitches.push({ p: points });
         pushLandmark('sports_pitch', tags, centroid(points), DEFAULT_BADGE_HEIGHT_M);
@@ -954,13 +961,17 @@ out geom;
   // (projet régional Île-de-France, terrain 95x68m, rénovation du
   // complexe), mais absent d'OSM — probablement postérieur au dernier
   // relevé utilisé ici. Pas de contour exact disponible : rectangle aux
-  // dimensions réelles standard, positionné dans l'espace vert ouvert le
-  // plus proche du reste du complexe (tennis/gymnase déjà repérés vers
-  // 540,510) plutôt qu'une position inventée au hasard — à corriger si un
-  // relevé précis devient disponible.
+  // dimensions réelles standard. Position (552.5, 527.5) choisie par
+  // recherche d'espace libre (aucun bâtiment/parc/court de tennis/terrain
+  // existant sous le rectangle, vérifié point par point) la plus proche du
+  // reste du complexe (gymnase/tennis déjà repérés vers 540,510) — la
+  // position précédente (610, 352) chevauchait un immeuble et se fondait
+  // visuellement dans le grand parc voisin (même vert), signalé par
+  // l'utilisateur via capture d'écran. À corriger si un relevé précis
+  // devient disponible.
   {
-    const cx = 610;
-    const cy = 352;
+    const cx = 552.5;
+    const cy = 527.5;
     const halfW = 47.5; // 95m
     const halfH = 34; // 68m
     const rugbyRect: [number, number][] = [

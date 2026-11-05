@@ -117,6 +117,20 @@ export const badgesClamart: BadgeClamart[] = [
   {id:"theatre",nom:"Théâtre",categorie:"lieux_speciaux",categorieLabel:"Lieux spéciaux",png:"badges/lieux_speciaux/theatre.png",webp:"badges_webp/lieux_speciaux/theatre.webp",couleur:"#EC4899"},
   {id:"marche",nom:"Marché",categorie:"lieux_speciaux",categorieLabel:"Lieux spéciaux",png:"badges/lieux_speciaux/marche.png",webp:"badges_webp/lieux_speciaux/marche.webp",couleur:"#22C55E"},
   {id:"cimetiere",nom:"Cimetière",categorie:"lieux_speciaux",categorieLabel:"Lieux spéciaux",png:"badges/lieux_speciaux/cimetiere.png",webp:"badges_webp/lieux_speciaux/cimetiere.webp",couleur:"#6B7280"},
+  // Lot complémentaire de 12 badges (voir badges_clamart_cartoon_12_icons) :
+  // "piscine" exclu ci-dessous, un badge du même id existe déjà plus haut
+  // (catégorie sports).
+  {id:"yoga",nom:"Yoga",categorie:"beaute_bien_etre",categorieLabel:"Beauté et bien-être",png:"badges/beaute_bien_etre/yoga.png",webp:"badges_webp/beaute_bien_etre/yoga.webp",couleur:"#DE71A9"},
+  {id:"pressing",nom:"Pressing",categorie:"services",categorieLabel:"Services et utilitaires",png:"badges/services/pressing.png",webp:"badges_webp/services/pressing.webp",couleur:"#8BC4E8"},
+  {id:"cordonnerie",nom:"Cordonnerie",categorie:"services",categorieLabel:"Services et utilitaires",png:"badges/services/cordonnerie.png",webp:"badges_webp/services/cordonnerie.webp",couleur:"#BF622E"},
+  {id:"retoucherie",nom:"Retoucherie",categorie:"services",categorieLabel:"Services et utilitaires",png:"badges/services/retoucherie.png",webp:"badges_webp/services/retoucherie.webp",couleur:"#ED737A"},
+  {id:"tabac_presse",nom:"Tabac-presse",categorie:"shopping",categorieLabel:"Shopping et boutiques",png:"badges/shopping/tabac_presse.png",webp:"badges_webp/shopping/tabac_presse.webp",couleur:"#E8AB5B"},
+  {id:"plomberie",nom:"Plomberie",categorie:"maison_bricolage",categorieLabel:"Maison et bricolage",png:"badges/maison_bricolage/plomberie.png",webp:"badges_webp/maison_bricolage/plomberie.webp",couleur:"#4F9AA7"},
+  {id:"electricite",nom:"Électricité",categorie:"maison_bricolage",categorieLabel:"Maison et bricolage",png:"badges/maison_bricolage/electricite.png",webp:"badges_webp/maison_bricolage/electricite.webp",couleur:"#AE79A9"},
+  {id:"quincaillerie",nom:"Quincaillerie",categorie:"maison_bricolage",categorieLabel:"Maison et bricolage",png:"badges/maison_bricolage/quincaillerie.png",webp:"badges_webp/maison_bricolage/quincaillerie.webp",couleur:"#689754"},
+  {id:"auto_ecole",nom:"Auto-école",categorie:"mobilite",categorieLabel:"Mobilité et transports",png:"badges/mobilite/auto_ecole.png",webp:"badges_webp/mobilite/auto_ecole.webp",couleur:"#A485B6"},
+  {id:"magasin_jeux_societe",nom:"Magasin de jeux de société",categorie:"culture_loisirs",categorieLabel:"Culture et loisirs",png:"badges/culture_loisirs/magasin_jeux_societe.png",webp:"badges_webp/culture_loisirs/magasin_jeux_societe.webp",couleur:"#C77D57"},
+  {id:"audioprothesiste",nom:"Audioprothésiste",categorie:"sante",categorieLabel:"Santé",png:"badges/sante/audioprothesiste.png",webp:"badges_webp/sante/audioprothesiste.webp",couleur:"#6CB7AE"},
 ];
 
 export const badgesParId: Record<string, BadgeClamart> = Object.fromEntries(
