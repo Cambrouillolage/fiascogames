@@ -1,6 +1,7 @@
 import type { Category, Merchant } from './merchants.ts';
 import { googleMapsDirectionsUrl, merchantSearchUrl } from './merchants.ts';
 import { badgesParId, BADGE_DEFAULT_ID } from './data/badgesClamart.ts';
+import { showGavResellerInfo } from './gavResellerInfo.ts';
 
 // Catégories pour résoudre le libellé de "spécialité" (sous-catégorie, ou à
 // défaut catégorie) — jamais masquée par la vue Supabase même verrouillé
@@ -47,10 +48,10 @@ function ensureCard() {
       <div class="merchantCardTitleWrap">
         <div class="merchantCardTitle"></div>
         <div class="merchantCardSpecialty"></div>
-        <a class="merchantCardStatus" href="/gav/" target="_blank" rel="noopener">
+        <button type="button" class="merchantCardStatus" id="merchantCardStatusBtn">
           <span class="merchantCardStatusMain">✅ Revendeur GAV</span>
           <span class="merchantCardStatusMore">En savoir plus ›</span>
-        </a>
+        </button>
         <div class="merchantCardStock"></div>
         <div class="merchantCardDesc"></div>
       </div>
@@ -63,6 +64,7 @@ function ensureCard() {
   `;
   document.body.appendChild(cardEl);
   cardEl.querySelector('.merchantCardClose')!.addEventListener('click', hideMerchantCard);
+  cardEl.querySelector('#merchantCardStatusBtn')!.addEventListener('click', showGavResellerInfo);
 }
 
 export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: number }) {

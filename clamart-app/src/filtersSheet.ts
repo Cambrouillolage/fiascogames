@@ -6,6 +6,8 @@ import { applyCategoryFilter, type MerchantPin } from './merchantPins.ts';
 import type { QuartierFeature } from './quartiersData.ts';
 import { quartierIdForLatLon } from './quartiers.ts';
 import { showMissingShopInfo } from './missingShopInfo.ts';
+import { showGavResellerInfo } from './gavResellerInfo.ts';
+import { showEventInfo } from './eventInfo.ts';
 
 // Bottom sheet "Filtres" : catégories (tri alphabétique, multi-sélection),
 // compteurs déverrouillé/verrouillé, liste de résultats, bouton sticky
@@ -115,13 +117,13 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     </div>
     <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
-      <a class="filtersGavTag" id="filtersGavTag" href="/gav/" target="_blank" rel="noopener">
+      <button type="button" class="filtersGavTag" id="filtersGavTag">
         <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeur GAV</span>
         <span class="filtersGavTagMore">En savoir plus ›</span>
-      </a>
-      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Il manque une boutique ?</button>
+      </button>
     </div>
     <div class="filtersQuartierRow">
+      <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Il manque une boutique ?</button>
       <select class="filtersQuartierSelect" id="filtersQuartierSelect" aria-label="Filtrer par quartier">
         <option value="">Tous les quartiers</option>
         ${quartiersSorted.map((q) => `<option value="${q.id}">${q.name}</option>`).join('')}
@@ -144,6 +146,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
   const eventsBannerEl = root.querySelector<HTMLDivElement>('#filtersEventsBanner')!;
   const gavCountEl = root.querySelector<HTMLElement>('#filtersGavCount')!;
   root.querySelector<HTMLButtonElement>('#filtersMissingShopTag')!.addEventListener('click', showMissingShopInfo);
+  root.querySelector<HTMLButtonElement>('#filtersGavTag')!.addEventListener('click', showGavResellerInfo);
   const quartierSelectEl = root.querySelector<HTMLSelectElement>('#filtersQuartierSelect')!;
   const categoryCountEl = root.querySelector<HTMLElement>('#filtersCategoryCount')!;
   const closeBtn = root.querySelector<HTMLButtonElement>('#filtersCloseBtn')!;
@@ -271,6 +274,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     // Plus aucune mention de verrouillage/déverrouillage ici (demande
     // explicite) : seuls les revendeurs GAV (non verrouillés) affichent une
     // information, avec un lien vers la page GAV pour en savoir plus.
+    const url = googleMapsDirectionsUrl(m);
     if (m.is_locked) {
       return `
         <div class="resultRow resultRow--locked" data-id="${m.id}">
@@ -280,22 +284,22 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
             <span class="resultRowMeta">${label}</span>
             <span class="resultRowCtas">
               <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
+              ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
             </span>
           </span>
         </div>`;
     }
 
-    const url = googleMapsDirectionsUrl(m);
     return `
       <div class="resultRow resultRow--unlocked" data-id="${m.id}">
         <img class="resultRowBadge" src="${badgeSrc}" alt="" />
         <span class="resultRowBody">
           <span class="resultRowName">${m.name}</span>
           <span class="resultRowMeta">${label}${m.address ? ' · ' + m.address : ''}</span>
-          <a class="resultRowStatus resultRowStatus--unlocked" href="/gav/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+          <button type="button" class="resultRowStatus resultRowStatus--unlocked resultRowGavInfoBtn" onclick="event.stopPropagation()">
             <span class="resultRowStatusMain">✅ Revendeur GAV</span>
             <span class="resultRowStatusMore">En savoir plus ›</span>
-          </a>
+          </button>
           ${m.gav_stock_quantity != null ? `<span class="resultRowStock">📦 ${m.gav_stock_quantity} GAV</span>` : ''}
           <span class="resultRowCtas">
             <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
@@ -338,6 +342,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
               <span class="filtersEventDate">${formatDate(m.gav_event_date!)}</span>
               <span class="filtersEventName">Événement GAV chez ${m.name}</span>
             </span>
+            <span class="filtersEventMore">En savoir plus ›</span>
           </button>
         `
       )
@@ -347,8 +352,10 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       rowEl.addEventListener('click', () => {
         const merchant = merchants.find((m) => m.id === rowEl.dataset.id);
         if (merchant) {
-          onSelectMerchant(merchant);
-          close();
+          showEventInfo(merchant, (m) => {
+            onSelectMerchant(m);
+            close();
+          });
         }
       });
     });
@@ -371,6 +378,9 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
           close();
         }
       });
+    });
+    listEl.querySelectorAll<HTMLButtonElement>('.resultRowGavInfoBtn').forEach((btn) => {
+      btn.addEventListener('click', showGavResellerInfo);
     });
     if (filtered.length && isOpen) {
       stickyBtn.textContent = `Voir sur la carte (${filtered.length})`;

@@ -134,7 +134,7 @@ html, body {
 #bottom-sheet-backdrop { z-index: 49; }
 #merchant-card-backdrop { z-index: 59; }
 #filters-sheet-backdrop { z-index: 54; }
-#missing-shop-backdrop { z-index: 64; }
+.infoSheetBackdrop { z-index: 64; }
 
 #bottom-sheet {
   position: fixed;
@@ -307,6 +307,9 @@ html, body {
   margin-top: 4px;
   background: #dcf1e4;
   text-decoration: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
 }
 .merchantCardStatus[hidden] {
   display: none;
@@ -660,6 +663,14 @@ html, body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.filtersEventMore {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a6690b;
+  text-decoration: underline;
+}
 
 .filtersCounters {
   display: flex;
@@ -676,8 +687,11 @@ html, body {
   font-size: 12px;
   padding: 4px 10px;
   border-radius: 999px;
+  border: none;
   background: #dcf1e4;
   text-decoration: none;
+  font: inherit;
+  cursor: pointer;
 }
 .filtersGavTagMain {
   font-weight: 700;
@@ -873,6 +887,9 @@ html, body {
   border-radius: 999px;
   width: fit-content;
   text-decoration: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
 }
 .resultRowStatus--unlocked {
   background: #dcf1e4;
@@ -939,8 +956,11 @@ html, body {
   display: none;
 }
 
-/* ===== Modale "Il manque une boutique ?" ===== */
-#missing-shop-sheet {
+/* ===== Modales d'info génériques (src/infoSheet.ts) : boutique manquante,
+   revendeurs GAV, événement GAV... même coquille, contenu injecté par
+   .infoSheetBody. Classes "infoSheetContact*" réutilisables par toute
+   modale ayant besoin d'un encart email + réseaux sociaux. ===== */
+.infoSheet {
   position: fixed;
   left: 0;
   right: 0;
@@ -955,11 +975,11 @@ html, body {
   transform: translateY(100%);
   transition: transform 0.25s ease;
 }
-#missing-shop-sheet.isOpen {
+.infoSheet.isOpen {
   transform: translateY(0);
 }
 
-.missingShopClose {
+.infoSheetClose {
   position: absolute;
   top: 10px;
   right: 14px;
@@ -972,7 +992,7 @@ html, body {
   padding: 4px;
 }
 
-.missingShopHandle {
+.infoSheetHandle {
   width: 36px;
   height: 4px;
   border-radius: 2px;
@@ -980,21 +1000,21 @@ html, body {
   margin: 0 auto 14px;
 }
 
-.missingShopTitle {
+.infoSheetTitle {
   margin: 0 0 8px;
   font-size: 18px;
   color: #1a1a1a;
   padding-right: 24px;
 }
 
-.missingShopText {
+.infoSheetText {
   margin: 0 0 14px;
   font-size: 14px;
   line-height: 1.5;
   color: #444;
 }
 
-.missingShopEmail {
+.infoSheetEmail {
   display: block;
   font-size: 14px;
   font-weight: 700;
@@ -1006,23 +1026,24 @@ html, body {
   margin-bottom: 14px;
 }
 
-.missingShopSocial {
+.infoSheetSocial {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 14px;
 }
-.missingShopSocialLabel {
+.infoSheetSocialLabel {
   font-size: 12px;
   font-weight: 700;
   color: #999;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.missingShopSocialLinks {
+.infoSheetSocialLinks {
   display: flex;
   gap: 8px;
 }
-.missingShopSocialLink {
+.infoSheetSocialLink {
   font-size: 13px;
   font-weight: 700;
   padding: 8px 14px;
@@ -1030,5 +1051,30 @@ html, body {
   background: #f1efe9;
   color: #1a1a1a;
   text-decoration: none;
+}
+
+.infoSheetActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.infoSheetActionBtn {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-radius: 14px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.infoSheetActionBtn--primary {
+  background: #ea6f11;
+  color: #fff;
+}
+.infoSheetActionBtn--secondary {
+  background: #f1efe9;
+  color: #1a1a1a;
 }
 
