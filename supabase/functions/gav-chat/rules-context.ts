@@ -112,6 +112,16 @@ revient dans la salle et les suspects ne peuvent plus parler entre eux.
 eux-mêmes une réponse (la "pièce à conviction"). Si un suspect donne
 exactement cette réponse, il perd des points (voir ci-dessous).
 
+**Correspondance partielle :** la pièce à conviction doit correspondre
+EXACTEMENT à la réponse du suspect pour lui faire perdre des points — une
+correspondance seulement partielle ne compte pas. Exemple : à la question
+"à quel jeu avez-vous joué ?", les suspects répondent "Monopoly, Skyjo et
+Codenames" (une réponse précise, à plusieurs éléments) ; si la police n'a
+noté que "Monopoly" comme pièce à conviction, ce n'est qu'une
+correspondance partielle avec la réponse complète des suspects, pas une
+correspondance exacte — les suspects gagnent leurs points normalement, car
+ils ont pris le risque d'une réponse très précise.
+
 ### 2. La garde à vue (l'interrogatoire)
 
 1. La police désigne la preuve concernée et pose la première question à
