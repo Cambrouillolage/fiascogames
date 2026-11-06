@@ -12,7 +12,7 @@ import { setupMapTopBar } from './mapTopBar.ts';
 import { setupFiltersSheet } from './filtersSheet.ts';
 import { createAutoHide } from './autoHide.ts';
 import { loadQuartiers } from './quartiersData.ts';
-import { buildQuartiers, type QuartiersLayer } from './quartiers.ts';
+import { buildQuartiers, pickQuartier, type QuartiersLayer } from './quartiers.ts';
 import { createPinDeclutter, type PinDeclutter } from './pinDeclutter.ts';
 import { createTraffic, type TrafficSystem } from './traffic.ts';
 import { createPedestrians, type PedestrianSystem } from './pedestrians.ts';
@@ -146,6 +146,7 @@ new ResizeObserver(resize).observe(app);
 
 let badges: THREE.Sprite[] = [];
 let merchantPins: MerchantPin[] = [];
+let quartiersLayer: QuartiersLayer | null = null;
 let selectedMerchantId: string | null = null;
 let autoHide: ReturnType<typeof createAutoHide> | null = null;
 // Assignées une fois les données chargées (voir .then() ci-dessous) :
@@ -266,7 +267,7 @@ loadMapData()
     ]);
     merchantPins = buildMerchantPins(merchants, data.center, scene);
     initMerchantCard(categories);
-    const quartiersLayer: QuartiersLayer = buildQuartiers(quartiers, data.center, scene);
+    quartiersLayer = buildQuartiers(quartiers, data.center, scene);
     const pinDeclutter: PinDeclutter = createPinDeclutter(scene);
 
     // Voitures/piétons sur toute la ville (généralisé après validation sur
@@ -355,7 +356,7 @@ loadMapData()
       const shouldShowQuartiers = rig.getZoomFraction() <= QUARTIER_MODE_ZOOM_THRESHOLD;
       if (shouldShowQuartiers === inQuartierMode) return;
       inQuartierMode = shouldShowQuartiers;
-      quartiersLayer.setVisible(inQuartierMode);
+      quartiersLayer!.setVisible(inQuartierMode);
       quartiersDisclaimerEl.hidden = !inQuartierMode;
       setBadgesVisible(badges, !inQuartierMode);
       applyCategoryFilter(
@@ -477,18 +478,38 @@ function setupInteraction() {
       Math.hypot(e.clientX - downPoint.x, e.clientY - downPoint.y) < TAP_THRESHOLD_PX
     ) {
       const { w, h } = viewportSize();
-      const merchantHit = pickMerchantPin(merchantPins, rig.camera, e.clientX, e.clientY, w, h);
-      if (merchantHit) {
-        selectedMerchantId = merchantHit.id;
-        setSelectedPin(merchantPins, merchantHit.id);
-        declutterPins?.();
-        showMerchantCard(merchantHit, { x: e.clientX, y: e.clientY });
+      // Mode "zones de quartier" (très dézoomé, voir applyQuartierMode) :
+      // taper une zone/étiquette zoome directement dessus, pour les
+      // utilisateurs qui ne pensent pas à zoomer eux-mêmes (voir zoomHint
+      // plus haut). Les pins/badges sont de toute façon invisibles (donc non
+      // raycastables) dans ce mode, inutile de tester l'ordre ici.
+      const quartierHit = quartiersLayer
+        ? pickQuartier(quartiersLayer.pickables, rig.camera, e.clientX, e.clientY, w, h)
+        : null;
+      if (quartierHit) {
+        dismissZoomHint();
+        const bounds = quartiersLayer!.boundsById.get(quartierHit.id);
+        // Plancher de zoom légèrement au-dessus du seuil quartier : sinon
+        // cadrer un grand quartier entier peut rester en-dessous et garder
+        // les zones colorées au lieu des pins (tap perçu comme sans effet).
+        if (bounds) {
+          const zoomFloor = rig.zoomLevelForFraction(QUARTIER_MODE_ZOOM_THRESHOLD + 0.08);
+          rig.flyToBounds(bounds, 700, () => declutterPins?.(), zoomFloor);
+        }
       } else {
-        const badgeHit = pickBadge(badges, rig.camera, e.clientX, e.clientY, w, h);
-        if (badgeHit) {
-          showBottomSheet(badgeHit.name, badgeHit.category, badgeHit.addr);
-        } else if (selectedMerchantId) {
-          hideMerchantCard();
+        const merchantHit = pickMerchantPin(merchantPins, rig.camera, e.clientX, e.clientY, w, h);
+        if (merchantHit) {
+          selectedMerchantId = merchantHit.id;
+          setSelectedPin(merchantPins, merchantHit.id);
+          declutterPins?.();
+          showMerchantCard(merchantHit, { x: e.clientX, y: e.clientY });
+        } else {
+          const badgeHit = pickBadge(badges, rig.camera, e.clientX, e.clientY, w, h);
+          if (badgeHit) {
+            showBottomSheet(badgeHit.name, badgeHit.category, badgeHit.addr);
+          } else if (selectedMerchantId) {
+            hideMerchantCard();
+          }
         }
       }
     }

@@ -116,6 +116,13 @@ export class IsoCameraRig {
    * (quasi à l'échelle de la rue), pas à l'échelle "vue d'ensemble de la
    * ville" voulue pour les zones de quartier (src/quartiers.ts).
    */
+  /** Inverse de getZoomFraction : le zoomLevel correspondant à une fraction [0,1] donnée (même échelle log). */
+  zoomLevelForFraction(fraction: number): number {
+    const logMin = Math.log(this.minZoom);
+    const logMax = Math.log(this.maxZoom);
+    return Math.exp(logMin + fraction * (logMax - logMin));
+  }
+
   getZoomFraction(): number {
     const logMin = Math.log(this.minZoom);
     const logMax = Math.log(this.maxZoom);
@@ -182,7 +189,14 @@ export class IsoCameraRig {
    * nécessaires pour que la boîte englobante tienne dans ~70% du cadre, puis
    * délègue à `flyTo` pour l'animation (même lerp, pas de code dupliqué).
    */
-  flyToBounds(points: { x: number; z: number }[], durationMs = 700, onComplete?: () => void) {
+  /**
+   * `zoomFloor` optionnel : plancher pour le zoom calculé (ex. sortir à coup
+   * sûr du mode "zones de quartier" en tapant un nom de quartier, voir
+   * QUARTIER_MODE_ZOOM_THRESHOLD dans main.ts — sans ça, cadrer un grand
+   * quartier entier peut rester sous ce seuil et garder les zones
+   * colorées au lieu des pins, zoom perçu comme n'ayant "rien fait").
+   */
+  flyToBounds(points: { x: number; z: number }[], durationMs = 700, onComplete?: () => void, zoomFloor?: number) {
     if (points.length === 0) return;
     let minX = Infinity;
     let maxX = -Infinity;
@@ -201,6 +215,7 @@ export class IsoCameraRig {
     const spanZ = Math.max(maxZ - minZ, 1);
     const zoomForX = (this.frustumSize * this.aspect * MARGIN) / spanX;
     const zoomForZ = (this.frustumSize * MARGIN) / spanZ;
-    this.flyTo(centerX, centerZ, Math.min(zoomForX, zoomForZ), durationMs, onComplete);
+    const zoom = Math.min(zoomForX, zoomForZ);
+    this.flyTo(centerX, centerZ, zoomFloor != null ? Math.max(zoom, zoomFloor) : zoom, durationMs, onComplete);
   }
 }

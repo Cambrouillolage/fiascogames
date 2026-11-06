@@ -86,6 +86,32 @@ function labelTexture(text: string, accentColor: string): THREE.CanvasTexture {
 
 export interface QuartiersLayer {
   setVisible(visible: boolean): void;
+  /** Zones colorées + étiquettes, pour pickQuartier (tap "zoome sur ce quartier" en mode dézoomé). */
+  pickables: THREE.Object3D[];
+  /** Contour de chaque quartier en coordonnées monde (mêmes unités que IsoCameraRig#flyToBounds), pour zoomer dessus au tap. */
+  boundsById: Map<string, { x: number; z: number }[]>;
+}
+
+export interface QuartierHit {
+  id: string;
+  name: string;
+}
+
+/** Retourne le quartier touché (zone colorée ou étiquette) sous (clientX, clientY), ou null. */
+export function pickQuartier(
+  pickables: THREE.Object3D[],
+  camera: THREE.Camera,
+  clientX: number,
+  clientY: number,
+  viewportW: number,
+  viewportH: number
+): QuartierHit | null {
+  const ndc = new THREE.Vector2((clientX / viewportW) * 2 - 1, -(clientY / viewportH) * 2 + 1);
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(pickables, false);
+  if (!hits.length) return null;
+  return hits[0].object.userData as QuartierHit;
 }
 
 /**
@@ -138,12 +164,17 @@ export function buildQuartiers(
   scene: THREE.Scene
 ): QuartiersLayer {
   const objects: THREE.Object3D[] = [];
+  const boundsById = new Map<string, { x: number; z: number }[]>();
 
   for (const f of features) {
     const ringWorldXZ: [number, number][] = f.ring.map(([lon, lat]) => {
       const [x, y] = latLonToLocalMeters(lat, lon, center);
       return [x, -y];
     });
+    boundsById.set(
+      f.id,
+      ringWorldXZ.map(([x, z]) => ({ x, z }))
+    );
     const geom = flatPolygonGeometry(ringWorldXZ, ZONE_Y);
     if (geom) {
       const material = new THREE.MeshBasicMaterial({
@@ -157,6 +188,7 @@ export function buildQuartiers(
       const mesh = new THREE.Mesh(geom, material);
       mesh.renderOrder = 500;
       mesh.visible = false;
+      mesh.userData = { id: f.id, name: f.name } satisfies QuartierHit;
       scene.add(mesh);
       objects.push(mesh);
     }
@@ -171,6 +203,7 @@ export function buildQuartiers(
     sprite.position.set(xC, LABEL_Y, -yC);
     sprite.renderOrder = 501;
     sprite.visible = false;
+    sprite.userData = { id: f.id, name: f.name } satisfies QuartierHit;
     scene.add(sprite);
     objects.push(sprite);
   }
@@ -179,5 +212,7 @@ export function buildQuartiers(
     setVisible(visible: boolean) {
       for (const o of objects) o.visible = visible;
     },
+    pickables: objects,
+    boundsById,
   };
 }
