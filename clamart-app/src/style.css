@@ -104,10 +104,10 @@ html, body {
   border-radius: 18px;
   background: rgba(20, 20, 20, 0.72);
   color: #fff;
+  max-width: 240px;
   font-size: 13px;
   font-weight: 600;
   text-align: center;
-  white-space: nowrap;
   pointer-events: none;
   animation: zoomHintFade 2s ease forwards;
 }

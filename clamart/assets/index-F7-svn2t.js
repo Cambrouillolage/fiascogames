@@ -4417,7 +4417,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       <line x1="10" y1="7" x2="10" y2="13"></line>
       <line x1="7" y1="10" x2="13" y2="10"></line>
     </svg>
-    <span>Déplacez et zoomez pour explorer</span>
+    <span>Déplacez la carte et zoomez pour découvrir les commerces autour de vous</span>
   </div>
   <div class="mapFooter">Cette carte est proposée par le jeu <a href="/gav/" target="_blank" rel="noopener">GAV</a> · <a href="/gav/" target="_blank" rel="noopener">En savoir plus</a></div>
   <button id="help-btn" type="button" class="helpBtn" aria-label="Signaler une erreur ou une boutique manquante">?</button>
