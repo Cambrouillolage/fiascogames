@@ -106,10 +106,19 @@ export function pickQuartier(
   viewportW: number,
   viewportH: number
 ): QuartierHit | null {
+  // Raycaster.intersectObjects ignore `.visible` (ça ne contrôle que le
+  // rendu, pas le raycast) : sans ce filtre, une zone/étiquette masquée une
+  // fois zoomé (setVisible(false), voir applyQuartierMode dans main.ts)
+  // reste quand même touchée par un tap sur un badge/commerce — les zones
+  // couvrent de grandes surfaces au sol, donc un tap zoomé les retouche
+  // presque à coup sûr, volant le tap au badge en-dessous et "dézoomant"
+  // vers les bornes du quartier à la place (bug signalé sur Android).
+  const visiblePickables = pickables.filter((o) => o.visible);
+  if (!visiblePickables.length) return null;
   const ndc = new THREE.Vector2((clientX / viewportW) * 2 - 1, -(clientY / viewportH) * 2 + 1);
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(ndc, camera);
-  const hits = raycaster.intersectObjects(pickables, false);
+  const hits = raycaster.intersectObjects(visiblePickables, false);
   if (!hits.length) return null;
   return hits[0].object.userData as QuartierHit;
 }
