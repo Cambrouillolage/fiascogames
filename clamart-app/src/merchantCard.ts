@@ -34,7 +34,10 @@ function ensureCard() {
   backdropEl = document.createElement('div');
   backdropEl.id = 'merchant-card-backdrop';
   backdropEl.className = 'sheetBackdrop';
-  backdropEl.addEventListener('click', hideMerchantCard);
+  // pointerup, pas click : cf. commentaire équivalent dans bottomSheet.ts
+  // (le click de compatibilité synthétisé après un tap tactile refermait la
+  // carte aussitôt après l'avoir ouverte sur Android/Samsung Internet).
+  backdropEl.addEventListener('pointerup', hideMerchantCard);
   document.body.appendChild(backdropEl);
 
   cardEl = document.createElement('div');

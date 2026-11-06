@@ -32,7 +32,12 @@ function ensureSheet() {
   backdropEl = document.createElement('div');
   backdropEl.id = 'bottom-sheet-backdrop';
   backdropEl.className = 'sheetBackdrop';
-  backdropEl.addEventListener('click', hideBottomSheet);
+  // pointerup, pas click : après un tap tactile, le navigateur synthétise un
+  // click de compatibilité ~qq ms après le pointerup qui vient d'ouvrir la
+  // sheet, et comme le backdrop est créé/affiché pile sous ce point au même
+  // instant, ce click fantôme la refermait aussitôt (bug "rien ne se passe"
+  // sur Android/Samsung Internet). pointerup n'est jamais synthétisé ainsi.
+  backdropEl.addEventListener('pointerup', hideBottomSheet);
   document.body.appendChild(backdropEl);
 
   sheetEl = document.createElement('div');
