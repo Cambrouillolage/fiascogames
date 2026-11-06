@@ -52,6 +52,15 @@ app.innerHTML = `
     </button>
   </div>
   <div class="quartiersDisclaimer" id="quartiers-disclaimer" hidden>Quartiers provisoires, non officiels</div>
+  <div class="zoomHint" id="zoom-hint" hidden>
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="10" cy="10" r="7"></circle>
+      <line x1="15" y1="15" x2="21" y2="21"></line>
+      <line x1="10" y1="7" x2="10" y2="13"></line>
+      <line x1="7" y1="10" x2="13" y2="10"></line>
+    </svg>
+    <span>Déplacez et zoomez pour explorer</span>
+  </div>
   <div class="mapFooter">Cette carte est proposée par le jeu <a href="/gav/" target="_blank" rel="noopener">GAV</a> · <a href="/gav/" target="_blank" rel="noopener">En savoir plus</a></div>
   <button id="help-btn" type="button" class="helpBtn" aria-label="Signaler une erreur ou une boutique manquante">?</button>
 `;
@@ -60,6 +69,21 @@ const canvas = document.querySelector<HTMLCanvasElement>('#scene-canvas')!;
 const loadingEl = document.querySelector<HTMLDivElement>('#loading')!;
 const hudEl = document.querySelector<HTMLDivElement>('#hud')!;
 const quartiersDisclaimerEl = document.querySelector<HTMLDivElement>('#quartiers-disclaimer')!;
+const zoomHintEl = document.querySelector<HTMLDivElement>('#zoom-hint')!;
+
+// Affiché une fois au chargement si l'utilisateur n'a pas encore interagi
+// avec la carte, disparaît dès le premier pan/zoom réel (ou après 2s au
+// plus tard, cf. l'animation CSS .zoomHint). Les 4 points d'entrée
+// d'interaction (pointerdown canvas, molette, boutons zoom) appellent tous
+// dismissZoomHint().
+let zoomHintDismissed = false;
+let zoomHintTimer: number | null = null;
+function dismissZoomHint() {
+  if (zoomHintDismissed) return;
+  zoomHintDismissed = true;
+  if (zoomHintTimer != null) window.clearTimeout(zoomHintTimer);
+  zoomHintEl.hidden = true;
+}
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -346,9 +370,14 @@ loadMapData()
 
     const params = new URLSearchParams(window.location.search);
     const preselectId = params.get('merchant');
-    if (preselectId) {
-      const merchant = merchants.find((m) => m.id === preselectId);
-      if (merchant) selectMerchant(merchant);
+    const merchant = preselectId ? merchants.find((m) => m.id === preselectId) : undefined;
+    if (merchant) {
+      selectMerchant(merchant);
+    } else if (inQuartierMode) {
+      // Pas de lien direct vers un commerce : vue dézoomée de départ, donc
+      // l'utilisateur n'a encore rien fait — on affiche l'indice.
+      zoomHintEl.hidden = false;
+      zoomHintTimer = window.setTimeout(dismissZoomHint, 2000);
     }
   })
   .catch((err) => {
@@ -394,6 +423,7 @@ function setupInteraction() {
   }
 
   canvas.addEventListener('pointerdown', (e) => {
+    dismissZoomHint();
     canvas.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pointers.size === 1) {
@@ -502,6 +532,7 @@ function setupInteraction() {
     'wheel',
     (e) => {
       e.preventDefault();
+      dismissZoomHint();
       const factor = Math.exp(-e.deltaY * 0.001);
       rig.zoomBy(factor);
       autoHide?.markMoving();
@@ -512,10 +543,12 @@ function setupInteraction() {
   );
 
   document.querySelector('#zoom-in')!.addEventListener('click', () => {
+    dismissZoomHint();
     rig.zoomBy(1.25);
     scheduleDeclutter();
   });
   document.querySelector('#zoom-out')!.addEventListener('click', () => {
+    dismissZoomHint();
     rig.zoomBy(0.8);
     scheduleDeclutter();
   });

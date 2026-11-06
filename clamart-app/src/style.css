@@ -86,6 +86,53 @@ html, body {
   display: none;
 }
 
+/* Indice d'onboarding "on peut bouger/zoomer la carte" (premiers tests
+   utilisateurs : certains ne savaient pas qu'ils pouvaient interagir avec
+   la carte). Affiché une fois au chargement si l'utilisateur n'a encore
+   rien fait, disparaît dès la première interaction réelle (pan/zoom) — au
+   plus tard après 2s, durée bornée par l'animation CSS elle-même. */
+.zoomHint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 22px;
+  border-radius: 18px;
+  background: rgba(20, 20, 20, 0.72);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: zoomHintFade 2s ease forwards;
+}
+.zoomHint[hidden] {
+  display: none;
+}
+.zoomHint svg {
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .zoomHint svg {
+    animation: zoomHintPulse 1s ease-in-out infinite;
+  }
+}
+@keyframes zoomHintFade {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  82% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+}
+@keyframes zoomHintPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
 .mapFooter {
   position: absolute;
   left: 50%;
