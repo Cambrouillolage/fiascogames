@@ -95,13 +95,11 @@ export function showMerchantCard(merchant: Merchant, screenPos: { x: number; y: 
   const statusEl = cardEl.querySelector('.merchantCardStatus') as HTMLAnchorElement;
   statusEl.hidden = merchant.is_locked;
 
+  // Quantité de GAV en stock : donnée gardée en base (admin), mais plus
+  // affichée sur la carte publique (demande explicite — retrait purement
+  // visuel, pas de changement du champ/de la requête).
   const stockEl = cardEl.querySelector('.merchantCardStock') as HTMLElement;
-  if (!merchant.is_locked && merchant.gav_stock_quantity != null) {
-    stockEl.textContent = `📦 ${merchant.gav_stock_quantity} GAV en stock`;
-    stockEl.hidden = false;
-  } else {
-    stockEl.hidden = true;
-  }
+  stockEl.hidden = true;
 
   cardEl.querySelector('.merchantCardDesc')!.textContent = merchant.description ?? '';
   (cardEl.querySelector('.merchantCardDesc') as HTMLElement).hidden = !merchant.description;

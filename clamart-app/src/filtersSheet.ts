@@ -298,7 +298,6 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
             <span class="resultRowStatusMain">✅ Revendeur GAV</span>
             <span class="resultRowStatusMore">En savoir plus ›</span>
           </button>
-          ${m.gav_stock_quantity != null ? `<span class="resultRowStock">📦 ${m.gav_stock_quantity} GAV</span>` : ''}
           <span class="resultRowCtas">
             <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
             ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}

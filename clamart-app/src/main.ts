@@ -85,10 +85,13 @@ const isLowPowerDevice = viewportSize().w < 768 || (navigator.hardwareConcurrenc
 // rapproché, "high" (beaucoup plus, demande explicite) au-delà. Le pool
 // construit une fois par src/traffic.ts et src/pedestrians.ts doit couvrir
 // le plus grand des deux (voir HIGH_* passés à createTraffic/createPedestrians).
-const BASELINE_VEHICLES = isLowPowerDevice ? 24 : 48;
-const HIGH_VEHICLES = isLowPowerDevice ? 45 : 90;
-const BASELINE_PEDESTRIANS = isLowPowerDevice ? 36 : 75;
-const HIGH_PEDESTRIANS = isLowPowerDevice ? 68 : 135;
+// Voitures x2.5, piétons x3 (demande explicite) par rapport aux paliers
+// précédents (24/48 et 45/90 pour les voitures, 36/75 et 68/135 pour les
+// piétons).
+const BASELINE_VEHICLES = isLowPowerDevice ? 60 : 120;
+const HIGH_VEHICLES = isLowPowerDevice ? 113 : 225;
+const BASELINE_PEDESTRIANS = isLowPowerDevice ? 108 : 225;
+const HIGH_PEDESTRIANS = isLowPowerDevice ? 204 : 405;
 
 function trafficDensityForZoom(zoomFraction: number): { vehicles: number; pedestrians: number } {
   return zoomFraction >= HIGH_DENSITY_ZOOM_THRESHOLD
