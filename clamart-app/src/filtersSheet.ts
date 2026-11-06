@@ -119,7 +119,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
       <button type="button" class="filtersGavTag" id="filtersGavTag">
-        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeurs</span>
+        <span class="filtersGavTagMain"><span id="filtersGavCount"></span> revendeurs</span>
         <span class="filtersGavTagMore">Détails ›</span>
       </button>
       <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Boutique manquante ?</button>
@@ -264,7 +264,14 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     const badgeSrc = `${import.meta.env.BASE_URL}${badge.webp}`;
     const label = categoryLabel(categories, m.subcategory_id) || categoryLabel(categories, m.category_id);
     const quartierName = quartierNameById.get(merchantQuartierId.get(m.id) ?? '') ?? null;
-    const metaParts = [label, m.address, quartierName].filter(Boolean);
+    // La catégorie est affichée à côté du titre (demande explicite, vue
+    // mobile) plutôt que répétée sur la ligne meta avec l'adresse/le quartier.
+    const metaParts = [m.address, quartierName].filter(Boolean);
+    const titleRow = `
+          <span class="resultRowTitleRow">
+            <span class="resultRowName">${m.name}</span>
+            ${label ? `<span class="resultRowCategoryTag">${label}</span>` : ''}
+          </span>`;
     // Site connu -> lien direct ("Voir le site") ; sinon on ne laisse jamais
     // ce CTA absent, on lance plutôt une recherche ("Voir sur internet").
     // Le nom n'est plus jamais masqué (migration 0015), donc ce CTA reste
@@ -280,8 +287,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
       return `
         <div class="resultRow resultRow--locked" data-id="${m.id}">
           <img class="resultRowBadge" src="${badgeSrc}" alt="" />
-          <span class="resultRowBody">
-            <span class="resultRowName">${m.name}</span>
+          <span class="resultRowBody">${titleRow}
             <span class="resultRowMeta">${metaParts.join(' · ')}</span>
             <span class="resultRowCtas">
               <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
@@ -294,8 +300,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     return `
       <div class="resultRow resultRow--unlocked" data-id="${m.id}">
         <img class="resultRowBadge" src="${badgeSrc}" alt="" />
-        <span class="resultRowBody">
-          <span class="resultRowName">${m.name}</span>
+        <span class="resultRowBody">${titleRow}
           <span class="resultRowMeta">${metaParts.join(' · ')}</span>
           <button type="button" class="resultRowStatus resultRowStatus--unlocked resultRowGavInfoBtn" onclick="event.stopPropagation()">
             <span class="resultRowStatusMain">✅ Revendeur GAV</span>

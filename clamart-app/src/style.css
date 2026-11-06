@@ -716,10 +716,10 @@ html, body {
 .filtersGavTag {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   flex: 0 0 auto;
-  font-size: 9.5px;
-  padding: 4px 8px;
+  font-size: 8px;
+  padding: 3px 7px;
   border-radius: 999px;
   border: none;
   background: #dcf1e4;
@@ -898,10 +898,26 @@ html, body {
   gap: 2px;
   min-width: 0;
 }
+.resultRowTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
 .resultRowName {
   font-size: 14.5px;
   font-weight: 700;
   color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.resultRowCategoryTag {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: #888;
 }
 .resultRowMeta {
   font-size: 12.5px;

@@ -4336,7 +4336,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     <div class="filtersEventsBanner" id="filtersEventsBanner" hidden></div>
     <div class="filtersCounters">
       <button type="button" class="filtersGavTag" id="filtersGavTag">
-        <span class="filtersGavTagMain">✅ <span id="filtersGavCount"></span> revendeurs</span>
+        <span class="filtersGavTagMain"><span id="filtersGavCount"></span> revendeurs</span>
         <span class="filtersGavTagMore">Détails ›</span>
       </button>
       <button type="button" class="filtersMissingShopTag" id="filtersMissingShopTag">Boutique manquante ?</button>
@@ -4352,30 +4352,32 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       <div class="filtersChips filtersSubChips" id="filtersSubChips"></div>
     </div>
     <div class="filtersResultsList" id="filtersResultsList"></div>
-  `,document.body.appendChild(y);let b=y.querySelector(`#filtersChips`),x=y.querySelector(`#filtersSubChipsSlider`),S=y.querySelector(`#filtersSubChips`),C=y.querySelector(`#filtersResultsList`),w=y.querySelector(`#filtersEventsBanner`),T=y.querySelector(`#filtersGavCount`);y.querySelector(`#filtersMissingShopTag`).addEventListener(`click`,Wy),y.querySelector(`#filtersGavTag`).addEventListener(`click`,vy);let E=y.querySelector(`#filtersQuartierSelect`),D=y.querySelector(`#filtersCategoryCount`),O=y.querySelector(`#filtersCloseBtn`),k=y.querySelector(`#filtersResetBtn`),A=document.createElement(`button`);A.type=`button`,A.id=`map-sticky-btn`,document.body.appendChild(A);let j=null,M=null,N=null,P=!1;function F(){if(!N)return null;let e=new Set;for(let[t,n]of d)n===N&&e.add(t);return e}function I(){let e=F(),t=M?n.filter(e=>e.subcategory_id&&M.has(e.subcategory_id)).map(e=>e.id):null;if(!e&&!t)return null;if(!e)return new Set(t);if(!t)return e;let r=new Set(t),i=new Set;for(let t of e)r.has(t)&&i.add(t);return i}function ee(){return n.filter(e=>(!j||j.has(e.category_id))&&(!M||e.subcategory_id!=null&&M.has(e.subcategory_id))&&(!N||d.get(e.id)===N)).sort((e,t)=>Number(e.is_locked)-Number(t.is_locked))}function te(){b.innerHTML=`<button type="button" class="catChip isAll" data-all="true">Toutes</button>`+h.map(e=>`<button type="button" class="catChip" data-id="${e.id}" style="--chip-color:${e.color}">${e.emoji} ${e.label}</button>`).join(``),ne()}function ne(){b.querySelectorAll(`.catChip`).forEach(e=>{e.dataset.all?e.classList.toggle(`isActive`,j===null):e.classList.toggle(`isActive`,j!==null&&j.has(e.dataset.id))}),D.textContent=`(${j?j.size:0}/${h.length})`,fy(r,j,I())}function re(){let e=(j&&j.size>=1&&j.size<=2?[...j]:[]).flatMap(e=>_.get(e)??[]).sort((e,t)=>e.label.localeCompare(t.label,`fr`));if(M){let t=new Set([...M].filter(t=>e.some(e=>e.id===t)));M=t.size?t:null}e.length?(x.hidden=!1,S.innerHTML=`<button type="button" class="catChip subChip isAll" data-all="true">Toutes les familles</button>`+e.map(e=>`<button type="button" class="catChip subChip" data-id="${e.id}" style="--chip-color:${e.color}">${e.emoji} ${e.label}</button>`).join(``),ie()):(x.hidden=!0,S.innerHTML=``)}function ie(){S.querySelectorAll(`.subChip`).forEach(e=>{e.dataset.all?e.classList.toggle(`isActive`,M===null):e.classList.toggle(`isActive`,M!==null&&M.has(e.dataset.id))}),fy(r,j,I())}function ae(e){let n=`/clamart/${Xy(e).webp}`,r=Yy(t,e.subcategory_id)||Yy(t,e.category_id),i=p.get(d.get(e.id)??``)??null,a=[r,e.address,i].filter(Boolean),o=e.website||Wv(e),s=e.website?`Voir le site`:`Voir sur internet`,c=Uv(e);return e.is_locked?`
+  `,document.body.appendChild(y);let b=y.querySelector(`#filtersChips`),x=y.querySelector(`#filtersSubChipsSlider`),S=y.querySelector(`#filtersSubChips`),C=y.querySelector(`#filtersResultsList`),w=y.querySelector(`#filtersEventsBanner`),T=y.querySelector(`#filtersGavCount`);y.querySelector(`#filtersMissingShopTag`).addEventListener(`click`,Wy),y.querySelector(`#filtersGavTag`).addEventListener(`click`,vy);let E=y.querySelector(`#filtersQuartierSelect`),D=y.querySelector(`#filtersCategoryCount`),O=y.querySelector(`#filtersCloseBtn`),k=y.querySelector(`#filtersResetBtn`),A=document.createElement(`button`);A.type=`button`,A.id=`map-sticky-btn`,document.body.appendChild(A);let j=null,M=null,N=null,P=!1;function F(){if(!N)return null;let e=new Set;for(let[t,n]of d)n===N&&e.add(t);return e}function I(){let e=F(),t=M?n.filter(e=>e.subcategory_id&&M.has(e.subcategory_id)).map(e=>e.id):null;if(!e&&!t)return null;if(!e)return new Set(t);if(!t)return e;let r=new Set(t),i=new Set;for(let t of e)r.has(t)&&i.add(t);return i}function ee(){return n.filter(e=>(!j||j.has(e.category_id))&&(!M||e.subcategory_id!=null&&M.has(e.subcategory_id))&&(!N||d.get(e.id)===N)).sort((e,t)=>Number(e.is_locked)-Number(t.is_locked))}function te(){b.innerHTML=`<button type="button" class="catChip isAll" data-all="true">Toutes</button>`+h.map(e=>`<button type="button" class="catChip" data-id="${e.id}" style="--chip-color:${e.color}">${e.emoji} ${e.label}</button>`).join(``),ne()}function ne(){b.querySelectorAll(`.catChip`).forEach(e=>{e.dataset.all?e.classList.toggle(`isActive`,j===null):e.classList.toggle(`isActive`,j!==null&&j.has(e.dataset.id))}),D.textContent=`(${j?j.size:0}/${h.length})`,fy(r,j,I())}function re(){let e=(j&&j.size>=1&&j.size<=2?[...j]:[]).flatMap(e=>_.get(e)??[]).sort((e,t)=>e.label.localeCompare(t.label,`fr`));if(M){let t=new Set([...M].filter(t=>e.some(e=>e.id===t)));M=t.size?t:null}e.length?(x.hidden=!1,S.innerHTML=`<button type="button" class="catChip subChip isAll" data-all="true">Toutes les familles</button>`+e.map(e=>`<button type="button" class="catChip subChip" data-id="${e.id}" style="--chip-color:${e.color}">${e.emoji} ${e.label}</button>`).join(``),ie()):(x.hidden=!0,S.innerHTML=``)}function ie(){S.querySelectorAll(`.subChip`).forEach(e=>{e.dataset.all?e.classList.toggle(`isActive`,M===null):e.classList.toggle(`isActive`,M!==null&&M.has(e.dataset.id))}),fy(r,j,I())}function ae(e){let n=`/clamart/${Xy(e).webp}`,r=Yy(t,e.subcategory_id)||Yy(t,e.category_id),i=p.get(d.get(e.id)??``)??null,a=[e.address,i].filter(Boolean),o=`
+          <span class="resultRowTitleRow">
+            <span class="resultRowName">${e.name}</span>
+            ${r?`<span class="resultRowCategoryTag">${r}</span>`:``}
+          </span>`,s=e.website||Wv(e),c=e.website?`Voir le site`:`Voir sur internet`,l=Uv(e);return e.is_locked?`
         <div class="resultRow resultRow--locked" data-id="${e.id}">
           <img class="resultRowBadge" src="${n}" alt="" />
-          <span class="resultRowBody">
-            <span class="resultRowName">${e.name}</span>
+          <span class="resultRowBody">${o}
             <span class="resultRowMeta">${a.join(` · `)}</span>
             <span class="resultRowCtas">
-              <a class="resultRowCta" href="${o}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${s}</a>
-              ${c?`<a class="resultRowCta resultRowCta--primary" href="${c}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>`:``}
+              <a class="resultRowCta" href="${s}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${c}</a>
+              ${l?`<a class="resultRowCta resultRowCta--primary" href="${l}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>`:``}
             </span>
           </span>
         </div>`:`
       <div class="resultRow resultRow--unlocked" data-id="${e.id}">
         <img class="resultRowBadge" src="${n}" alt="" />
-        <span class="resultRowBody">
-          <span class="resultRowName">${e.name}</span>
+        <span class="resultRowBody">${o}
           <span class="resultRowMeta">${a.join(` · `)}</span>
           <button type="button" class="resultRowStatus resultRowStatus--unlocked resultRowGavInfoBtn" onclick="event.stopPropagation()">
             <span class="resultRowStatusMain">✅ Revendeur GAV</span>
             <span class="resultRowStatusMore">En savoir plus ›</span>
           </button>
           <span class="resultRowCtas">
-            <a class="resultRowCta" href="${o}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${s}</a>
-            ${c?`<a class="resultRowCta resultRowCta--primary" href="${c}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>`:``}
+            <a class="resultRowCta" href="${s}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${c}</a>
+            ${l?`<a class="resultRowCta resultRowCta--primary" href="${l}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>`:``}
           </span>
         </span>
       </div>`}function oe(){let e=new Date().toISOString().slice(0,10),t=n.filter(t=>t.gav_event_date&&t.gav_event_date>=e).sort((e,t)=>e.gav_event_date.localeCompare(t.gav_event_date));if(!t.length){w.hidden=!0,w.innerHTML=``;return}let r=e=>new Date(`${e}T00:00:00`).toLocaleDateString(`fr-FR`,{day:`numeric`,month:`short`});w.hidden=!1,w.innerHTML=t.map(e=>`
