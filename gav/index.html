@@ -1912,8 +1912,20 @@
       // reconstruit toute la timeline au redimensionnement pour qu'il
       // reste exact plutôt que de devenir obsolète (rotation mobile,
       // redimensionnement de fenêtre desktop...).
+      //
+      // Seule la LARGEUR déclenche la reconstruction, pas la hauteur : sur
+      // mobile, la barre d'adresse qui se réduit/réapparaît pendant le
+      // scroll déclenche "resize" (hauteur seule qui change) en plein
+      // milieu de la section épinglée — reconstruire la timeline à ce
+      // moment-là casse la synchronisation avec le scroll (l'animation ne
+      // rejoue plus correctement en remontant). Un vrai changement de
+      // largeur (rotation d'écran, redimensionnement desktop) reste géré
+      // normalement.
       let resizeTimer = null;
+      let lastWidth = window.innerWidth;
       window.addEventListener('resize', () => {
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(build, 200);
       });
