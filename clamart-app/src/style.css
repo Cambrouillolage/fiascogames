@@ -718,13 +718,13 @@ html, body {
   align-items: center;
   gap: 4px;
   flex: 0 0 auto;
-  font-size: 8px;
-  padding: 3px 7px;
+  padding: 4px 8px;
   border-radius: 999px;
   border: none;
   background: #dcf1e4;
   text-decoration: none;
   font: inherit;
+  font-size: 11px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -931,13 +931,13 @@ html, body {
   align-items: center;
   gap: 5px;
   margin-top: 2px;
-  font-size: 9.5px;
   padding: 2px 8px;
   border-radius: 999px;
   width: fit-content;
   text-decoration: none;
   border: none;
   font: inherit;
+  font-size: 11px;
   cursor: pointer;
 }
 .resultRowStatus--unlocked {

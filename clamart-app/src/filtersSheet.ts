@@ -303,7 +303,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         <span class="resultRowBody">${titleRow}
           <span class="resultRowMeta">${metaParts.join(' · ')}</span>
           <button type="button" class="resultRowStatus resultRowStatus--unlocked resultRowGavInfoBtn" onclick="event.stopPropagation()">
-            <span class="resultRowStatusMain">✅ Revendeur GAV</span>
+            <span class="resultRowStatusMain">Revendeur GAV</span>
             <span class="resultRowStatusMore">En savoir plus ›</span>
           </button>
           <span class="resultRowCtas">
