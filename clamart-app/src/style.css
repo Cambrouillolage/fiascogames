@@ -103,6 +103,34 @@ html, body {
   text-decoration: underline;
 }
 
+/* Bouton d'aide flottant (bas gauche, symétrique du zoom à droite) :
+   raccourci direct vers la modale "Il manque une boutique ?" (erreur sur
+   la carte, boutique manquante, contact) sans passer par les filtres. */
+.helpBtn {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20, 20, 20, 0.72);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.helpBtn:active {
+  background: rgba(20, 20, 20, 0.9);
+}
+
 .loading {
   position: absolute;
   inset: 0;
@@ -301,7 +329,7 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 9.5px;
   padding: 4px 10px;
   border-radius: 999px;
   margin-top: 4px;
@@ -690,7 +718,7 @@ html, body {
   align-items: center;
   gap: 5px;
   flex: 0 0 auto;
-  font-size: 11px;
+  font-size: 9.5px;
   padding: 4px 8px;
   border-radius: 999px;
   border: none;
@@ -725,11 +753,11 @@ html, body {
   filter: brightness(0.97);
 }
 .filtersQuartierSelect {
-  flex: 0 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
+  min-width: max-content;
   margin-left: auto;
   font: inherit;
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: 700;
   color: #444;
   background: #f0eee9;
@@ -887,7 +915,7 @@ html, body {
   align-items: center;
   gap: 5px;
   margin-top: 2px;
-  font-size: 10.5px;
+  font-size: 9.5px;
   padding: 2px 8px;
   border-radius: 999px;
   width: fit-content;

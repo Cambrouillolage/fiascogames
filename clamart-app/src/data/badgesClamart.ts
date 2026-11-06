@@ -22,7 +22,7 @@ export const badgesClamart: BadgeClamart[] = [
   {id:"japonais",nom:"Restaurant japonais",categorie:"restaurants_bars",categorieLabel:"Restaurants et bars",png:"badges/restaurants_bars/japonais.png",webp:"badges_webp/restaurants_bars/japonais.webp",couleur:"#FC7F88"},
   {id:"asiatique",nom:"Restaurant asiatique",categorie:"restaurants_bars",categorieLabel:"Restaurants et bars",png:"badges/restaurants_bars/asiatique.png",webp:"badges_webp/restaurants_bars/asiatique.webp",couleur:"#A573F8"},
   {id:"cuisine_du_monde",nom:"Cuisine du monde",categorie:"restaurants_bars",categorieLabel:"Restaurants et bars",png:"badges/restaurants_bars/cuisine_du_monde.png",webp:"badges_webp/restaurants_bars/cuisine_du_monde.webp",couleur:"#FDD437"},
-  {id:"boulangerie",nom:"Boulangerie (croissant)",categorie:"alimentation",categorieLabel:"Alimentation",png:"badges/alimentation/boulangerie.png",webp:"badges_webp/alimentation/boulangerie.webp",couleur:"#FC7C9F"},
+  {id:"boulangerie",nom:"Boulangerie",categorie:"alimentation",categorieLabel:"Alimentation",png:"badges/alimentation/boulangerie.png",webp:"badges_webp/alimentation/boulangerie.webp",couleur:"#FC7C9F"},
   {id:"boulanger",nom:"Boulanger / pain",categorie:"alimentation",categorieLabel:"Alimentation",png:"badges/alimentation/boulanger.png",webp:"badges_webp/alimentation/boulanger.webp",couleur:"#FCBB55"},
   {id:"patisserie",nom:"Pâtisserie",categorie:"alimentation",categorieLabel:"Alimentation",png:"badges/alimentation/patisserie.png",webp:"badges_webp/alimentation/patisserie.webp",couleur:"#FDA0C1"},
   {id:"glacier",nom:"Glacier",categorie:"alimentation",categorieLabel:"Alimentation",png:"badges/alimentation/glacier.png",webp:"badges_webp/alimentation/glacier.webp",couleur:"#46E0DD"},

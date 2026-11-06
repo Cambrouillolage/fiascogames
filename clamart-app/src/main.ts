@@ -18,6 +18,7 @@ import { createTraffic, type TrafficSystem } from './traffic.ts';
 import { createPedestrians, type PedestrianSystem } from './pedestrians.ts';
 import { createLodFader, type LodFader } from './lod.ts';
 import { createTransit, type TransitSystem } from './transit.ts';
+import { showMissingShopInfo } from './missingShopInfo.ts';
 
 // Seuil de "zoom fraction" (0 = dézoomé au max, 1 = zoomé au max, voir
 // IsoCameraRig#getZoomFraction) sous lequel on bascule des badges/pins vers
@@ -52,6 +53,7 @@ app.innerHTML = `
   </div>
   <div class="quartiersDisclaimer" id="quartiers-disclaimer" hidden>Quartiers provisoires, non officiels</div>
   <div class="mapFooter">Cette carte est proposée par le jeu <a href="/gav/" target="_blank" rel="noopener">GAV</a> · <a href="/gav/" target="_blank" rel="noopener">En savoir plus</a></div>
+  <button id="help-btn" type="button" class="helpBtn" aria-label="Signaler une erreur ou une boutique manquante">?</button>
 `;
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene-canvas')!;
@@ -517,4 +519,5 @@ function setupInteraction() {
     rig.zoomBy(0.8);
     scheduleDeclutter();
   });
+  document.querySelector('#help-btn')!.addEventListener('click', showMissingShopInfo);
 }

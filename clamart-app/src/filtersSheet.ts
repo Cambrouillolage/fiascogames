@@ -75,6 +75,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     ])
   );
   const quartiersSorted = [...quartiers].sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+  const quartierNameById = new Map(quartiers.map((q) => [q.id, q.name]));
 
   // Seulement les catégories qui ont au moins un commerce : la taxonomie en
   // base contient encore d'anciennes catégories orphelines (ex. "Éducation
@@ -262,6 +263,8 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
     const badge = badgeFor(m);
     const badgeSrc = `${import.meta.env.BASE_URL}${badge.webp}`;
     const label = categoryLabel(categories, m.subcategory_id) || categoryLabel(categories, m.category_id);
+    const quartierName = quartierNameById.get(merchantQuartierId.get(m.id) ?? '') ?? null;
+    const metaParts = [label, m.address, quartierName].filter(Boolean);
     // Site connu -> lien direct ("Voir le site") ; sinon on ne laisse jamais
     // ce CTA absent, on lance plutôt une recherche ("Voir sur internet").
     // Le nom n'est plus jamais masqué (migration 0015), donc ce CTA reste
@@ -279,7 +282,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
           <img class="resultRowBadge" src="${badgeSrc}" alt="" />
           <span class="resultRowBody">
             <span class="resultRowName">${m.name}</span>
-            <span class="resultRowMeta">${label}</span>
+            <span class="resultRowMeta">${metaParts.join(' · ')}</span>
             <span class="resultRowCtas">
               <a class="resultRowCta" href="${webHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${webLabel}</a>
               ${url ? `<a class="resultRowCta resultRowCta--primary" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Voir l'itinéraire</a>` : ''}
@@ -293,7 +296,7 @@ export function setupFiltersSheet(deps: FiltersSheetDeps): FiltersSheet {
         <img class="resultRowBadge" src="${badgeSrc}" alt="" />
         <span class="resultRowBody">
           <span class="resultRowName">${m.name}</span>
-          <span class="resultRowMeta">${label}${m.address ? ' · ' + m.address : ''}</span>
+          <span class="resultRowMeta">${metaParts.join(' · ')}</span>
           <button type="button" class="resultRowStatus resultRowStatus--unlocked resultRowGavInfoBtn" onclick="event.stopPropagation()">
             <span class="resultRowStatusMain">✅ Revendeur GAV</span>
             <span class="resultRowStatusMore">En savoir plus ›</span>
