@@ -1524,6 +1524,18 @@
         // jamais — il faut alors révéler la vidéo explicitement, sans quoi
         // elle resterait invisible indéfiniment derrière le fond uni.
         video.__reveal = reveal;
+        // Sans réseau (ou requête qui échoue), `playing` ne se déclenche
+        // jamais non plus : sans ce filet, le fond uni restait affiché
+        // indéfiniment, sans poster ni rien d'autre — perçu comme un bug
+        // plutôt qu'un simple souci de chargement (signalé par l'utilisateur
+        // pour le hero). On révèle alors la vidéo quand même : son attribut
+        // `poster` s'affiche nativement tant que la lecture n'a pas démarré,
+        // ce qui donne au moins un visuel fixe au lieu d'un carré orange.
+        video.addEventListener('error', reveal, { once: true });
+        // Réseau lent (ni erreur franche, ni lecture qui démarre à temps) :
+        // même filet après un délai raisonnable, pour ne pas laisser le
+        // fond uni affiché indéfiniment pendant un chargement qui traîne.
+        window.setTimeout(() => { if (!video.classList.contains('isReady')) reveal(); }, 6000);
       });
     })();
 
