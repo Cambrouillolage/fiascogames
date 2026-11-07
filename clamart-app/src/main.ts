@@ -128,9 +128,14 @@ function trafficDensityForZoom(zoomFraction: number): { vehicles: number; pedest
 const { w: initW, h: initH } = viewportSize();
 let rig = new IsoCameraRig(initW / initH, 450);
 renderer.setSize(initW, initH);
+let lastSyncedW = initW;
+let lastSyncedH = initH;
 
 function resize() {
   const { w, h } = viewportSize();
+  if (w === lastSyncedW && h === lastSyncedH) return;
+  lastSyncedW = w;
+  lastSyncedH = h;
   renderer.setSize(w, h);
   rig.setAspect(w / h);
 }
@@ -143,6 +148,21 @@ window.addEventListener('resize', resize);
 // pas la cause du bug "badges ovales" signalé — voir badges.ts/
 // merchantPins.ts pour celle-là — mais un vrai trou de robustesse distinct).
 new ResizeObserver(resize).observe(app);
+// renderer.setSize() fixe la taille CSS du canvas en px via un style inline
+// (qui l'emporte sur `width:100%` en CSS, voir style.css) : tant qu'un
+// resize()/ResizeObserver n'a pas eu l'occasion de tourner, le canvas peut
+// rester bloqué sur une ancienne taille alors que `#app` (en 100dvh) a déjà
+// changé — ex. barre d'outils mobile qui se rétracte pile au moment du tap.
+// Dans ce court intervalle, le raycast (basé sur la taille actuelle lue à
+// l'instant T) et le rendu réel (toujours à l'ancienne taille) sont
+// désynchronisés : le tap sur un badge peut alors rater sa cible sans
+// réaction visible ("rien ne se passe", signalé sur Android/Samsung).
+// Appeler resize() en traitant chaque pointerdown élimine cette fenêtre de
+// course : pas cher (no-op si la taille n'a pas changé), donc exécuté à
+// chaque tap plutôt que de dépendre uniquement d'un évènement resize externe.
+function syncViewportBeforeInteraction() {
+  resize();
+}
 
 let badges: THREE.Sprite[] = [];
 let merchantPins: MerchantPin[] = [];
@@ -424,6 +444,7 @@ function setupInteraction() {
   }
 
   canvas.addEventListener('pointerdown', (e) => {
+    syncViewportBeforeInteraction();
     dismissZoomHint();
     canvas.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -477,6 +498,7 @@ function setupInteraction() {
       downPoint &&
       Math.hypot(e.clientX - downPoint.x, e.clientY - downPoint.y) < TAP_THRESHOLD_PX
     ) {
+      syncViewportBeforeInteraction();
       const { w, h } = viewportSize();
       // Mode "zones de quartier" (très dézoomé, voir applyQuartierMode) :
       // taper une zone/étiquette zoome directement dessus, pour les
