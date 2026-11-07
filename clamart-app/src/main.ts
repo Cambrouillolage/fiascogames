@@ -131,8 +131,24 @@ renderer.setSize(initW, initH);
 let lastSyncedW = initW;
 let lastSyncedH = initH;
 
+// Seuil de taille plausible pour un viewport réel (voir le garde-fou
+// ci-dessous) : nettement sous la plus petite largeur/hauteur d'écran
+// imaginable, juste pour écarter une lecture 0/quasi nulle.
+const MIN_PLAUSIBLE_VIEWPORT_PX = 50;
+
 function resize() {
   const { w, h } = viewportSize();
+  // Garde-fou ajouté après un nouveau bug signalé sur iPhone (le tap sur un
+  // badge semblait "dézoomer") suite à l'ajout de la resynchro ci-dessous :
+  // Safari iOS peut renvoyer un clientWidth/clientHeight transitoirement
+  // quasi nul en lisant la mise en page de façon synchrone depuis certains
+  // gestionnaires d'évènements tactiles, avant qu'une mise en page en
+  // attente ne soit terminée. Sans ce filtre, un `h` proche de 0 fait
+  // exploser `w/h` -> frustum beaucoup trop large -> effet "zoom arrière"
+  // immédiat. On ignore silencieusement cette lecture et on retentera au
+  // prochain appel (resize/ResizeObserver/tap suivant) plutôt que de figer
+  // la caméra sur une valeur aberrante.
+  if (w < MIN_PLAUSIBLE_VIEWPORT_PX || h < MIN_PLAUSIBLE_VIEWPORT_PX) return;
   if (w === lastSyncedW && h === lastSyncedH) return;
   lastSyncedW = w;
   lastSyncedH = h;
