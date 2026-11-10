@@ -186,10 +186,14 @@ export function buildQuartiers(
     );
     const geom = flatPolygonGeometry(ringWorldXZ, ZONE_Y);
     if (geom) {
+      // opacity 0, pas de couleur visible du tout (demande explicite : juste
+      // le nom du quartier, plus la zone colorée) — le mesh reste quand même
+      // dans la scène et suit le même `visible` que le label, pour que le tap
+      // "zoome sur ce quartier" (pickQuartier) continue de couvrir toute la
+      // zone géographique, pas juste la petite bulle du nom.
       const material = new THREE.MeshBasicMaterial({
-        color: new THREE.Color(f.color),
         transparent: true,
-        opacity: 0.45,
+        opacity: 0,
         depthTest: false,
         depthWrite: false,
         side: THREE.DoubleSide,
