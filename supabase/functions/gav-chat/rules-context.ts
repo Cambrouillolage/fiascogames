@@ -181,8 +181,11 @@ ou non les points malgré tout.
 - **Jugement refusé** (réponse identique jugée non plausible et jurés
   contre) : 0 point, même si la réponse était identique.
 
-Ces effets se cumulent question par question ; le total du binôme est la
-somme des points de ses deux membres sur les 8 questions.
+Pas de cumul au sein d'une même question : chaque suspect obtient UN seul
+résultat par question (1, 2, 0 ou -1), jamais une somme. Le Super alibi
+double le point (2, pas 1+2), et la correspondance avec la police donne
+-1 point, qui remplace tout le reste (pas 1-1 ni 2-1). Le total du binôme
+est ensuite la somme des points de ses deux membres sur les 8 questions.
 
 ## Délibération et échelle de condamnation
 
