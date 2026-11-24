@@ -51,8 +51,9 @@ la prison, il va falloir survivre à l'interrogatoire !
 
 ### Comptage des points (résumé)
 
-- Même réponse que son binôme : +1 point chacun.
-- Même réponse + Super alibi coché : +2 points pour le joueur qui a coché.
+- Même réponse que son binôme : tu marques 1 point.
+- Même réponse + Super alibi coché : tu doubles les points, tu marques 2
+  points.
 - Réponses différentes : 0 point.
 - Super alibi coché, mais mauvaise intuition (réponses différentes) :
   -1 point pour celui qui a coché.
@@ -194,15 +195,14 @@ l'échelle de condamnation :
 
 | Points du binôme | Verdict |
 |---|---|
-| < 0 pt | Perpétuité |
-| 0 à 4 pts | 20 ans ferme |
-| 5 à 9 pts | 3 ans ferme |
-| 10 à 13 pts | 21 jours ferme |
-| 14 à 15 pts | Libéré(e) sous caution |
-| 16 à 17 pts | Libéré(e) sous caution |
-| ≥ 18 pts | Innocent |
+| Négatif à 2 pts (moins de 3) | Perpétuité |
+| 3 à 6 pts | 20 ans ferme |
+| 7 à 9 pts | 3 ans ferme |
+| 10 à 12 pts | 21 jours ferme |
+| 13 à 14 pts | Bracelet électronique |
+| 15 pts et plus | Innocent |
 
-Le binôme avec le plus de points gagne. Si aucun binôme n'atteint 18
+Le binôme avec le plus de points gagne. Si aucun binôme n'atteint 15
 points (le seuil "Innocent"), c'est la police qui gagne.
 
 On relance ensuite la partie en désignant de nouveaux policiers pour la
