@@ -190,7 +190,11 @@
       width:100%;
       height:100vh;
       height:100dvh;
-      background:var(--orange);
+      /* Poster en fond CSS : visible dès le premier rendu, bien cadré
+         (background-size n'a pas le souci d'object-fit de WebKit), et
+         reste affiché si la vidéo ne démarre jamais. Orange en dessous
+         le temps que l'image arrive. */
+      background:var(--orange) url("../assets/hero-video-poster.jpg") center top / cover no-repeat;
     }
     /* Certains WebKit (Safari iOS) n'appliquent pas tout de suite object-fit
        à la <video> avant que la lecture ne soit réellement démarrée : le
@@ -200,8 +204,8 @@
        d'une image (qui peut rester sujette au même type de rendu
        approximatif selon les moteurs), on la garde simplement invisible
        (opacity:0) tant qu'elle n'est pas confirmée en lecture — seul le
-       fond uni de .heroStage (var(--orange)) est visible en attendant,
-       aucune image ne peut donc jamais s'afficher mal cadrée. Révélée dès
+       fond de .heroStage (le poster en image de fond CSS, bien cadré) est
+       visible en attendant, ou indéfiniment si l'autoplay est bloqué. Révélée dès
        l'évènement `playing` (voir le script en bas de page), sans
        transition : un fondu serait lui-même un changement visuel, l'objectif
        est qu'il n'y en ait aucun. */
@@ -249,12 +253,12 @@
       aspect-ratio:9/16;
       margin:0 auto;
       border-radius:24px;
-      background:#111;
+      background:#111 url("../assets/gav-video-poster.jpg") center / cover no-repeat;
       box-shadow:0 20px 44px rgba(0,0,0,.22);
     }
     /* Même principe fond-uni-puis-révélation que .heroVideo, voir son
-       commentaire — ici c'est le fond sombre de .gavVideoStage qui tient
-       lieu de "fond uni" en attendant. */
+       commentaire — ici c'est le poster en fond de .gavVideoStage qui
+       s'affiche en attendant. */
     .gavVideoEl{
       display:block;
       width:100%;
@@ -1197,11 +1201,10 @@
         id="gavVideoEl"
         src="../assets/gav-video.mp4"
         poster="../assets/gav-video-poster.jpg"
-        autoplay
         muted
         loop
         playsinline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
       ></video>
       <img class="gavVideoBadge" src="../assets/macaron-famille-2026.png" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
@@ -1554,38 +1557,55 @@
         const reveal = () => video.classList.add('isReady');
         if (!video.paused && video.readyState >= 2) reveal();
         else video.addEventListener('playing', reveal, { once: true });
-        // Exposée pour initAutoplayVideos ci-dessous : si l'autoplay est
-        // coupé (prefers-reduced-motion), `playing` ne se déclenchera
-        // jamais — il faut alors révéler la vidéo explicitement, sans quoi
-        // elle resterait invisible indéfiniment derrière le fond uni.
-        video.__reveal = reveal;
-        // Sans réseau (ou requête qui échoue), `playing` ne se déclenche
-        // jamais non plus : sans ce filet, le fond uni restait affiché
-        // indéfiniment, sans poster ni rien d'autre — perçu comme un bug
-        // plutôt qu'un simple souci de chargement (signalé par l'utilisateur
-        // pour le hero). On révèle alors la vidéo quand même : son attribut
-        // `poster` s'affiche nativement tant que la lecture n'a pas démarré,
-        // ce qui donne au moins un visuel fixe au lieu d'un carré orange.
-        video.addEventListener('error', reveal, { once: true });
-        // Réseau lent (ni erreur franche, ni lecture qui démarre à temps) :
-        // même filet après un délai raisonnable, pour ne pas laisser le
-        // fond uni affiché indéfiniment pendant un chargement qui traîne.
-        window.setTimeout(() => { if (!video.classList.contains('isReady')) reveal(); }, 6000);
+        // Pas de filet "révéler quand même" (erreur, délai) : si la lecture
+        // ne démarre jamais, la vidéo reste invisible et c'est le poster en
+        // fond CSS de son cadre qui reste affiché, bien cadré.
       });
     })();
 
-    // Coupe l'autoplay si l'utilisateur a demandé moins de mouvement, avant
-    // même que la lecture ne démarre, et révèle quand même la vidéo (elle
-    // affichera alors son poster natif, statique, au lieu de jouer).
-    (function initAutoplayVideos(){
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      ['heroVideo', 'gavVideoEl'].forEach((id) => {
-        const video = document.getElementById(id);
-        if (!video) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Hero : l'attribut autoplay échoue en silence quand le navigateur bloque
+    // la lecture (mode économie d'énergie iOS, navigateurs intégrés aux apps,
+    // économiseur de données…), sans jamais réessayer — hero resté figé
+    // environ une fois sur trois. On appelle play()
+    // explicitement et, en cas de refus, on retente au premier geste de
+    // l'utilisateur (seul moment où ces navigateurs l'autorisent).
+    (function initHeroAutoplay(){
+      const video = document.getElementById('heroVideo');
+      if (!video) return;
+      if (prefersReducedMotion) {
         video.removeAttribute('autoplay');
         video.pause();
-        video.__reveal?.();
-      });
+        return;
+      }
+      const retryOnGesture = () => {
+        const events = ['touchstart', 'pointerdown', 'keydown', 'scroll'];
+        const retry = () => {
+          events.forEach((e) => window.removeEventListener(e, retry));
+          video.play().catch(() => {});
+        };
+        events.forEach((e) => window.addEventListener(e, retry, { once: true, passive: true }));
+      };
+      const attempt = video.play();
+      if (attempt) attempt.catch(retryOnGesture);
+    })();
+
+    // "GAV en pleine partie" (14,8 Mo) : plus d'autoplay ni de préchargement
+    // dans le HTML — téléchargée en même temps que le hero, elle lui volait
+    // la bande passante et retardait son démarrage. Lancée seulement à
+    // l'approche de sa section.
+    (function initLazyGavVideo(){
+      const video = document.getElementById('gavVideoEl');
+      if (!video || prefersReducedMotion) return;
+      const start = () => video.play().catch(() => {});
+      if (!('IntersectionObserver' in window)) { start(); return; }
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        start();
+      }, { rootMargin: '400px 0px' });
+      observer.observe(video);
     })();
 
     // Vidéo du hero accélérée à x1,20 sur toute sa durée.
