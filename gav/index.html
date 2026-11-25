@@ -190,8 +190,12 @@
       position:relative;
       overflow:hidden;
       width:100%;
+      /* svh (petit viewport, barre d'adresse affichée) plutôt que dvh :
+         dvh change de valeur pendant le scroll quand la barre d'adresse
+         mobile se replie, ce qui redimensionnait le hero et donnait un
+         effet de zoom. 100vh en repli pour les navigateurs sans svh. */
       height:100vh;
-      height:100dvh;
+      height:100svh;
       /* Poster en fond CSS : visible dès le premier rendu, bien cadré
          (background-size n'a pas le souci d'object-fit de WebKit), et
          reste affiché si la vidéo ne démarre jamais. Orange en dessous
@@ -1259,12 +1263,12 @@
 <body>
   <div class="tickerBar" aria-hidden="true">
     <div class="tickerTrack">
-      <span class="tickerItem">GAV — LE JEU D'AMBIANCE DE LA GARDE À VUE</span>
-      <span class="tickerItem">✦ DISPONIBLE SUR AMAZON &amp; PHILIBERT ✦</span>
-      <span class="tickerItem">IL Y A TOUJOURS UNE BONNE RAISON DE JOUER À GAV</span>
-      <span class="tickerItem">GAV — LE JEU D'AMBIANCE DE LA GARDE À VUE</span>
-      <span class="tickerItem">✦ DISPONIBLE SUR AMAZON &amp; PHILIBERT ✦</span>
-      <span class="tickerItem">IL Y A TOUJOURS UNE BONNE RAISON DE JOUER À GAV</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">-20 %</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">-20 %</span>
     </div>
   </div>
 
@@ -1275,7 +1279,7 @@
         <video
           class="heroVideo"
           id="heroVideo"
-          src="../assets/hero-frames/GAV_animation_9x16.mp4"
+          src="../assets/hero-frames/GAV_animation_9x16-720.mp4"
           poster="../assets/hero-video-poster.jpg"
           autoplay
           muted
@@ -1944,6 +1948,37 @@
       addMessage("assistant", "Salut 👋 Pose-moi ta question sur GAV, je te réponds à partir des règles officielles.");
     })();
 
+    // Plausible : événement "Scroll" envoyé une fois par palier de
+    // profondeur (25/50/75/100 %). Un événement personnalisé compte comme
+    // une interaction pour Plausible : un visiteur qui scrolle n'est donc
+    // plus compté comme un rebond, et le taux de rebond devient "partis
+    // sans scroller". Nécessite l'objectif "Scroll" dans Plausible.
+    (function initScrollDepthTracking(){
+      const THRESHOLDS = [25, 50, 75, 100];
+      const sent = new Set();
+      let ticking = false;
+      function check(){
+        ticking = false;
+        const doc = document.documentElement;
+        const scrollable = doc.scrollHeight - window.innerHeight;
+        if (scrollable <= 0) return;
+        const percent = Math.min(100, Math.round((window.scrollY / scrollable) * 100));
+        THRESHOLDS.forEach((t) => {
+          if (percent >= t && !sent.has(t)){
+            sent.add(t);
+            if (window.plausible) plausible('Scroll', { props: { profondeur: t + ' %' } });
+          }
+        });
+        if (sent.size === THRESHOLDS.length) window.removeEventListener('scroll', onScroll);
+      }
+      function onScroll(){
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(check);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+
     // Vidéo du hero accélérée à x1,20 sur toute sa durée.
     (function speedUpHeroVideo(){
       const video = document.getElementById('heroVideo');
@@ -2157,6 +2192,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
+    // ScrollTrigger a son propre rafraîchissement interne, déclenché aussi
+    // par le "resize" hauteur-seule de la barre d'adresse mobile pendant le
+    // scroll (recalculs → sauts/zoom). Réglé ici, une seule fois pour toute
+    // la page, avant la création de tout ScrollTrigger.
+    if (window.ScrollTrigger) ScrollTrigger.config({ ignoreMobileResize: true });
+
     // Section "Occasions" : scrollytelling piloté par GSAP ScrollTrigger.
     // Le HTML/CSS sert déjà un repli correct (lecture empilée normale) —
     // on n'active la version épinglée/animée que si GSAP a bien chargé
@@ -2169,13 +2210,6 @@
       if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') return;
 
       gsap.registerPlugin(ScrollTrigger);
-      // Renfort en plus du garde-fou largeur/hauteur sur notre propre
-      // listener resize plus bas : ScrollTrigger a son propre rafraîchissement
-      // interne (indépendant de notre code) qui peut aussi être déclenché par
-      // le même "resize" hauteur-seule de la barre d'adresse mobile — cette
-      // option lui dit explicitement de l'ignorer. Mis ici (avant toute
-      // création de ScrollTrigger sur la page) pour s'appliquer globalement.
-      ScrollTrigger.config({ ignoreMobileResize: true });
 
       const stage = document.getElementById('occStage');
       const boxWrap = document.getElementById('occBoxWrap');
