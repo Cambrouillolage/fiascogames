@@ -32,8 +32,10 @@
   <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
 
   <link rel="icon" type="image/png" href="../assets/GAV1.png" />
-  <link rel="preload" as="image" href="../assets/interrogatoire-indices-a-dechiffrer.png" />
-  <link rel="preload" as="image" href="../assets/Sous-titre.png" />
+  <!-- Seul préchargement de la page : le poster du hero (fond de son cadre
+       en attendant la vidéo), en priorité haute. Tout le reste des images
+       est en lazy pour laisser la bande passante au hero. -->
+  <link rel="preload" as="image" href="../assets/hero-video-poster.jpg" fetchpriority="high" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -646,8 +648,10 @@
     }
 
     /* ===== Section "Alibi" : photo plein écran + mot qui tourne =====
-       5 <img> empilées (object-fit:cover), toutes chargées dès le départ
-       (pas de display:none) pour éviter tout flash blanc au changement.
+       5 <img> empilées (object-fit:cover), en loading="lazy" pour ne pas
+       concurrencer le hero : comme aucune n'est en display:none, le
+       navigateur les charge toutes ensemble à l'approche de la section,
+       bien avant qu'elle ne s'affiche — pas de flash blanc au changement.
        Transition en "balayage" via clip-path (pas un fondu classique) :
        la photo entrante est clippée à 100% depuis la gauche (invisible),
        passe à 0% (pleinement visible) — l'effet balaie depuis la droite,
@@ -1286,8 +1290,8 @@
     <div class="container">
       <p class="heroRotator">Qui vous fera confiance en Garde à vue&nbsp;?</p>
       <div class="heroBoxWrap">
-        <img class="heroBoxBelow" src="../assets/gav-box-cutout.png" alt="La boîte du jeu de société GAV" loading="lazy" />
-        <img class="heroBoxBadge" src="../assets/macaron-famille-2026.png" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
+        <img class="heroBoxBelow" src="../assets/gav-box-cutout-560.png" width="560" height="560" decoding="async" alt="La boîte du jeu de société GAV" loading="lazy" />
+        <img class="heroBoxBadge" src="../assets/macaron-famille-2026-400.png" width="400" height="400" decoding="async" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
       </div>
       <p class="heroPrice">19,99&nbsp;€</p>
       <p class="heroStats">3 à 30 joueurs · à partir de 10 ans · 15 min par partie</p>
@@ -1349,7 +1353,7 @@
         preload="none"
         aria-hidden="true"
       ></video>
-      <img class="gavVideoBadge" src="../assets/macaron-famille-2026.png" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
+      <img class="gavVideoBadge" src="../assets/macaron-famille-2026-400.png" width="400" height="400" decoding="async" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
       <button type="button" class="gavVideoSoundBtn" id="gavVideoSoundBtn" aria-label="Activer le son de la vidéo" aria-pressed="false">🔇</button>
     </div>
     <a class="heroRulesLink" href="video/" data-ga-id="gav_hero_rules_link">Voir les règles en détail →</a>
@@ -1396,7 +1400,7 @@
       </article>
 
       <div class="occBoxWrap" id="occBoxWrap" aria-hidden="true">
-        <img class="occBoxImg" src="../assets/box_GAV3.png" alt="" loading="lazy" />
+        <img class="occBoxImg" src="../assets/box_GAV3-520.png" width="520" height="735" decoding="async" alt="" loading="lazy" />
       </div>
 
       <article class="occStep" data-step="1" data-bg="orange">
@@ -1454,7 +1458,7 @@
             <h3 class="howStepTitle">Chacun prépare son plan.</h3>
           </div>
           <div class="howIllu" id="howIllu1">
-            <img class="howImg" id="howImg1" src="../assets/interrogatoire-indices-a-dechiffrer.png" alt="Le policier prépare ses questions à l'aide du carnet d'enquête et des cartes Preuves pendant que les suspects discutent de leur alibi par binôme, séparés par la vitre" loading="eager" />
+            <img class="howImg" id="howImg1" src="../assets/interrogatoire-indices-a-dechiffrer.jpg" width="1200" height="900" decoding="async" alt="Le policier prépare ses questions à l'aide du carnet d'enquête et des cartes Preuves pendant que les suspects discutent de leur alibi par binôme, séparés par la vitre" loading="lazy" />
             <span class="howGlow" aria-hidden="true"></span>
           </div>
           <p class="howStepDesc">La police prépare ses 8 questions à l'aide des cartes Preuves, pendant que les suspects disposent de 3 minutes pour préparer leur alibi en binôme.</p>
@@ -1466,7 +1470,7 @@
             <h3 class="howStepTitle">Pensez comme votre complice&nbsp;!</h3>
           </div>
           <div class="howIllu" id="howIllu2">
-            <img class="howImg" id="howImg2" src="../assets/Sous-titre.png" alt="Le policier interroge les quatre suspects réunis autour de la table, chacun répondant à voix haute avec les cartes Preuves" loading="eager" />
+            <img class="howImg" id="howImg2" src="../assets/sous-titre.jpg" width="1200" height="835" decoding="async" alt="Le policier interroge les quatre suspects réunis autour de la table, chacun répondant à voix haute avec les cartes Preuves" loading="lazy" />
             <span class="howGlow" aria-hidden="true"></span>
           </div>
           <p class="howStepDesc">Pendant l'interrogatoire, les suspects doivent donner exactement les mêmes réponses que leur binôme… sans répondre comme la police&nbsp;!</p>
@@ -1524,11 +1528,11 @@
 
   <section class="alibiSection" id="alibiSection" aria-label="Aurez-vous le même alibi ?">
     <div class="alibiBg">
-      <img class="alibiSlide isActive" src="../assets/alibi-photos/boss.jpg" alt="" loading="eager" />
-      <img class="alibiSlide" src="../assets/alibi-photos/papa.jpg" alt="" loading="eager" />
-      <img class="alibiSlide" src="../assets/alibi-photos/amis.jpg" alt="" loading="eager" />
-      <img class="alibiSlide" src="../assets/alibi-photos/collegues.jpg" alt="" loading="eager" />
-      <img class="alibiSlide" src="../assets/alibi-photos/grands-parents.jpg" alt="" loading="eager" />
+      <img class="alibiSlide isActive" src="../assets/alibi-photos/boss-web.jpg" alt="" loading="lazy" decoding="async" />
+      <img class="alibiSlide" src="../assets/alibi-photos/papa-web.jpg" alt="" loading="lazy" decoding="async" />
+      <img class="alibiSlide" src="../assets/alibi-photos/amis-web.jpg" alt="" loading="lazy" decoding="async" />
+      <img class="alibiSlide" src="../assets/alibi-photos/collegues-web.jpg" alt="" loading="lazy" decoding="async" />
+      <img class="alibiSlide" src="../assets/alibi-photos/grands-parents-web.jpg" alt="" loading="lazy" decoding="async" />
     </div>
     <div class="alibiScrim" aria-hidden="true"></div>
     <div class="alibiTextWrap">
