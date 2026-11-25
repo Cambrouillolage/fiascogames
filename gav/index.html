@@ -267,6 +267,140 @@
       opacity:0;
     }
     .gavVideoEl.isReady{ opacity:1; }
+
+    /* ===== Chat IA "Une question sur le jeu ?" =====
+       Même chat que gav/video/ (même Edge Function gav-chat, même
+       conversation partagée via localStorage), même recette "bonbon" que
+       .faqItem : bordure + ombre portée dure. */
+    .gavChatSection{ background:var(--bg-2); padding:44px 0; }
+    .gavChatSection .gavVideoTitle{ text-align:center; }
+    .gavChatLead{
+      margin:-12px auto 20px;
+      text-align:center;
+      color:var(--muted);
+      font-weight:600;
+      font-size:15px;
+    }
+    .gavChatWrap{ max-width:640px; margin:0 auto; }
+    .chatCard{
+      border:2px solid #dba25a;
+      border-radius:16px;
+      background:#fffbf2;
+      box-shadow:4px 5px 0 #c9822f;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      text-align:left;
+    }
+    .chatMessages{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:18px;
+      max-height:52vh;
+      min-height:140px;
+      overflow-y:auto;
+    }
+    .msg{
+      max-width:88%;
+      padding:10px 14px;
+      border-radius:14px;
+      line-height:1.45;
+      font-size:14.5px;
+      white-space:pre-wrap;
+    }
+    .msg.user{
+      align-self:flex-end;
+      background:linear-gradient(180deg, var(--orange-2), var(--orange));
+      color:#fff;
+      border-bottom-right-radius:4px;
+    }
+    .msg.assistant{
+      align-self:flex-start;
+      background:var(--white);
+      border:1px solid var(--line);
+      color:var(--ink);
+      border-bottom-left-radius:4px;
+    }
+    .msg.error{
+      align-self:flex-start;
+      background:#fdecea;
+      border:1px solid #e6a19a;
+      color:#7a2a20;
+      border-bottom-left-radius:4px;
+    }
+    .msg.error a{color:#7a2a20; font-weight:800}
+    .typing{
+      align-self:flex-start;
+      display:inline-flex;
+      gap:4px;
+      padding:12px 14px;
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:14px;
+      border-bottom-left-radius:4px;
+    }
+    .typing span{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--muted);
+      animation:chatBlink 1.2s infinite ease-in-out;
+    }
+    .typing span:nth-child(2){animation-delay:.2s}
+    .typing span:nth-child(3){animation-delay:.4s}
+    @keyframes chatBlink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+    .suggestions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      padding:0 18px 14px;
+    }
+    .suggestionChip{
+      border:1px solid var(--line);
+      background:var(--white);
+      color:var(--ink);
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:12.5px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease;
+    }
+    .suggestionChip:hover{background:var(--bg-2); transform:translateY(-1px)}
+    .chatInputRow{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      padding:14px;
+      border-top:2px solid var(--line);
+      background:var(--bg-2);
+    }
+    /* 16px minimum : en dessous, Safari iOS zoome sur la page au focus. */
+    .chatInputRow textarea{
+      flex:1;
+      resize:none;
+      border:2px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      font-family:inherit;
+      font-size:16px;
+      line-height:1.4;
+      max-height:120px;
+      background:var(--white);
+      color:var(--ink);
+    }
+    .chatInputRow textarea:focus{outline:2px solid var(--orange-2); outline-offset:1px}
+    .chatSendBtn{ padding:11px 18px; font-size:13px; white-space:nowrap; }
+    .chatSendBtn:disabled{opacity:.55; cursor:not-allowed; transform:none}
+    .chatDisclaimer{
+      margin:14px 2px 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    @media (max-width:640px){
+      .chatMessages{max-height:60vh}
+      .msg{max-width:94%}
+    }
     .gavVideoBadge{
       position:absolute;
       z-index:2;
@@ -1213,6 +1347,34 @@
     <a class="heroRulesLink" href="video/" data-ga-id="gav_hero_rules_link">Voir les règles en détail →</a>
   </section>
 
+  <section class="gavChatSection" id="question" aria-label="Une question sur le jeu ?">
+    <div class="container">
+      <h2 class="gavVideoTitle">Une question sur le jeu&nbsp;?</h2>
+      <p class="gavChatLead">Pose ta question, l'assistant te répond à partir des règles officielles.</p>
+      <div class="gavChatWrap">
+        <div class="chatCard">
+          <div class="chatMessages" id="chatMessages" role="log" aria-live="polite"></div>
+          <div class="suggestions" id="chatSuggestions">
+            <button type="button" class="suggestionChip" data-ga-id="gav_home_chat_suggestion_1">On peut jouer à combien ?</button>
+            <button type="button" class="suggestionChip" data-ga-id="gav_home_chat_suggestion_2">À partir de quel âge ?</button>
+            <button type="button" class="suggestionChip" data-ga-id="gav_home_chat_suggestion_3">Comment on compte les points ?</button>
+          </div>
+          <form class="chatInputRow" id="chatForm">
+            <textarea
+              id="chatInput"
+              rows="1"
+              maxlength="500"
+              placeholder="Pose ta question…"
+              aria-label="Ta question"
+              required></textarea>
+            <button type="submit" class="btn btnPrimary chatSendBtn" id="chatSend" data-ga-id="gav_home_chat_send_click">Envoyer</button>
+          </form>
+        </div>
+        <p class="chatDisclaimer">Les réponses sont générées automatiquement à partir des règles du jeu. En cas de doute, la boîte de jeu fait toujours foi — tu peux aussi nous écrire à <a href="mailto:contact@fiascogames.fr">contact@fiascogames.fr</a>. Tes échanges avec l'assistant peuvent être conservés pour améliorer le service (voir notre <a href="../politique-confidentialite.html">politique de confidentialité</a>).</p>
+      </div>
+    </div>
+  </section>
+
   <section class="occasionSection" id="occasionSection" aria-label="On a toujours une bonne raison de jouer">
     <div class="occStage" id="occStage">
       <article class="occStep occStep--intro" data-step="0" data-bg="cream">
@@ -1606,6 +1768,168 @@
         start();
       }, { rootMargin: '400px 0px' });
       observer.observe(video);
+    })();
+
+    // Chat IA "Une question sur le jeu ?" : même logique que gav/video/
+    // (même Edge Function, même identifiant de conversation en
+    // localStorage, donc conversation commune aux deux pages).
+    (function initGavChat(){
+      const SUPABASE_URL = "https://wrguanxvvpqzoaesxcfk.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZ3Vhbnh2dnBxem9hZXN4Y2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MjEwMjIsImV4cCI6MjEwMzM5NzAyMn0.NsODcMAh2J-nUD6dGheZOeF4ykXl-e3aKCONCNyvLUg";
+      const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/gav-chat`;
+      const STORAGE_KEY = "gavChatSessionId";
+
+      const messagesEl = document.getElementById("chatMessages");
+      const suggestionsEl = document.getElementById("chatSuggestions");
+      const formEl = document.getElementById("chatForm");
+      const inputEl = document.getElementById("chatInput");
+      const sendBtn = document.getElementById("chatSend");
+      if (!messagesEl || !formEl || !inputEl || !sendBtn) return;
+
+      function getConversationId() {
+        try {
+          let id = localStorage.getItem(STORAGE_KEY);
+          if (!id) {
+            id = crypto.randomUUID();
+            localStorage.setItem(STORAGE_KEY, id);
+          }
+          return id;
+        } catch (e) {
+          // Stockage bloqué (navigation privée stricte…) : conversation
+          // propre à cet onglet.
+          window.__gavChatId = window.__gavChatId || crypto.randomUUID();
+          return window.__gavChatId;
+        }
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // Échappe d'abord (le message d'un visiteur ne doit jamais injecter de
+      // HTML), puis un minimum de markdown sur le texte échappé — voir le
+      // détail dans gav/video/index.html.
+      function formatMessageHtml(text) {
+        let safe = escapeHtml(text);
+        const placeholders = [];
+        safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => {
+          const token = String.fromCharCode(0xE000 + placeholders.length);
+          placeholders.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+          return token;
+        });
+        safe = safe.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        safe = safe.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+        safe = safe.replace(/([\w.+-]+@[\w-]+\.[\w.-]+)/g, '<a href="mailto:$1">$1</a>');
+        safe = safe.replace(
+          /(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g,
+          '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+        );
+        safe = safe.replace(/[-]/g, (ch) => placeholders[ch.codePointAt(0) - 0xE000]);
+        return safe;
+      }
+
+      function appendEl(el) {
+        messagesEl.appendChild(el);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        return el;
+      }
+
+      function addMessage(role, text) {
+        const el = document.createElement("div");
+        el.className = "msg " + role;
+        el.innerHTML = formatMessageHtml(text);
+        return appendEl(el);
+      }
+
+      function addErrorMessage(text) {
+        const el = document.createElement("div");
+        el.className = "msg error";
+        el.innerHTML = escapeHtml(text) + ' <a href="#faq">Voir la FAQ</a>.';
+        return appendEl(el);
+      }
+
+      function showTyping() {
+        const el = document.createElement("div");
+        el.className = "typing";
+        el.id = "typingIndicator";
+        el.innerHTML = "<span></span><span></span><span></span>";
+        appendEl(el);
+      }
+
+      function hideTyping() {
+        document.getElementById("typingIndicator")?.remove();
+      }
+
+      async function sendMessage(text) {
+        if (window.gtag) {
+          gtag("event", "chat_message_sent", { cta_page: location.pathname });
+        }
+        addMessage("user", text);
+        inputEl.value = "";
+        inputEl.style.height = "auto";
+        inputEl.disabled = true;
+        sendBtn.disabled = true;
+        showTyping();
+
+        try {
+          const res = await fetch(FUNCTION_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({ conversationId: getConversationId(), message: text }),
+          });
+          hideTyping();
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            addErrorMessage(data.error || "Une erreur est survenue.");
+            return;
+          }
+          const data = await res.json();
+          addMessage("assistant", data.reply);
+        } catch (err) {
+          hideTyping();
+          addErrorMessage("Impossible de contacter l'assistant pour le moment.");
+        } finally {
+          inputEl.disabled = false;
+          sendBtn.disabled = false;
+          inputEl.focus();
+        }
+      }
+
+      formEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = inputEl.value.trim();
+        if (!text) return;
+        sendMessage(text);
+      });
+
+      inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          formEl.requestSubmit();
+        }
+      });
+
+      inputEl.addEventListener("input", () => {
+        inputEl.style.height = "auto";
+        inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+      });
+
+      suggestionsEl?.addEventListener("click", (e) => {
+        const chip = e.target.closest(".suggestionChip");
+        if (!chip) return;
+        sendMessage(chip.textContent);
+        suggestionsEl.remove();
+      });
+
+      // Message d'accueil (local, non envoyé/persisté).
+      addMessage("assistant", "Salut 👋 Pose-moi ta question sur GAV, je te réponds à partir des règles officielles.");
     })();
 
     // Vidéo du hero accélérée à x1,20 sur toute sa durée.
