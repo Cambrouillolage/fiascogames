@@ -108,7 +108,10 @@
     .tickerTrack{
       display:flex;
       width:max-content;
-      animation: tickerScroll 22s linear infinite;
+      /* Le contenu (2 messages) est répété 6 fois par moitié pour
+         couvrir les écrans très larges sans vide en fin de piste ; la
+         durée est ajustée pour garder la même vitesse qu'avant. */
+      animation: tickerScroll 46s linear infinite;
     }
     .tickerItem{
       flex:0 0 auto;
@@ -126,6 +129,7 @@
     }
     @media (prefers-reduced-motion: reduce){
       .tickerTrack{ animation:none; flex-wrap:wrap; width:auto; justify-content:center; }
+      .tickerItem:nth-child(n+3){ display:none; }
     }
 
     /* ===== Nav =====
@@ -397,12 +401,6 @@
     .chatInputRow textarea:focus{outline:2px solid var(--orange-2); outline-offset:1px}
     .chatSendBtn{ padding:11px 18px; font-size:13px; white-space:nowrap; }
     .chatSendBtn:disabled{opacity:.55; cursor:not-allowed; transform:none}
-    .chatDisclaimer{
-      margin:14px 2px 0;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.5;
-    }
     @media (max-width:640px){
       .chatMessages{max-height:60vh}
       .msg{max-width:94%}
@@ -1265,10 +1263,28 @@
     <div class="tickerTrack">
       <span class="tickerItem">LIVRÉ AVANT NOËL</span>
       <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">-20 %</span>
       <span class="tickerItem">LIVRÉ AVANT NOËL</span>
       <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">-20 %</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
+      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
     </div>
   </div>
 
@@ -1386,7 +1402,6 @@
             <button type="submit" class="btn btnPrimary chatSendBtn" id="chatSend" data-ga-id="gav_home_chat_send_click">Envoyer</button>
           </form>
         </div>
-        <p class="chatDisclaimer">Les réponses sont générées automatiquement à partir des règles du jeu. En cas de doute, la boîte de jeu fait toujours foi — tu peux aussi nous écrire à <a href="mailto:contact@fiascogames.fr">contact@fiascogames.fr</a>. Tes échanges avec l'assistant peuvent être conservés pour améliorer le service (voir notre <a href="../politique-confidentialite.html">politique de confidentialité</a>).</p>
       </div>
     </div>
   </section>
