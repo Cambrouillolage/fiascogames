@@ -811,8 +811,16 @@
     .occBoxImg{ display:block; width:min(46vw, 260px); height:auto; aspect-ratio:1414/2000; filter:drop-shadow(0 18px 30px rgba(0,0,0,.28)); }
 
     /* --- Mode "enhanced" (JS + GSAP + mouvement autorisé) --- */
+    /* Épinglage en CSS (sticky) plutôt qu'avec le pin de ScrollTrigger :
+       le pin JS bascule la scène en position:fixed au début de la section,
+       et sur mobile le scroll au doigt (géré hors du thread JS) prend de
+       l'avance sur ce basculement — la scène dépassait puis "sautait" en
+       place. Le sticky est géré par le navigateur lui-même, sans décalage.
+       La hauteur de la section (scène + distance de scroll de l'animation)
+       est fixée par le JS. */
     .occasionSection.isEnhanced .occStage{
-      position:relative;
+      position:sticky;
+      top:0;
       height:100vh;
       overflow:hidden;
     }
@@ -2290,14 +2298,21 @@
           }
         });
 
+        // Distance de scroll de l'animation : la section fait la hauteur de
+        // la scène + cette distance, et la scène (sticky) reste collée en
+        // haut pile pendant ce temps-là — l'animation se termine donc
+        // exactement quand la scène se décolle et repart avec la page.
+        const scrollDistance = Math.round(window.innerHeight * (totalLeg / LEG));
+        section.style.height = (stage.offsetHeight + scrollDistance) + 'px';
+
         st = ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: () => '+=' + (window.innerHeight * (totalLeg / LEG)),
-          scrub: 1,
-          pin: stage,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
+          end: '+=' + scrollDistance,
+          // Lissage court : assez pour adoucir le scroll, mais l'animation
+          // ne continue plus de bouger une seconde après que le doigt s'est
+          // arrêté (scrub:1 donnait cet effet de "rattrapage").
+          scrub: 0.3,
           animation: tl,
         });
       }
@@ -2325,7 +2340,12 @@
         if (window.innerWidth === lastWidth) return;
         lastWidth = window.innerWidth;
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(build, 200);
+        resizeTimer = setTimeout(() => {
+          build();
+          // La hauteur de la section a changé : les déclencheurs des
+          // sections suivantes doivent être recalculés.
+          ScrollTrigger.refresh();
+        }, 200);
       });
 
       window.addEventListener('pagehide', () => {
