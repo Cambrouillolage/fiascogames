@@ -1,12 +1,37 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>GAV Sheet - Redirection</title>
-  <meta http-equiv="refresh" content="0;url=/gav/feuille/">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Redirection vers /gav/feuille/. GitHub Pages ne permet pas de vraie
+       redirection serveur : le script part en premier pour être le plus
+       rapide possible, conserve ?paramètres et #ancre (fbclid, utm_*…
+       indispensables au suivi des pubs) et utilise replace() pour ne pas
+       laisser cette page dans l'historique (le bouton Retour ne ramène pas
+       ici en boucle). Le meta refresh n'est qu'un secours sans JavaScript.
+       Les balises de partage sont copiées de la page cible pour que les
+       aperçus Facebook/Instagram/WhatsApp soient corrects même si leur
+       robot ne suit pas la redirection. -->
+  <script>location.replace("/gav/feuille/" + location.search + location.hash);</script>
+  <meta http-equiv="refresh" content="0; url=/gav/feuille/" />
+  <title>Feuilles de score GAV – Jeu de société garde à vue</title>
+  <meta name="robots" content="noindex,follow" />
+  <link rel="canonical" href="https://fiascogames.fr/gav/feuille/" />
+  <meta name="description" content="Feuillets interactifs pour jouer à GAV, le jeu de société d'ambiance sur la garde à vue : calcul des points automatique pour la police et les suspects." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="Feuilles de score GAV – Jeu de société garde à vue" />
+  <meta property="og:description" content="Feuillets interactifs pour jouer à GAV, le jeu de société d'ambiance sur la garde à vue : calcul des points automatique." />
+  <meta property="og:url" content="https://fiascogames.fr/gav/feuille/" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
+  <meta property="og:image:alt" content="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Feuilles de score GAV – Jeu de société garde à vue" />
+  <meta name="twitter:description" content="Feuillets interactifs pour jouer à GAV : calcul des points automatique pour la police et les suspects." />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
 </head>
 <body>
-  <p>Redirection vers <a href="/gav/feuille/">/gav/feuille/</a></p>
+  <noscript><p>Redirection vers <a href="/gav/feuille/">/gav/feuille/</a>…</p></noscript>
 </body>
 </html>

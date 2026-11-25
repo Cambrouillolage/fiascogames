@@ -1,14 +1,37 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>GAV - Redirection</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Redirection vers /gav/. GitHub Pages ne permet pas de vraie
+       redirection serveur : le script part en premier pour être le plus
+       rapide possible, conserve ?paramètres et #ancre (fbclid, utm_*…
+       indispensables au suivi des pubs) et utilise replace() pour ne pas
+       laisser cette page dans l'historique (le bouton Retour ne ramène pas
+       ici en boucle). Le meta refresh n'est qu'un secours sans JavaScript.
+       Les balises de partage sont copiées de la page cible pour que les
+       aperçus Facebook/Instagram/WhatsApp soient corrects même si leur
+       robot ne suit pas la redirection. -->
+  <script>location.replace("/gav/" + location.search + location.hash);</script>
+  <meta http-equiv="refresh" content="0; url=/gav/" />
+  <title>GAV – Jeu de société d'ambiance garde à vue entre amis</title>
   <meta name="robots" content="noindex,follow" />
-  <meta http-equiv="refresh" content="0;url=/gav/">
   <link rel="canonical" href="https://fiascogames.fr/gav/" />
+  <meta name="description" content="GAV est un jeu de société d'ambiance simple et drôle : donnez le même alibi que votre complice lors de la garde à vue, sinon direction la prison !" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="Fiasco Games" />
+  <meta property="og:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
+  <meta property="og:description" content="GAV est un jeu de société d'ambiance simple et drôle : donnez le même alibi que votre complice lors de la garde à vue, sinon direction la prison !" />
+  <meta property="og:url" content="https://fiascogames.fr/gav/" />
+  <meta property="og:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
+  <meta property="og:image:alt" content="La boîte du jeu de société GAV dans une salle d'interrogatoire de garde à vue" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GAV – Jeu de société d'ambiance garde à vue entre amis" />
+  <meta name="twitter:description" content="Donnez le même alibi que votre complice lors de la garde à vue... sinon direction la prison !" />
+  <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
 </head>
 <body>
-  <p>Redirection vers <a href="/gav/">/gav/</a></p>
+  <noscript><p>Redirection vers <a href="/gav/">/gav/</a>…</p></noscript>
 </body>
 </html>
