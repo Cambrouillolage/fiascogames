@@ -32,12 +32,15 @@
   <meta name="twitter:image" content="https://fiascogames.fr/assets/hero-poster.jpg" />
 
   <link rel="icon" type="image/png" href="../assets/GAV1.png" />
-  <!-- Seul préchargement de la page : le poster du hero (fond de son cadre
-       en attendant la vidéo), en priorité haute. Tout le reste des images
-       est en lazy pour laisser la bande passante au hero. -->
-  <link rel="preload" as="image" href="../assets/hero-video-poster.jpg" fetchpriority="high" />
+  <!-- Seul préchargement de la page : la boîte du hero (seule image du
+       premier écran), en priorité haute. Tout le reste des images est en
+       lazy pour laisser la bande passante au hero. -->
+  <link rel="preload" as="image" href="../assets/gav-box-cutout-560.png" imagesrcset="../assets/gav-box-cutout-560.png 560w, ../assets/gav-box-cutout-840.png 840w" imagesizes="(min-width: 559px) 380px, 68vw" fetchpriority="high" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Police du titre du hero (premier écran) : préchargée pour éviter
+       que le titre ne s'affiche d'abord en Anton puis change de police. -->
+  <link rel="preload" as="font" type="font/woff" href="../assets/fonts/jolley.woff" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
   <script src="../assets/analytics.js"></script>
   <!-- Privacy-friendly analytics by Plausible -->
@@ -99,43 +102,7 @@
       overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
     }
 
-    /* ===== Bandeau déroulant ===== */
-    .tickerBar{
-      overflow:hidden;
-      background:var(--dark);
-      border-bottom:2px solid var(--orange);
-    }
-    .tickerTrack{
-      display:flex;
-      width:max-content;
-      /* Le contenu (2 messages) est répété 6 fois par moitié pour
-         couvrir les écrans très larges sans vide en fin de piste ; la
-         durée est ajustée pour garder la même vitesse qu'avant. */
-      animation: tickerScroll 46s linear infinite;
-    }
-    .tickerItem{
-      flex:0 0 auto;
-      padding:8px 28px;
-      color:var(--white);
-      font-weight:800;
-      letter-spacing:.04em;
-      white-space:nowrap;
-      text-transform:uppercase;
-      font-size:13px;
-    }
-    @keyframes tickerScroll{
-      from{ transform:translateX(0); }
-      to{ transform:translateX(-50%); }
-    }
-    @media (prefers-reduced-motion: reduce){
-      .tickerTrack{ animation:none; flex-wrap:wrap; width:auto; justify-content:center; }
-      .tickerItem:nth-child(n+3){ display:none; }
-    }
-
-    /* ===== Nav =====
-       Plus de bandeau séparé : juste le bouton d'achat, posé en flottant
-       au-dessus de la vidéo du hero (voir .heroStage, position:relative)
-       — la vidéo remonte d'autant, juste sous le bandeau déroulant. */
+    /* ===== Boutons ===== */
 
     .btn{
       border:2px solid transparent;
@@ -159,85 +126,222 @@
     .btnPrimary:hover{transform:translateY(-2px); filter:brightness(1.06)}
     .btnPrimary:active{transform:translateY(3px); box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.28)}
 
-    /* Bouton flottant au-dessus de la vidéo du hero : volontairement
-       discret (pill translucide, pas de dégradé ni d'ombre "3D") pour ne
-       pas rivaliser visuellement avec la vidéo en dessous. Défini après
-       .btnPrimary pour gagner la cascade à spécificité égale. */
-    .heroNavBuy{
-      position:absolute;
-      left:16px;
-      right:16px;
-      bottom:76px;
-      z-index:20;
-      font-size:18px;
-      font-weight:800;
-      padding:18px 20px;
-      border-radius:14px;
-      background:rgba(17,17,17,.68);
-      box-shadow:0 10px 24px rgba(0,0,0,.3);
+    /* ===== Header =====
+       Barre noire de 80px : logo GAV à gauche, bouton d'achat arrondi à
+       droite. Le bouton reprend data-ga-id="gav_nav_acheter" (ancien bouton
+       posé sur la vidéo du hero) pour garder le même suivi des clics. */
+    .siteHeader{ background:#000; }
+    .siteHeaderInner{
+      height:80px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
     }
-    .heroNavBuy:hover{ transform:translateY(-1px); filter:brightness(1.1); }
-    .heroNavBuy:active{ transform:translateY(1px); }
+    .siteHeaderLogo{ display:block; }
+    .siteHeaderLogo img{ display:block; height:48px; width:auto; }
+    .siteHeaderBuy{
+      display:inline-flex;
+      align-items:center;
+      padding:12px 24px;
+      border-radius:999px;
+      background:#f7e43a;
+      color:#111;
+      font-family:"Poppins","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-decoration:none;
+      box-shadow:0 4px 0 #b8a40f;
+      transition:transform .16s ease, filter .16s ease;
+    }
+    .siteHeaderBuy:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+    .siteHeaderBuy:active{ transform:translateY(2px); box-shadow:0 2px 0 #b8a40f; }
 
     /* ===== Hero =====
-       La scène d'intro est désormais la vidéo GAV_animation_9x16 (déjà
-       le titre "LA GAV LA PLUS FUN" + la boîte qui se pose, montés en
-       vidéo) — plus besoin de reproduire cette animation en CSS/JS.
-       Sur mobile, la vidéo (9:16, même format que l'écran) occupe tout
-       l'écran au chargement ("doit prendre toute la page"). Sur desktop,
-       un plein écran n'aurait pas de sens pour un format portrait : elle
-       est montrée dans un cadre contenu, centré, au-dessus du reste du
-       contenu du hero. */
+       Fond orange, halo crème en rayons qui tourne lentement derrière la
+       boîte, boîte qui descend en place puis lévite (de haut en bas, en
+       boucle) avec son ombre au sol qui respire en rythme. Tout en CSS :
+       l'image de la boîte est le seul élément lourd du premier écran,
+       préchargée en priorité haute (voir <head>). */
     .hero{ padding:0 0 48px; text-align:center; }
-    .heroStageBg{ width:100%; }
-    .heroStage{
+    .heroTop{
       position:relative;
       overflow:hidden;
-      width:100%;
-      /* svh (petit viewport, barre d'adresse affichée) plutôt que dvh :
-         dvh change de valeur pendant le scroll quand la barre d'adresse
-         mobile se replie, ce qui redimensionnait le hero et donnait un
-         effet de zoom. 100vh en repli pour les navigateurs sans svh. */
-      height:100vh;
-      height:100svh;
-      /* Poster en fond CSS : visible dès le premier rendu, bien cadré
-         (background-size n'a pas le souci d'object-fit de WebKit), et
-         reste affiché si la vidéo ne démarre jamais. Orange en dessous
-         le temps que l'image arrive. */
-      background:var(--orange) url("../assets/hero-video-poster.jpg") center top / cover no-repeat;
+      isolation:isolate;
+      background:var(--orange);
+      padding:26px 16px 34px;
     }
-    /* Certains WebKit (Safari iOS) n'appliquent pas tout de suite object-fit
-       à la <video> avant que la lecture ne soit réellement démarrée : le
-       premier rendu affiche alors la vidéo/poster à sa taille intrinsèque,
-       collée en haut à gauche, puis "saute" à la bonne taille pile au
-       moment où elle commence à jouer. Plutôt que de recouvrir la vidéo
-       d'une image (qui peut rester sujette au même type de rendu
-       approximatif selon les moteurs), on la garde simplement invisible
-       (opacity:0) tant qu'elle n'est pas confirmée en lecture — seul le
-       fond de .heroStage (le poster en image de fond CSS, bien cadré) est
-       visible en attendant, ou indéfiniment si l'autoplay est bloqué. Révélée dès
-       l'évènement `playing` (voir le script en bas de page), sans
-       transition : un fondu serait lui-même un changement visuel, l'objectif
-       est qu'il n'y en ait aucun. */
-    .heroVideo{
+    .heroTop .heroStats{ position:relative; z-index:2; margin:0 auto; }
+    @font-face{
+      font-family:"Jolley";
+      src:url("../assets/fonts/jolley.woff") format("woff");
+      font-weight:400;
+      font-style:normal;
+      font-display:swap;
+    }
+    .heroTitle{
+      position:relative;
+      z-index:2;
+      margin:6px auto 0;
+      max-width:11ch;
+      font-family:"Jolley","Anton","Bebas Neue","Impact",sans-serif;
+      font-weight:400;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+      line-height:.95;
+      font-size:clamp(46px, 13vw, 96px);
+      color:var(--dark);
+    }
+    .heroScene{
+      position:relative;
+      width:min(68vw, 380px);
+      aspect-ratio:1;
+      margin:14px auto 0;
+    }
+    .heroHalo{
+      position:absolute;
+      z-index:0;
+      left:50%;
+      top:50%;
+      width:min(170vw, 1100px);
+      aspect-ratio:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle, rgba(255,232,200,.95) 0 16%, rgba(255,232,200,.55) 30%, rgba(255,232,200,0) 60%),
+        repeating-conic-gradient(from 0deg, rgba(255,232,200,.42) 0deg 9deg, rgba(255,232,200,0) 9deg 24deg);
+      -webkit-mask-image:radial-gradient(circle, #000 28%, transparent 68%);
+              mask-image:radial-gradient(circle, #000 28%, transparent 68%);
+      transform:translate(-50%, -50%);
+      animation:heroHaloSpin 48s linear infinite;
+      pointer-events:none;
+    }
+    .heroShadow{
+      position:absolute;
+      z-index:1;
+      left:50%;
+      bottom:-3%;
+      width:62%;
+      height:9%;
+      border-radius:50%;
+      background:radial-gradient(closest-side, rgba(0,0,0,.32), rgba(0,0,0,0));
+      transform:translateX(-50%);
+      animation:heroShadowBreath 3.4s ease-in-out .9s infinite alternate;
+    }
+    .heroBoxFloat{
+      position:relative;
+      z-index:2;
+      width:100%;
+      /* Entrée par le haut, puis lévitation : l'entrée se termine pile à
+         translateY(0), point de départ de la lévitation (pas de saut). */
+      animation:
+        heroBoxDrop .9s cubic-bezier(.2,.9,.3,1.15) both,
+        heroBoxLevitate 3.4s ease-in-out .9s infinite alternate;
+      will-change:transform;
+    }
+    .heroBoxImg{
       display:block;
       width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:center top;
-      opacity:0;
+      height:auto;
+      filter:drop-shadow(0 18px 22px rgba(0,0,0,.28));
     }
-    .heroVideo.isReady{ opacity:1; }
-    @media (min-width:720px){
-      .heroStageBg{ background:var(--orange); }
-      .heroStage{
-        width:min(94vw, 420px);
-        height:auto;
-        aspect-ratio:9/16;
-        margin:0 auto;
-        border-radius:28px;
-        box-shadow:0 24px 50px rgba(0,0,0,.25);
-      }
+    .heroBoxBadge{
+      position:absolute;
+      top:2%;
+      right:-4%;
+      width:28%;
+      height:auto;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));
+    }
+    /* Tags "bonbons" sous la boîte : bordure noire épaisse + ombre dure
+       décalée vers le bas, couleurs vives. */
+    .heroTags{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      margin:26px auto 0;
+    }
+    .heroTagRow{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .heroTag{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      margin:0;
+      padding:7px 16px;
+      border:3px solid #111;
+      border-radius:999px;
+      box-shadow:0 4px 0 #111;
+      color:#111;
+      font-family:"Poppins","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      font-size:13px;
+      font-weight:800;
+      line-height:1.25;
+      text-transform:uppercase;
+    }
+    .heroTag--main{ max-width:min(100%, 420px); border-radius:22px; text-align:center; font-size:11.5px; }
+    .heroTag--orange{ background:var(--orange-2); }
+    /* Petits écrans : les trois tags Famille/Amis/Collègues tiennent sur
+       une seule ligne. */
+    @media (max-width:420px){
+      .heroTag{ padding:6px 11px; font-size:12px; gap:4px; }
+      .heroTag--main{ font-size:11px; }
+      .heroTagRow{ gap:7px; }
+    }
+    .heroTag--blue{ background:#9cc0f7; }
+    .heroTag--peach{ background:#f8c78f; }
+    .heroTag--pink{ background:#f1a7ee; }
+    .heroPitch{
+      position:relative;
+      z-index:2;
+      margin:22px auto 0;
+      max-width:32ch;
+      font-family:"Poppins","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      font-size:17px;
+      font-weight:600;
+      line-height:1.45;
+      color:var(--dark);
+    }
+    .heroPitch strong{
+      display:block;
+      margin-bottom:6px;
+      font-family:"Anton","Bebas Neue","Impact",sans-serif;
+      font-weight:400;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+      font-size:24px;
+      line-height:1.1;
+    }
+    @keyframes heroHaloSpin{
+      from{ transform:translate(-50%, -50%) rotate(0deg); }
+      to{ transform:translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes heroBoxDrop{
+      from{ transform:translateY(-70px); opacity:0; }
+      to{ transform:translateY(0); opacity:1; }
+    }
+    @keyframes heroBoxLevitate{
+      from{ transform:translateY(0) rotate(-1deg); }
+      to{ transform:translateY(-18px) rotate(1deg); }
+    }
+    @keyframes heroShadowBreath{
+      from{ transform:translateX(-50%) scale(1); opacity:1; }
+      to{ transform:translateX(-50%) scale(.82); opacity:.6; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .heroHalo, .heroShadow, .heroBoxFloat{ animation:none; }
     }
 
     /* ===== Section vidéo "GAV en pleine partie" =====
@@ -266,9 +370,10 @@
       background:#111 url("../assets/gav-video-poster.jpg") center / cover no-repeat;
       box-shadow:0 20px 44px rgba(0,0,0,.22);
     }
-    /* Même principe fond-uni-puis-révélation que .heroVideo, voir son
-       commentaire — ici c'est le poster en fond de .gavVideoStage qui
-       s'affiche en attendant. */
+    /* Invisible (opacity:0) tant que la lecture n'a pas démarré : certains
+       WebKit (Safari iOS) n'appliquent object-fit qu'une fois la vidéo en
+       lecture, et l'afficheraient mal cadrée avant. C'est le poster en fond
+       de .gavVideoStage qui s'affiche en attendant. */
     .gavVideoEl{
       display:block;
       width:100%;
@@ -436,39 +541,8 @@
     .gavVideoSoundBtn:hover{ background:rgba(17,17,17,.78); }
     .gavVideoSoundBtn:active{ transform:scale(.92); }
 
-    .heroRotator{
-      margin:20px auto 0;
-      max-width:16ch;
-      font-family:"Anton","Bebas Neue","Impact",sans-serif;
-      font-weight:400;
-      text-transform:uppercase;
-      letter-spacing:.01em;
-      line-height:1.02;
-      font-size:clamp(26px, 6vw, 44px);
-      color:var(--ink);
-    }
-
-    .heroBoxWrap{
-      position:relative;
-      width:min(60vw, 260px);
-      margin:14px auto 0;
-    }
-    .heroBoxBelow{
-      display:block;
-      width:100%;
-      height:auto;
-      filter:drop-shadow(0 16px 26px rgba(0,0,0,.28));
-    }
-    .heroBoxBadge{
-      position:absolute;
-      top:-8px;
-      right:-8px;
-      width:30%;
-      height:auto;
-      filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));
-    }
     .heroPrice{
-      margin:10px auto 0;
+      margin:24px auto 0;
       font-family:"Anton","Bebas Neue","Impact",sans-serif;
       font-weight:400;
       font-size:clamp(22px, 4vw, 28px);
@@ -483,16 +557,6 @@
       color:var(--dark);
     }
 
-    .heroReassurance{
-      margin:16px auto 0;
-      max-width:38ch;
-      font-family:"Poppins","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
-      color:var(--ink);
-      font-size:17px;
-      font-weight:600;
-      letter-spacing:.01em;
-      line-height:1.5;
-    }
     .heroGiftLine{
       margin:14px auto 0;
       font-family:"Bebas Neue","Impact",sans-serif;
@@ -531,199 +595,17 @@
       transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
     }
     .buyBtn em{font-style:normal; opacity:.85; font-size:.8em}
-    .buyBtnLabel{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:3px;
-      line-height:1.2;
-      padding:4px 0;
-    }
-    .buyBtnLabel em{font-style:normal; text-transform:none; font-size:11px; font-weight:700; opacity:.9}
     .buyBtn:hover{transform:translateY(-2px); filter:brightness(1.06)}
     .buyBtn:active{transform:translateY(3px)}
     .buyBtn.amazon{background:linear-gradient(180deg, #2b2b2b, #0d0d0d); box-shadow:0 5px 0 #000, 0 12px 22px rgba(0,0,0,.22)}
     .buyBtn.amazon:active{box-shadow:0 1px 0 #000, 0 4px 10px rgba(0,0,0,.2)}
+    .buyBtn.philibert{background:#fff; color:var(--dark); border:2px solid var(--dark); box-shadow:0 5px 0 var(--dark), 0 12px 22px rgba(0,0,0,.14)}
+    .buyBtn.philibert:active{box-shadow:0 1px 0 var(--dark), 0 4px 10px rgba(0,0,0,.12)}
+    .buyLogoImg{display:block; height:26px; width:auto}
     .buyBtn.direct{background:linear-gradient(180deg, var(--orange-2), var(--orange)); box-shadow:0 5px 0 #b34f09, 0 12px 22px rgba(234,111,17,.3)}
     .buyBtn.direct:active{box-shadow:0 1px 0 #b34f09, 0 4px 10px rgba(234,111,17,.26)}
     .buyLogo{flex:0 0 auto; background-size:contain; background-repeat:no-repeat; background-position:center}
     .buyLogo.amazon{width:34px; height:34px; background-image:url(../assets/amazon-white.png)}
-
-    /* Barre de rareté sous le bouton "Achat en direct" : nombre de proto
-       restants mis à jour à la main par Florian (pas d'automatisation —
-       choix volontaire pour rester honnête sur le stock réel). */
-    .scarcityBox{ margin:16px auto 0; max-width:420px; text-align:center; }
-    .scarcityBar{
-      height:10px;
-      border-radius:999px;
-      background:#f1ddb8;
-      overflow:hidden;
-    }
-    .scarcityBarFill{
-      height:100%;
-      border-radius:999px;
-      background:linear-gradient(90deg, #ff5a4e, #d4201a);
-    }
-    .scarcityLabel{
-      margin:8px 0 0;
-      font-size:13px;
-      font-weight:800;
-      color:var(--ink);
-    }
-    .scarcityLabel strong{ color:var(--orange); font-size:15px; }
-    .liveVisitors{
-      margin:4px 0 0;
-      font-size:12px;
-      font-weight:700;
-      color:var(--muted);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-    }
-    .liveDot{
-      width:7px; height:7px;
-      border-radius:999px;
-      background:#2fae5e;
-      box-shadow:0 0 0 3px rgba(47,174,94,.2);
-    }
-    .liveVisitorsCount{
-      filter:blur(5px);
-      transition:filter .25s ease;
-      user-select:none;
-    }
-    .liveVisitorsCount.isRevealed{ filter:none; }
-    .liveVisitorsReveal{
-      margin-left:2px;
-      border:none;
-      background:none;
-      padding:0;
-      font:inherit;
-      font-weight:800;
-      font-size:11px;
-      text-decoration:underline;
-      color:var(--orange);
-      cursor:pointer;
-    }
-    .liveVisitorsReveal:hover{ opacity:.8; }
-    .liveVisitorsNote{
-      margin:6px auto 0;
-      max-width:340px;
-      font-size:11px;
-      font-weight:600;
-      line-height:1.4;
-      color:var(--muted);
-      text-align:center;
-    }
-
-    /* Bandeau de réassurance de l'achat en direct : même technique de
-       défilement que .tickerBar (@keyframes tickerScroll, contenu dupliqué
-       une fois pour boucler sans à-coup), thémé crème/orange et posé juste
-       sous les boutons d'achat plutôt qu'en pleine largeur noire. */
-    .trustBar{
-      margin:14px auto 0;
-      max-width:460px;
-      overflow:hidden;
-    }
-    .trustTrack{
-      display:flex;
-      width:max-content;
-      animation: tickerScroll 18s linear infinite;
-    }
-    .trustItem{
-      flex:0 0 auto;
-      padding:10px 20px;
-      white-space:nowrap;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.02em;
-      text-transform:uppercase;
-      color:var(--dark);
-    }
-    .trustItem::before{content:"✓ "; color:var(--orange); font-weight:900}
-    @media (prefers-reduced-motion: reduce){
-      .trustTrack{ animation:none; flex-wrap:wrap; width:auto; justify-content:center; }
-      /* Le contenu est dupliqué une fois pour boucler sans à-coup en
-         mode animé (voir le HTML) — sans quoi le repli statique
-         afficherait chaque point deux fois de suite. */
-      .trustItem:nth-child(n+5){ display:none; }
-    }
-
-    /* ===== Section "Alibi" : photo plein écran + mot qui tourne =====
-       5 <img> empilées (object-fit:cover), en loading="lazy" pour ne pas
-       concurrencer le hero : comme aucune n'est en display:none, le
-       navigateur les charge toutes ensemble à l'approche de la section,
-       bien avant qu'elle ne s'affiche — pas de flash blanc au changement.
-       Transition en "balayage" via clip-path (pas un fondu classique) :
-       la photo entrante est clippée à 100% depuis la gauche (invisible),
-       passe à 0% (pleinement visible) — l'effet balaie depuis la droite,
-       au-dessus de la photo sortante qui reste statique en dessous
-       jusqu'à être recouverte (voir initAlibiSection). */
-    .alibiSection{
-      position:relative;
-      width:100%;
-      min-height:85vh;
-      max-height:920px;
-      overflow:hidden;
-      display:flex;
-      align-items:flex-end;
-      background:#111;
-    }
-    .alibiBg{position:absolute; inset:0}
-    .alibiSlide{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit:cover; object-position:center 22%;
-      opacity:0;
-      transform:scale(1.18);
-      transform-origin:center;
-      transition:opacity .4s ease, transform .5s cubic-bezier(.34,1.56,.64,1);
-      will-change:opacity, transform;
-      z-index:1;
-    }
-    .alibiSlide.isActive{opacity:1; transform:scale(1); z-index:2}
-    .alibiScrim{
-      position:absolute; inset:0; z-index:3; pointer-events:none;
-      background:linear-gradient(180deg, rgba(249,245,236,0) 32%, rgba(249,245,236,.88) 76%, rgba(249,245,236,.97) 100%);
-    }
-    .alibiTextWrap{
-      position:relative; z-index:4;
-      width:100%;
-      padding:0 18px 44px;
-    }
-    .alibiText{
-      margin:0 auto;
-      max-width:720px;
-      text-align:center;
-      font-family:"Anton", "Bebas Neue", "Impact", sans-serif;
-      font-weight:400;
-      text-transform:uppercase;
-      color:#111111;
-      font-size:clamp(24px, 7.5vw, 42px);
-      line-height:1.08;
-      letter-spacing:.01em;
-    }
-    .alibiWord{
-      display:block;
-      overflow:hidden;
-      color:#ff701f;
-      font-size:clamp(42px, 16vw, 92px);
-      line-height:1;
-      margin-top:6px;
-    }
-    .alibiWordReel{
-      display:flex;
-      flex-direction:column;
-      transition:transform .55s cubic-bezier(.36,1.4,.5,1);
-      will-change:transform;
-    }
-    .alibiWordRow{display:block; line-height:1; white-space:nowrap}
-    @media (min-width:900px){
-      .alibiSection{min-height:70vh; max-height:720px}
-    }
-    @media (prefers-reduced-motion: reduce){
-      .alibiSlide, .alibiWordReel{transition:none !important; animation:none !important}
-    }
 
     /* ===== Section "Occasions" : storytelling piloté par le scroll =====
        Un seul balisage sert deux rendus. Par défaut (CSS seul — pas de
@@ -781,7 +663,7 @@
 
     /* Dernière étape de la séquence : plus de numéro/description, une
        phrase d'accroche suivie d'un mot qui tourne façon machine à sous
-       (même principe que .alibiWordReel). La hauteur de ligne n'est plus
+       (translateY par pas d'une ligne). La hauteur de ligne n'est plus
        mesurée en JS (ça désynchronisait le texte affiché pendant le
        chargement de la police Anton, d'où les mots tronqués/superposés) :
        fenêtre et lignes partagent la même hauteur en "em", directement
@@ -1128,6 +1010,11 @@
       width:max-content;
       animation: tickerScroll 38s linear infinite;
     }
+    /* Contenu dupliqué une fois dans le HTML : -50% boucle sans à-coup. */
+    @keyframes tickerScroll{
+      from{ transform:translateX(0); }
+      to{ transform:translateX(-50%); }
+    }
     .reviewCard{
       flex:0 0 auto;
       width:min(78vw, 320px);
@@ -1197,44 +1084,57 @@
     .footerMinimalInner nav a:first-child{margin-left:0}
     .footerMinimalInner nav a:hover{opacity:1}
 
-    /* ===== Bouton fixe au scroll ===== */
+    /* ===== Bouton fixe "Commande ton jeu" =====
+       Toujours visible, sur toute la page. Pastille jaune, bordure noire
+       épaisse et ombre dure (même famille que les tags du hero), qui
+       grossit puis revient à sa taille toutes les 3 secondes. */
     .stickyBuyBtn{
       position:fixed;
-      left:16px;
-      right:16px;
-      bottom:-90px;
+      left:50%;
+      /* Toujours dans le premier écran, dès le chargement. Remonté par
+         rapport au bord et décalé de la zone système (barre d'accueil
+         iPhone, barres d'outils des navigateurs intégrés Instagram /
+         Facebook) pour ne jamais passer sous la ligne de flottaison. */
+      bottom:calc(28px + env(safe-area-inset-bottom, 0px));
       z-index:95;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:16px 20px;
-      border-radius:16px;
-      background:linear-gradient(180deg, var(--orange-2), var(--orange));
-      color:#fff;
+      gap:6px;
+      width:max-content;
+      max-width:calc(100% - 32px);
+      padding:13px 26px;
+      border:3px solid #111;
+      border-radius:999px;
+      background:#f7e43a;
+      color:#111;
+      box-shadow:0 5px 0 #111, 0 12px 24px rgba(0,0,0,.25);
+      font-family:"Poppins","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
       font-weight:900;
-      font-size:14px;
+      font-size:19px;
+      letter-spacing:.01em;
       text-transform:uppercase;
-      letter-spacing:.02em;
+      white-space:nowrap;
       text-decoration:none;
-      box-shadow:0 10px 26px rgba(234,111,17,.4);
-      transition:bottom .25s ease, transform .16s ease;
+      transform:translateX(-50%);
+      animation:stickyPulse 3s ease-in-out infinite;
     }
-    .stickyBuyBtn.isVisible{bottom:20px}
     .stickyBuyBtn:hover{filter:brightness(1.05)}
-    .stickyBuyBtn:active{transform:translateY(3px)}
-    .stickyBuyBtn.onOrange{
-      background:linear-gradient(180deg, #222, var(--dark));
-      color:var(--cream);
-      box-shadow:0 10px 26px rgba(0,0,0,.4);
+    @keyframes stickyPulse{
+      0%, 70%, 100%{ transform:translateX(-50%) scale(1); }
+      80%{ transform:translateX(-50%) scale(1.09); }
+      90%{ transform:translateX(-50%) scale(.98); }
     }
-    @media (min-width:720px){
-      .stickyBuyBtn{ max-width:420px; margin:0 auto; }
+    @media (prefers-reduced-motion: reduce){
+      .stickyBuyBtn{ animation:none; }
     }
+    /* Laisse la place au bouton fixe en bas de page, pour qu'il ne cache
+       jamais les liens du footer. */
+    .footerMinimal{ padding-bottom:110px; }
 
     @media (max-width:640px){
       .section{padding:36px 0}
       .sectionTitle{font-size:30px}
-      .tickerItem{font-size:11px; padding:7px 18px}
       .footerMinimalInner{justify-content:center; text-align:center}
       .footerMinimalInner nav{width:100%; display:flex; justify-content:center; flex-wrap:wrap; gap:4px 0}
     }
@@ -1259,64 +1159,38 @@
   <!-- End Meta Pixel Code -->
 </head>
 <body>
-  <div class="tickerBar" aria-hidden="true">
-    <div class="tickerTrack">
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
-      <span class="tickerItem">LIVRÉ AVANT NOËL</span>
-      <span class="tickerItem">✦ JOUABLE EN GRAND GROUPE ✦</span>
+  <header class="siteHeader">
+    <div class="container siteHeaderInner">
+      <a class="siteHeaderLogo" href="./" aria-label="GAV — accueil"><img src="../assets/GAV1.png" width="243" height="165" alt="GAV" /></a>
+      <a class="siteHeaderBuy" href="https://www.amazon.fr/dp/B0HK561XB1?maas=maas_adg_B7326041B1F717B210B1F503FF3F55AC_afap_abs&ref_=aa_maas&tag=maas" target="_blank" rel="noopener noreferrer" data-ga-id="gav_nav_acheter">Acheter</a>
     </div>
-  </div>
+  </header>
 
   <section class="hero" id="le-jeu">
-    <h1 class="srOnly">GAV, la garde à vue la plus fun de votre vie</h1>
-    <div class="heroStageBg">
-      <div class="heroStage">
-        <video
-          class="heroVideo"
-          id="heroVideo"
-          src="../assets/hero-frames/GAV_animation_9x16-720.mp4"
-          poster="../assets/hero-video-poster.jpg"
-          autoplay
-          muted
-          playsinline
-          preload="auto"
-          aria-hidden="true"
-        ></video>
-        <a class="btn btnPrimary heroNavBuy" href="https://www.amazon.fr/dp/B0HK561XB1?maas=maas_adg_B7326041B1F717B210B1F503FF3F55AC_afap_abs&ref_=aa_maas&tag=maas" target="_blank" rel="noopener noreferrer" data-ga-id="gav_nav_acheter">DÉCOUVRIR SUR AMAZON</a>
+    <div class="heroTop">
+      <p class="heroStats">3 à 30 joueurs · à partir de 10 ans · 15 min par partie</p>
+      <h1 class="heroTitle">La GAV la plus fun</h1>
+      <div class="heroScene">
+        <div class="heroHalo" aria-hidden="true"></div>
+        <div class="heroShadow" aria-hidden="true"></div>
+        <div class="heroBoxFloat">
+          <img class="heroBoxImg" src="../assets/gav-box-cutout-560.png" srcset="../assets/gav-box-cutout-560.png 560w, ../assets/gav-box-cutout-840.png 840w" sizes="(min-width: 559px) 380px, 68vw" width="560" height="560" alt="La boîte du jeu de société GAV" fetchpriority="high" decoding="async" />
+          <img class="heroBoxBadge" src="../assets/macaron-famille-2026-400.png" width="400" height="400" decoding="async" alt="Prix Pari Ludique 2026 — Famille" />
+        </div>
       </div>
+      <div class="heroTags">
+        <p class="heroTag heroTag--main heroTag--orange">🏆 Jeu inspiré du meilleur concept internet&nbsp;: ALIBI</p>
+        <ul class="heroTagRow">
+          <li class="heroTag heroTag--blue">🤗 Famille</li>
+          <li class="heroTag heroTag--peach">😂 Amis</li>
+          <li class="heroTag heroTag--pink">💼 Collègues</li>
+        </ul>
+      </div>
+      <p class="heroPitch"><strong>Ton alibi va-t-il tenir&nbsp;?</strong>Mettez-vous d’accord sur une histoire, puis répondez chacun de votre côté aux questions inventées par la police. Ayez les mêmes réponses, sinon direction la prison&nbsp;!</p>
     </div>
 
     <div class="container">
-      <p class="heroRotator">Qui vous fera confiance en Garde à vue&nbsp;?</p>
-      <div class="heroBoxWrap">
-        <img class="heroBoxBelow" src="../assets/gav-box-cutout-560.png" width="560" height="560" decoding="async" alt="La boîte du jeu de société GAV" loading="lazy" />
-        <img class="heroBoxBadge" src="../assets/macaron-famille-2026-400.png" width="400" height="400" decoding="async" alt="Prix Pari Ludique 2026 — Famille" loading="lazy" />
-      </div>
       <p class="heroPrice">19,99&nbsp;€</p>
-      <p class="heroStats">3 à 30 joueurs · à partir de 10 ans · 15 min par partie</p>
-
-      <p class="heroReassurance">Un jeu simple à expliquer, facile à prendre en main avec une rejouabilité infinie.</p>
 
       <p class="heroGiftLine">Pour toi ou pour offrir</p>
 
@@ -1324,37 +1198,10 @@
         <a class="buyBtn amazon" href="https://www.amazon.fr/dp/B0HK561XB1?maas=maas_adg_B7326041B1F717B210B1F503FF3F55AC_afap_abs&ref_=aa_maas&tag=maas" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Amazon" data-ga-id="gav_hero_buy_amazon">
           <span class="buyLogo amazon" aria-hidden="true"></span>Acheter sur Amazon
         </a>
-        <a class="buyBtn direct" href="https://buy.stripe.com/7sY9ATdylgh40Oz53H18c01" target="_blank" rel="noopener noreferrer" aria-label="Achat en direct, prochain jeu offert en exclusivité aux 100 premiers acheteurs" data-ga-id="gav_hero_buy_direct">
-          <span class="buyBtnLabel">
-            Achat en direct
-            <em>Notre prochain jeu offert en exclusivité aux 100 premiers</em>
-          </span>
+        <a class="buyBtn philibert" href="https://www.philibertnet.com/fr/fiasco-games/182733-gav-garde-a-vue-3770043150013.html" target="_blank" rel="noopener noreferrer" aria-label="Acheter sur Philibert" data-ga-id="gav_hero_buy_philibert">
+          Acheter sur <img class="buyLogoImg" src="../assets/philibert-logo-280.png" width="280" height="118" alt="Philibert" loading="lazy" decoding="async" />
         </a>
-      </div>
-
-      <div class="scarcityBox">
-        <div class="scarcityBar" role="img" aria-label="17 restants sur 100">
-          <div class="scarcityBarFill" style="width:17%"></div>
-        </div>
-        <p class="scarcityLabel"><strong>17</strong> restants sur 100</p>
-        <p class="liveVisitors">
-          <span class="liveDot" aria-hidden="true"></span><span id="liveVisitorsCount" class="liveVisitorsCount">24</span> visiteurs en ligne
-          <button type="button" class="liveVisitorsReveal" id="liveVisitorsReveal">Voir</button>
-        </p>
-        <p class="liveVisitorsNote" id="liveVisitorsNote" hidden>En vrai on n'en sait rien, mais comme t'étais curieux on t'a inventé un chiffre&nbsp;! Par contre sois aussi curieux pour le jeu, il est vraiment bien&nbsp;😉</p>
-      </div>
-
-      <div class="trustBar" aria-hidden="true">
-        <div class="trustTrack">
-          <span class="trustItem">Expédié sous 24h</span>
-          <span class="trustItem">Paiement sécurisé</span>
-          <span class="trustItem">Stock limité</span>
-          <span class="trustItem">Prochain proto offert aux 100 premiers</span>
-          <span class="trustItem">Expédié sous 24h</span>
-          <span class="trustItem">Paiement sécurisé</span>
-          <span class="trustItem">Stock limité</span>
-          <span class="trustItem">Prochain proto offert aux 100 premiers</span>
-        </div>
+        <a class="buyBtn direct" href="https://buy.stripe.com/7sY9ATdylgh40Oz53H18c01" target="_blank" rel="noopener noreferrer" aria-label="Acheter en direct" data-ga-id="gav_hero_buy_direct">Acheter en direct</a>
       </div>
     </div>
   </section>
@@ -1545,29 +1392,6 @@
     </div>
   </section>
 
-  <section class="alibiSection" id="alibiSection" aria-label="Aurez-vous le même alibi ?">
-    <div class="alibiBg">
-      <img class="alibiSlide isActive" src="../assets/alibi-photos/boss-web.jpg" alt="" loading="lazy" decoding="async" />
-      <img class="alibiSlide" src="../assets/alibi-photos/papa-web.jpg" alt="" loading="lazy" decoding="async" />
-      <img class="alibiSlide" src="../assets/alibi-photos/amis-web.jpg" alt="" loading="lazy" decoding="async" />
-      <img class="alibiSlide" src="../assets/alibi-photos/collegues-web.jpg" alt="" loading="lazy" decoding="async" />
-      <img class="alibiSlide" src="../assets/alibi-photos/grands-parents-web.jpg" alt="" loading="lazy" decoding="async" />
-    </div>
-    <div class="alibiScrim" aria-hidden="true"></div>
-    <div class="alibiTextWrap">
-      <p class="alibiText">AUREZ-VOUS LE MÊME ALIBI QUE
-        <span class="alibiWord" id="alibiWord"><span class="alibiWordReel" id="alibiWordReel">
-          <span class="alibiWordRow">TON BOSS&nbsp;?</span>
-          <span class="alibiWordRow">TON PAPA&nbsp;?</span>
-          <span class="alibiWordRow">TES AMIS&nbsp;?</span>
-          <span class="alibiWordRow">TES COLLÈGUES&nbsp;?</span>
-          <span class="alibiWordRow">TES GRANDS-PARENTS&nbsp;?</span>
-          <span class="alibiWordRow" aria-hidden="true">TON BOSS&nbsp;?</span>
-        </span></span>
-      </p>
-    </div>
-  </section>
-
   <section class="section" id="faq">
     <div class="container">
       <h2 class="sectionTitle">QUESTIONS <span class="accent">FRÉQUENTES</span></h2>
@@ -1721,11 +1545,11 @@
     </div>
   </footer>
 
-  <a class="stickyBuyBtn" id="stickyBuyBtn" href="https://www.amazon.fr/dp/B0HK561XB1?maas=maas_adg_B7326041B1F717B210B1F503FF3F55AC_afap_abs&ref_=aa_maas&tag=maas" target="_blank" rel="noopener noreferrer" data-ga-id="gav_sticky_buy">Acheter sur Amazon</a>
+  <a class="stickyBuyBtn" id="stickyBuyBtn" href="https://www.amazon.fr/dp/B0HK561XB1?maas=maas_adg_B7326041B1F717B210B1F503FF3F55AC_afap_abs&ref_=aa_maas&tag=maas" target="_blank" rel="noopener noreferrer" data-ga-id="gav_sticky_buy">Commande ton jeu&nbsp;! 🔥</a>
 
   <script>
-    // Vidéos en autoplay (hero + "GAV en pleine partie") : par défaut
-    // invisibles (voir .heroVideo/.gavVideoEl, opacity:0) tant qu'elles ne
+    // Vidéo "GAV en pleine partie" : par défaut
+    // invisible (voir .gavVideoEl, opacity:0) tant qu'elles ne
     // sont pas confirmées en lecture — seul le fond uni de leur conteneur
     // est visible en attendant, ce qui évite tout rendu mal cadré pendant
     // le chargement (certains WebKit, notamment Safari iOS, n'appliquent
@@ -1744,7 +1568,7 @@
     // jouer à ce moment-là, et on ne s'appuie sur l'évènement que si ce
     // n'est pas encore le cas.
     (function initVideoReveal(){
-      ['heroVideo', 'gavVideoEl'].forEach((videoId) => {
+      ['gavVideoEl'].forEach((videoId) => {
         const video = document.getElementById(videoId);
         if (!video) return;
         const reveal = () => video.classList.add('isReady');
@@ -1758,35 +1582,9 @@
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Hero : l'attribut autoplay échoue en silence quand le navigateur bloque
-    // la lecture (mode économie d'énergie iOS, navigateurs intégrés aux apps,
-    // économiseur de données…), sans jamais réessayer — hero resté figé
-    // environ une fois sur trois. On appelle play()
-    // explicitement et, en cas de refus, on retente au premier geste de
-    // l'utilisateur (seul moment où ces navigateurs l'autorisent).
-    (function initHeroAutoplay(){
-      const video = document.getElementById('heroVideo');
-      if (!video) return;
-      if (prefersReducedMotion) {
-        video.removeAttribute('autoplay');
-        video.pause();
-        return;
-      }
-      const retryOnGesture = () => {
-        const events = ['touchstart', 'pointerdown', 'keydown', 'scroll'];
-        const retry = () => {
-          events.forEach((e) => window.removeEventListener(e, retry));
-          video.play().catch(() => {});
-        };
-        events.forEach((e) => window.addEventListener(e, retry, { once: true, passive: true }));
-      };
-      const attempt = video.play();
-      if (attempt) attempt.catch(retryOnGesture);
-    })();
-
     // "GAV en pleine partie" (14,8 Mo) : plus d'autoplay ni de préchargement
-    // dans le HTML — téléchargée en même temps que le hero, elle lui volait
-    // la bande passante et retardait son démarrage. Lancée seulement à
+    // dans le HTML — téléchargée dès l'ouverture, elle volait la bande
+    // passante au hero. Lancée seulement à
     // l'approche de sa section.
     (function initLazyGavVideo(){
       const video = document.getElementById('gavVideoEl');
@@ -1994,29 +1792,6 @@
       window.addEventListener('scroll', onScroll, { passive: true });
     })();
 
-    // Vidéo du hero accélérée à x1,20 sur toute sa durée.
-    (function speedUpHeroVideo(){
-      const video = document.getElementById('heroVideo');
-      if (!video) return;
-      const PLAYBACK_RATE = 1.2;
-      function applyRate(){
-        video.playbackRate = PLAYBACK_RATE;
-      }
-      if (video.readyState >= 1) applyRate();
-      else video.addEventListener('loadedmetadata', applyRate, { once: true });
-    })();
-
-    // Compteur "visiteurs en ligne" sous le bouton Achat en direct : un
-    // nombre qui varie toutes les 1 min 30 entre 21 et 32.
-    (function initLiveVisitors(){
-      const el = document.getElementById('liveVisitorsCount');
-      if (!el) return;
-      function randomBetween(min, max){
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-      setInterval(() => { el.textContent = randomBetween(21, 32); }, 90000);
-    })();
-
     // Bouton son sur la vidéo "GAV en pleine partie" : mute par défaut
     // (nécessaire pour l'autoplay), l'utilisateur peut l'activer au clic.
     (function initGavVideoSound(){
@@ -2032,147 +1807,6 @@
       });
     })();
 
-    // Bouton "Voir" à côté du compteur flouté : au clic, déflouter le
-    // chiffre et afficher la petite note honnête juste en dessous.
-    (function initLiveVisitorsReveal(){
-      const btn = document.getElementById('liveVisitorsReveal');
-      const count = document.getElementById('liveVisitorsCount');
-      const note = document.getElementById('liveVisitorsNote');
-      if (!btn || !count || !note) return;
-      btn.addEventListener('click', () => {
-        count.classList.add('isRevealed');
-        note.hidden = false;
-        btn.remove();
-      }, { once: true });
-    })();
-
-    // Bouton fixe "Acheter sur Amazon" : apparaît dès qu'on a scrollé au-delà
-    // du hero, sur toutes les tailles d'écran (pas limité au mobile).
-    (function initStickyBuy(){
-      const stickyBuyBtn = document.getElementById('stickyBuyBtn');
-      const heroEl = document.getElementById('le-jeu');
-      if (!stickyBuyBtn || !heroEl) return;
-      // Le dégradé orange du bouton se fond dans les sections au fond
-      // orange (ex. l'étape roulette d'occasionSection) : on bascule sur
-      // une variante foncée quand le bouton survole une de ces sections.
-      const orangeEls = Array.from(document.querySelectorAll('.occStep[data-bg="orange"]'));
-      function update(){
-        const heroBottom = heroEl.getBoundingClientRect().bottom;
-        stickyBuyBtn.classList.toggle('isVisible', heroBottom < 0);
-        const probeY = window.innerHeight - 56;
-        const onOrange = orangeEls.some((el) => {
-          const r = el.getBoundingClientRect();
-          return r.top <= probeY && r.bottom >= probeY;
-        });
-        stickyBuyBtn.classList.toggle('onOrange', onOrange);
-      }
-      window.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update);
-      update();
-    })();
-
-    // Section "Alibi" : boucle automatique photo + mot, en pause hors
-    // écran (IntersectionObserver) et désactivée sous prefers-reduced-motion
-    // (reste alors figée sur la 1ère photo/mot, déjà posés dans le HTML).
-    (function initAlibiSection(){
-      const section = document.getElementById('alibiSection');
-      const wordWindow = document.getElementById('alibiWord');
-      const reel = document.getElementById('alibiWordReel');
-      if (!section || !wordWindow || !reel) return;
-      const slides = Array.from(section.querySelectorAll('.alibiSlide'));
-      const rows = Array.from(reel.querySelectorAll('.alibiWordRow'));
-      if (slides.length < 2 || rows.length < 2) return;
-
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      let current = 0;
-      let reelIndex = 0;
-      let rowHeight = 0;
-      let timer = null;
-
-      // Les mots n'ont pas tous la même longueur ("TON BOSS ?" vs "TES
-      // GRANDS-PARENTS ?") : on garde une seule taille de police pour
-      // toutes les lignes (indispensable à l'alignement du reel), mais on
-      // la réduit si besoin pour que le mot le plus long tienne sur une
-      // seule ligne, y compris sur mobile.
-      function fitWordSize(){
-        const text = wordWindow.closest('.alibiText');
-        if (!text) return;
-        wordWindow.style.fontSize = '';
-        const available = text.clientWidth;
-        if (!available) return;
-        let maxWidth = 0;
-        rows.forEach((row) => { maxWidth = Math.max(maxWidth, row.scrollWidth); });
-        if (maxWidth > available){
-          const baseSize = parseFloat(getComputedStyle(wordWindow).fontSize);
-          wordWindow.style.fontSize = (baseSize * (available / maxWidth)) + 'px';
-        }
-      }
-
-      function measure(){
-        rowHeight = rows[0].getBoundingClientRect().height;
-        wordWindow.style.height = rowHeight + 'px';
-      }
-
-      function refit(){
-        fitWordSize();
-        measure();
-        spinReel(reelIndex, false);
-      }
-      refit();
-      window.addEventListener('resize', refit);
-
-      function spinReel(index, animate){
-        reel.style.transition = animate ? '' : 'none';
-        reel.style.transform = 'translateY(' + (-index * rowHeight) + 'px)';
-        if (!animate){
-          void reel.offsetHeight;
-          reel.style.transition = '';
-        }
-      }
-
-      function goTo(next){
-        const incoming = slides[next];
-        const outgoing = slides[current];
-        incoming.style.zIndex = 3;
-        incoming.classList.add('isActive');
-
-        reelIndex += 1;
-        spinReel(reelIndex, true);
-        if (reelIndex === slides.length){
-          setTimeout(() => { reelIndex = 0; spinReel(0, false); }, 560);
-        }
-
-        setTimeout(() => {
-          outgoing.classList.remove('isActive');
-          outgoing.style.zIndex = 1;
-          incoming.style.zIndex = 2;
-        }, 560);
-        current = next;
-      }
-
-      function tick(){
-        goTo((current + 1) % slides.length);
-      }
-
-      function start(){
-        if (timer || prefersReduced) return;
-        timer = setInterval(tick, 1500);
-      }
-      function stop(){
-        clearInterval(timer);
-        timer = null;
-      }
-
-      if (!prefersReduced && 'IntersectionObserver' in window){
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) start(); else stop();
-          });
-        }, { threshold: 0.3 });
-        observer.observe(section);
-      }
-    })();
   </script>
 
   <script>
@@ -2193,7 +1827,8 @@
       }
 
       document.querySelectorAll('.buyBtn, .storeBtn, .stickyBuyBtn').forEach((el) => {
-        const retailer = el.classList.contains('direct') ? 'direct' : 'amazon';
+        const retailer = el.classList.contains('philibert') ? 'philibert'
+          : el.classList.contains('direct') ? 'direct' : 'amazon';
         el.addEventListener('click', () => trackBuyClick(retailer, el.dataset.gaId || ''));
       });
 
@@ -2410,8 +2045,7 @@
 
   <script>
     // Dernière étape de "On a toujours une bonne raison" : mot qui
-    // tourne façon machine à sous (même principe que la section alibi,
-    // voir initAlibiSection). Les deux moitiés gauche/droite ont chacune
+    // tourne façon machine à sous. Les deux moitiés gauche/droite ont chacune
     // leur propre reel (nécessaire pour l'effet de coupe au scroll), donc
     // on les fait tourner en même temps, au même index, pour qu'elles
     // continuent à former un seul texte une fois jointes.
