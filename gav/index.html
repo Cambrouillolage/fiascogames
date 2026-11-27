@@ -1527,6 +1527,22 @@
     // une interaction pour Plausible : un visiteur qui scrolle n'est donc
     // plus compté comme un rebond, et le taux de rebond devient "partis
     // sans scroller". Nécessite l'objectif "Scroll" dans Plausible.
+    // Plausible : événement "Scroll Hero" envoyé une seule fois, quand le
+    // visiteur a scrollé assez pour que le bloc orange du hero soit
+    // entièrement passé au-dessus de l'écran. Nécessite l'objectif
+    // "Scroll Hero" dans Plausible.
+    (function initHeroPassedTracking(){
+      const hero = document.querySelector('.heroTop');
+      if (!hero || !('IntersectionObserver' in window)) return;
+      const observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting || entry.boundingClientRect.bottom > 0) return;
+        observer.disconnect();
+        if (window.plausible) plausible('Scroll Hero');
+      });
+      observer.observe(hero);
+    })();
+
     (function initScrollDepthTracking(){
       const THRESHOLDS = [25, 50, 75, 100];
       const sent = new Set();
